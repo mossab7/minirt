@@ -63,6 +63,21 @@ void	detach_resource(t_alloc_record **memory_records, void *target_resource)
 	free(temp);
 }
 
+int		ft_open(const char *filename, int flags)
+{
+	int	fd;
+
+	fd = open(filename, flags);
+	if (fd < 0)
+	{
+		perror("Error opening file");
+		return (fd);
+	}
+	register_memory_allocation(get_memory_tracker(),
+		create_memory_record((void *)(intptr_t)fd, ft_close));
+	return (fd);
+}
+
 void	ft_close(void *fd)
 {
 	int	descriptor;

@@ -72,3 +72,9 @@ void	*allocate_tracked_memory(size_t size)
 		create_memory_record(resource, free));
 	return (resource);
 }
+
+void 	safe_exit(int status)
+{
+	cleanup_memory_tracker(get_memory_tracker());
+	exit(status);
+}

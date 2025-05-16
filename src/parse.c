@@ -10,22 +10,21 @@ int	parse_filename(char *filename)
 	return (0);
 }
 
-void init_obj_parse_func(t_parse_function *parse_func, t_object_name *obj_name)
+void init_obj_parse_func(t_parse_function *parse_func, char **obj_name)
 {
-	obj_name[0] = "A";
-	obj_name[1] = "C";
-	obj_name[2] = "L";
-	obj_name[3] = "sp";
-	obj_name[4] = "pl";
-	obj_name[5] = "cy";
+	obj_name[OBJ_AMB_LIGHT] = "A";
+	obj_name[OBJ_CAMERA] = "C";
+	obj_name[OBJ_LIGHT] = "L";
+	obj_name[OBJ_SPHERE] = "sp";
+	obj_name[OBJ_PLANE] = "pl";
+	obj_name[OBJ_CYLINDER] = "cy";
 	
-	parse_func[0] = parse_amb_light;
-	parse_func[1] = parse_camera;
-	parse_func[2] = parse_light;
-	parse_func[3] = parse_sphare;
-	parse_func[4] = parse_plane;
-	parse_func[5] = parse_cylinder;
-
+	parse_func[OBJ_AMB_LIGHT] = parse_amb_light;
+	parse_func[OBJ_CAMERA] = parse_camera;
+	parse_func[OBJ_LIGHT] = parse_light;
+	parse_func[OBJ_SPHERE] = parse_sphare;
+	parse_func[OBJ_PLANE] = parse_plane;
+	parse_func[OBJ_CYLINDER] = parse_cylinder;
 }
 
 void	parse_obj_data(char **data, t_scene *scene)
@@ -51,23 +50,84 @@ void	parse_obj_data(char **data, t_scene *scene)
 	}
 }
 
+t_color get_color(char *data)
+{
+	t_color	color;
+	char 	**rgb;
+
+	rgb = ft_split(data, ',');
+	color.r = atof(rgb[RED_INDEX]);
+	color.g = atof(rgb[GREEN_INDEX]);
+	color.b = atof(rgb[BLUE_INDEX]);
+	ft_free_2d(rgb,-1);
+	if (color.r < COLOR_MIN || color.r > COLOR_MAX 
+		|| color.g < COLOR_MIN || color.g > COLOR_MAX 
+		|| color.b < COLOR_MIN || color.b > COLOR_MAX)
+	{
+		ft_putstr_fd("Error: Invalid color value\n", 2);
+		safe_exit(1);
+	}
+	return (color);
+}
+
+t_vec4 get_vec4(char *vec)
+{
+	t_vec4	vec4;
+	char 	**v;
+
+	v = ft_split(vec, ',');
+	vec4.x = atof(v[X_INDEX]);
+	vec4.y = atof(v[Y_INDEX]);
+	vec4.z = atof(v[Z_INDEX]);
+	vec4.w = 1.0f;
+	ft_free_2d(v,-1);
+	return (vec4);
+}
+
 void  parse_amb_light(char **data, t_scene *scene)
 {
-	scene->amb_light.ratio = ft_atof(data[1]);
-	scene->amb_light.color = ft_atoi_base(data[2], 16);
+	scene->amb_light.ratio = atof(data[1]);
+	if (scene->amb_light.ratio < LIGHT_RATIO_MIN || scene->amb_light.ratio > LIGHT_RATIO_MAX)
+	{
+		ft_putstr_fd("Error: Invalid ambient light ratio\n", 2);
+		safe_exit(1);
+	}
+	scene->amb_light.color = get_color(data[2]);
+}
+
+void	check_vec_range(t_vec4 vec)
+{
+	if (vec.x < VEC_MIN || vec.x > VEC_MAX
+		|| vec.y < VEC_MIN || vec.y > VEC_MAX
+		|| vec.z < VEC_MIN || vec.z > VEC_MAX)
+	{
+		fprintf(stderr, "Error: Invalid vector range %f,%f,%f\n", vec.x, vec.y, vec.z);
+		safe_exit(1);
+	}
 }
 
 void  parse_camera(char **data, t_scene *scene)
 {
-	scene->camera.position = ft_atoi_base(data[1], 16);
-	scene->camera.direction = ft_atoi_base(data[2], 16);
-	scene->camera.fov = ft_atof(data[3]);
+	scene->camera.position = get_vec4(data[1]);
+	scene->camera.direction = get_vec4(data[2]);
+	check_vec_range(scene->camera.direction);
+	scene->camera.fov = atof(data[3]);
+	if (scene->camera.fov < FOV_MIN || scene->camera.fov > FOV_MAX)
+	{
+		ft_putstr_fd("Error: Invalid camera FOV\n", 2);
+		safe_exit(1);
+	}
 }
 void  parse_light(char **data, t_scene *scene)
 {
-	scene->light.position = ft_atoi_base(data[1], 16);
-	scene->light.color = ft_atoi_base(data[2], 16);
-	scene->light.intensity = ft_atof(data[3]);
+	scene->light.position = get_vec4(data[1]);
+	scene->light.intensity = atof(data[2]);
+	if (scene->light.intensity > 1.0f || scene->light.intensity < 0.0f)
+	{
+		ft_putstr_fd("Error: Invalid light intensity\n", 2);
+		safe_exit(1);
+	}
+	scene->light.color = get_color(data[3]);
 }
 void  parse_sphare(char **data, t_scene *scene)
 {
@@ -75,9 +135,9 @@ void  parse_sphare(char **data, t_scene *scene)
 
 	obj = (t_object *)alloc(sizeof(t_object));
 	obj->type = SPHERE;
-	obj->obj.sphere.center = ft_atoi_base(data[1], 16);
-	obj->obj.sphere.diameter = ft_atof(data[2]);
-	obj->obj.sphere.color = ft_atoi_base(data[3], 16);
+	obj->obj.sphere.center = get_vec4(data[1]);
+	obj->obj.sphere.diameter = atof(data[2]);
+	obj->obj.sphere.color = get_color(data[3]);
 	container_push_back(scene->objects, obj);
 }
 void  parse_plane(char **data, t_scene *scene)
@@ -86,9 +146,10 @@ void  parse_plane(char **data, t_scene *scene)
 
 	obj = (t_object *)alloc(sizeof(t_object));
 	obj->type = PLANE;
-	obj->obj.plane.center = ft_atoi_base(data[1], 16);
-	obj->obj.plane.normal = ft_atoi_base(data[2], 16);
-	obj->obj.plane.color = ft_atoi_base(data[3], 16);
+	obj->obj.plane.center = get_vec4(data[1]);
+	obj->obj.plane.normal = get_vec4(data[2]);
+	check_vec_range(obj->obj.plane.normal);
+	obj->obj.plane.color = get_color(data[3]);
 	container_push_back(scene->objects, obj);
 }
 void  parse_cylinder(char **data, t_scene *scene)
@@ -97,11 +158,12 @@ void  parse_cylinder(char **data, t_scene *scene)
 
 	obj = (t_object *)alloc(sizeof(t_object));
 	obj->type = CYLINDER;
-	obj->obj.cylinder.center = ft_atoi_base(data[1], 16);
-	obj->obj.cylinder.axis = ft_atoi_base(data[2], 16);
-	obj->obj.cylinder.diameter = ft_atof(data[3]);
-	obj->obj.cylinder.height = ft_atof(data[4]);
-	obj->obj.cylinder.color = ft_atoi_base(data[5], 16);
+	obj->obj.cylinder.center = get_vec4(data[1]);
+	obj->obj.cylinder.axis = get_vec4(data[2]);
+	check_vec_range(obj->obj.cylinder.axis);
+	obj->obj.cylinder.diameter = atof(data[3]);
+	obj->obj.cylinder.height = atof(data[4]);
+	obj->obj.cylinder.color = get_color(data[5]);
 	container_push_back(scene->objects, obj);
 }
 void  parse_hyperboloid(char **data, t_scene *scene)
@@ -110,11 +172,12 @@ void  parse_hyperboloid(char **data, t_scene *scene)
 
 	obj = (t_object *)alloc(sizeof(t_object));
 	obj->type = HYPERBOLDOID;
-	obj->obj.hyperboloid.center = ft_atoi_base(data[1], 16);
-	obj->obj.hyperboloid.axis = ft_atoi_base(data[2], 16);
-	obj->obj.hyperboloid.diameter = ft_atof(data[3]);
-	obj->obj.hyperboloid.height = ft_atof(data[4]);
-	obj->obj.hyperboloid.color = ft_atoi_base(data[5], 16);
+	obj->obj.hyperboloid.center = get_vec4(data[1]);
+	obj->obj.hyperboloid.axis = get_vec4(data[2]);
+	check_vec_range(obj->obj.hyperboloid.axis);
+	obj->obj.hyperboloid.diameter = atof(data[3]);
+	obj->obj.hyperboloid.height = atof(data[4]);
+	obj->obj.hyperboloid.color = get_color(data[5]);
 	container_push_back(scene->objects, obj);
 }
 void  parse_paraboloid(char **data, t_scene *scene)
@@ -123,11 +186,12 @@ void  parse_paraboloid(char **data, t_scene *scene)
 
 	obj = (t_object *)alloc(sizeof(t_object));
 	obj->type = PARABOLOID;
-	obj->obj.paraboloid.center = ft_atoi_base(data[1], 16);
-	obj->obj.paraboloid.axis = ft_atoi_base(data[2], 16);
-	obj->obj.paraboloid.diameter = ft_atof(data[3]);
-	obj->obj.paraboloid.height = ft_atof(data[4]);
-	obj->obj.paraboloid.color = ft_atoi_base(data[5], 16);
+	obj->obj.paraboloid.center = get_vec4(data[1]);
+	obj->obj.paraboloid.axis = get_vec4(data[2]);
+	check_vec_range(obj->obj.paraboloid.axis);
+	obj->obj.paraboloid.diameter = atof(data[3]);
+	obj->obj.paraboloid.height = atof(data[4]);
+	obj->obj.paraboloid.color = get_color(data[5]);
 	container_push_back(scene->objects, obj);
 }
 
@@ -143,8 +207,17 @@ void	read_to_scene(int fd,t_scene *scene)
 			break;
 		data = ft_split(line," ");
 		parse_obj_data(data, scene);
-		ft_free_2d(data);
+		ft_free_2d(data,-1);
 	}
+}
+
+t_scene	*init_scene(void)
+{
+	t_scene	*scene;
+
+	scene = (t_scene *)alloc(sizeof(t_scene));
+	scene->objects = container_init();
+	return (scene);
 }
 
 t_scene *parse_scene(char *filename)

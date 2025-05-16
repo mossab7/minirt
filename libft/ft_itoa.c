@@ -9,7 +9,7 @@
 /*   Updated: 2025/01/30 13:03:55 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
+#include <libft.h>
 
 static int	digit_length_base(unsigned long num)
 {

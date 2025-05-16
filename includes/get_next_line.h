@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -9,8 +9,8 @@
 /*   Updated: 2024/11/05 16:29:26 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef GET_NEXT_LINE_BONUS_H
-# define GET_NEXT_LINE_BONUS_H
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
 # include <libft.h>
 # include <stdlib.h>
@@ -34,4 +34,4 @@ char		*ft_strchr_gnl(char *s, int c);
 char		*ft_strdup_heap(const char *s1, char *heap);
 char		*ft_strcpy_until(char *dst, const char *src, char c);
 
-#endif // !GET_NEXT_LINE_BONUS_H
+#endif // !GET_NEXT_LINE_H

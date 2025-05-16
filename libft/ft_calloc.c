@@ -9,7 +9,7 @@
 /*   Updated: 2025/01/30 13:32:32 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
+#include <libft.h>
 
 static void	ft_bzero_static(void *s, size_t n)
 {

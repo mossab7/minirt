@@ -9,7 +9,7 @@
 /*   Updated: 2024/10/25 21:30:16 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
+#include <libft.h>
 
 int	ft_lstsize(t_list *lst)
 {

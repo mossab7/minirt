@@ -11,31 +11,18 @@
 /* ************************************************************************** */
 #include <libft.h>
 
-static size_t	ft_2d_size(char **v)
-{
-	size_t	i;
-
-	i = 0;
-	while (v[i])
-		i++;
-	return (i);
-}
-
-char	**ft_free_2d(char **v, size_t size)
+void	ft_free_2d(char **v, size_t size)
 {
 	size_t	e;
 
 	if (v)
 	{
-		if (size == 0)
-			size = ft_2d_size(v);
 		e = 0;
-		while (e < size)
+		while (e < size || v[e])
 		{
 			ft_free(v[e]);
 			e++;
 		}
 		ft_free(v);
 	}
-	return (NULL);
 }

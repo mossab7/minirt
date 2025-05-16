@@ -79,7 +79,7 @@ static char	**ft_split_private(char **vec,
 		{
 			vec[vec_idx] = alloc(wlength + 1);
 			if (!vec[vec_idx])
-				return (ft_free_2d(vec, vec_idx));
+				return (ft_free_2d(vec, vec_idx),NULL);
 			while (k < wlength && s[i])
 				vec[vec_idx][k++] = s[i++];
 			vec[vec_idx++][k] = 0;

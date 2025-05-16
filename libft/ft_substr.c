@@ -9,7 +9,7 @@
 /*   Updated: 2025/01/30 13:06:17 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
+#include <libft.h>
 
 static char	*empty(void)
 {

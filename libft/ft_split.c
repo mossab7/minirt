@@ -9,7 +9,7 @@
 /*   Updated: 2025/01/30 13:04:54 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
+#include <libft.h>
 
 static int	count_words(char const *s, char c)
 {

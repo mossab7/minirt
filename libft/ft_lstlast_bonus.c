@@ -9,7 +9,7 @@
 /*   Updated: 2024/10/25 21:40:42 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
+#include <libft.h>
 
 t_list	*ft_lstlast(t_list *lst)
 {

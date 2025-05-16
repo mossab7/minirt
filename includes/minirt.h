@@ -1,6 +1,7 @@
+#ifndef MINIRT_H
+#define MINIRT_H
 #include <libft.h>
-
-typedef float	matrix4d[4][4];
+#include <macros.h>
 
 typedef struct t_vec4
 {
@@ -26,7 +27,7 @@ typedef struct s_sphere
 
 typedef struct s_plane
 {
-	t_vec4 point;
+	t_vec4 center;
 	t_vec4 normal;
 	t_color color;
 }t_plane;
@@ -82,8 +83,8 @@ typedef struct s_object
 
 typedef struct s_amb_light
 {
+	float ratio;
 	t_color color;
-	float intensity;
 }t_amb_light;
 
 typedef struct s_camera
@@ -107,3 +108,24 @@ typedef struct s_scene
 	t_amb_light amb_light;
 	t_container *objects;
 }t_scene;
+
+typedef void (*t_parse_function)(char **, t_scene *);
+typedef float	matrix4d[4][4];
+
+void parse_amb_light(char **data, t_scene *scene);
+void parse_camera(char **data, t_scene *scene);
+void parse_light(char **data, t_scene *scene);
+void parse_sphare(char **data, t_scene *scene);
+void parse_plane(char **data, t_scene *scene);
+void parse_cylinder(char **data, t_scene *scene);
+void parse_hyperboloid(char **data, t_scene *scene);
+void parse_paraboloid(char **data, t_scene *scene);
+void parse_obj_data(char **data, t_scene *scene);
+int parse_filename(char *filename);
+void init_obj_parse_func(t_parse_function *parse_func, char **obj_name);
+t_color get_color(char *data);
+t_vec4 get_vec4(char *data);
+void check_vec_range(t_vec4 vec);
+t_scene *parse_scene(char *filename);
+
+#endif // MINIRT_H

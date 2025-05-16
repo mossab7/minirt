@@ -11,12 +11,12 @@ SRCS=ft_atoi.c ft_bzero.c ft_isalnum.c\
 	ft_lstclear_bonus.c ft_lstdelone_bonus.c ft_lstiter_bonus.c\
 	ft_lstlast_bonus.c ft_lstmap_bonus.c ft_lstnew_bonus.c resource_man_utils.c\
 	ft_lstsize_bonus.c ft_strcmp.c ft_realloc.c ft_free.c ft_malloc.c\
-	ft_ispunct.c ft_isspace.c ft_isquote.c ft_atol_base.c ft_readline.c\
+	ft_ispunct.c ft_isspace.c ft_isquote.c ft_atol_base.c container.c\
 	get_next_line.c get_next_line_utils.c ft_is_not_null.c ft_isdir.c ft_split_set.c\
 	ft_free_2d.c
 OBJS=$(SRCS:%.c=%.o)
 NAME=libft.a
-INCLUDE=-I../include
+INCLUDE=-I../includes
 CC=cc
 CFLAGS=-Wall -Wextra -Werror
 AR=ar -rsc

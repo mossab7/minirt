@@ -13,5 +13,7 @@ typedef struct s_container
     size_t  capacity; 
 } t_container;
 
+void        container_push_back(t_container *container, void *item);
+t_container *container_init();
 
 #endif // CONTAINER_H

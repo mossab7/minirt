@@ -18,7 +18,7 @@ void	ft_free_2d(char **v, size_t size)
 	if (v)
 	{
 		e = 0;
-		while (e < size || v[e])
+		while (e < size && v[e])
 		{
 			ft_free(v[e]);
 			e++;

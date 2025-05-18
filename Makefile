@@ -3,7 +3,7 @@ CFLAGS = -Wall -Werror -Wextra
 SRC = src/minirt.c src/parse.c
 
 all : LIBFT
-	$(CC) $(CFLAGS) $(SRC) - -lXext -lX11 -lm -lz -lft -Llibft -Iincludes -o minirt
+	$(CC) $(CFLAGS) $(SRC)  -lft -Llibft -Iincludes -o minirt
 
 LIBFT:
 	make -C libft

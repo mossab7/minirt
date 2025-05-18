@@ -34,6 +34,7 @@ void	parse_obj_data(char **data, t_scene *scene)
 	int					i;
 
 	init_obj_parse_func(parse_func, obj_name);
+	i = 0;
 	while (i < OBJ_COUNT)
 	{
 		if (ft_strcmp(data[0], obj_name[i]) == 0)
@@ -205,7 +206,7 @@ void	read_to_scene(int fd,t_scene *scene)
 		line = get_next_line(fd);
 		if(line == NULL)
 			break;
-		data = ft_split(line," ");
+		data = ft_split(line, ' ');
 		parse_obj_data(data, scene);
 		ft_free_2d(data,-1);
 	}
@@ -230,7 +231,7 @@ t_scene *parse_scene(char *filename)
 		ft_putstr_fd("Error: Invalid file name\n", 2);
 		return (NULL);
 	}
-	scene = (t_scene *)alloc(sizeof(t_scene));
+	scene = init_scene();
 	fd = ft_open(filename, O_RDONLY);
 	if (fd < 0)
 	{
@@ -238,6 +239,6 @@ t_scene *parse_scene(char *filename)
 		return (NULL);
 	}
 	read_to_scene(fd, scene);
-	ft_close(fd);
+	ft_close((void *)(intptr_t)fd);
 	return (scene);
 }

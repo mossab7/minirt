@@ -109,8 +109,12 @@ typedef struct s_scene
 	t_container *objects;
 }t_scene;
 
+typedef struct s_matrix4d
+{
+	float data[4][4];
+}t_matrix4d;
+
 typedef void (*t_parse_function)(char **, t_scene *);
-typedef float	matrix4d[4][4];
 
 void parse_amb_light(char **data, t_scene *scene);
 void parse_camera(char **data, t_scene *scene);

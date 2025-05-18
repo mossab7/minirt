@@ -25,12 +25,12 @@ char	*ft_strdup_heap(const char *s1, char *heap)
 	if (!dup)
 	{
 		if (heap)
-			free(heap);
+			ft_free(heap);
 		return (NULL);
 	}
 	dup = ft_strcpy_until(dup, s1, 0);
 	if (heap)
-		free(heap);
+		ft_free(heap);
 	return (dup);
 }
 
@@ -39,10 +39,10 @@ void	*ft_realloc(void *ptr, size_t new_sz, size_t old_sz)
 	char	*new;
 	size_t	index;
 
-	new = malloc(new_sz);
+	new = alloc(new_sz);
 	if (new == NULL)
 	{
-		free(ptr);
+		ft_free(ptr);
 		return (NULL);
 	}
 	index = 0;
@@ -56,7 +56,7 @@ void	*ft_realloc(void *ptr, size_t new_sz, size_t old_sz)
 		new[index] = ((char *)ptr)[index];
 		index++;
 	}
-	free(ptr);
+	ft_free(ptr);
 	return (new);
 }
 

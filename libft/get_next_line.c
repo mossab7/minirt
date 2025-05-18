@@ -17,7 +17,7 @@ static void	*release_gnl_resources(t_line *line, char *table[FD_MAX], int fd)
 	{
 		if (table[fd])
 		{
-			free(table[fd]);
+			ft_free(table[fd]);
 			table[fd] = NULL;
 		}
 	}
@@ -27,7 +27,7 @@ static void	*release_gnl_resources(t_line *line, char *table[FD_MAX], int fd)
 		return (NULL);
 	if (line->size == 0)
 	{
-		free(line->content);
+		ft_free(line->content);
 		line->content = NULL;
 	}
 	return (NULL);

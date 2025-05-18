@@ -132,6 +132,7 @@ void						cleanup_memory_tracker(
 void						free_resource(void (*free_func)(void *),
 								void *resource);
 void						safe_exit(int code);
+int							ft_open(const char *filename, int flags);
 void						*ft_realloc(void *ptr, size_t new_sz,
 								size_t old_sz);
 void						ft_free(void *addr);

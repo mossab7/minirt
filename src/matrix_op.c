@@ -1,7 +1,7 @@
 #include <minirt.h>
 
 
-t_matrix4d matrix4d_translation(t_vec4 translation)
+t_matrix4d matrix4d_translation(t_vec3 translation)
 {
     t_matrix4d matrix;
 
@@ -24,7 +24,7 @@ t_matrix4d matrix4d_translation(t_vec4 translation)
 
     return (matrix);
 }
-t_matrix4d matrix4d_rotation_x(float angle)
+t_matrix4d matrix4d_rotation_x(double angle)
 {
     t_matrix4d matrix;
 
@@ -47,7 +47,7 @@ t_matrix4d matrix4d_rotation_x(float angle)
 
     return (matrix);
 }
-t_matrix4d matrix4d_rotation_y(float angle)
+t_matrix4d matrix4d_rotation_y(double angle)
 {
     t_matrix4d matrix;
 
@@ -70,7 +70,7 @@ t_matrix4d matrix4d_rotation_y(float angle)
 
     return (matrix);
 }
-t_matrix4d matrix4d_rotation_z(float angle)
+t_matrix4d matrix4d_rotation_z(double angle)
 {
     t_matrix4d matrix;
 
@@ -113,7 +113,7 @@ t_matrix4d matrix4d_mult(t_matrix4d a, t_matrix4d b)
     return (result);
 }
 
-t_matrix4d matrix4d_rotation(t_vec4 rotation)
+t_matrix4d matrix4d_rotation(t_vec3 rotation)
 {
     t_matrix4d matrix;
 
@@ -124,7 +124,7 @@ t_matrix4d matrix4d_rotation(t_vec4 rotation)
     return (matrix);
 }
 
-t_matrix4d matrix4d_scale(t_vec4 scale)
+t_matrix4d matrix4d_scale(t_vec3 scale)
 {
     t_matrix4d matrix;
 
@@ -189,8 +189,7 @@ t_matrix4d matrix4d_transpose(t_matrix4d matrix)
 t_matrix4d matrix4d_inverse(t_matrix4d matrix)
 {
     t_matrix4d result;
-    float det;
-    int i, j;
+    double det;
 
     det = matrix.data[0][0] * (matrix.data[1][1] * matrix.data[2][2] - matrix.data[1][2] * matrix.data[2][1]) -
           matrix.data[0][1] * (matrix.data[1][0] * matrix.data[2][2] - matrix.data[1][2] * matrix.data[2][0]) +
@@ -230,19 +229,18 @@ t_matrix4d matrix4d_inverse(t_matrix4d matrix)
     return (result);
 }
 
-t_vec4 matrix4d_mult_vec4(t_matrix4d matrix, t_vec4 vec)
+t_vec3 matrix4d_mult_vec3(t_matrix4d matrix, t_vec3 vec)
 {
-    t_vec4 result;
+    t_vec3 result;
 
-    result.x = matrix.data[0][0] * vec.x + matrix.data[0][1] * vec.y + matrix.data[0][2] * vec.z + matrix.data[0][3] * vec.w;
-    result.y = matrix.data[1][0] * vec.x + matrix.data[1][1] * vec.y + matrix.data[1][2] * vec.z + matrix.data[1][3] * vec.w;
-    result.z = matrix.data[2][0] * vec.x + matrix.data[2][1] * vec.y + matrix.data[2][2] * vec.z + matrix.data[2][3] * vec.w;
-    result.w = matrix.data[3][0] * vec.x + matrix.data[3][1] * vec.y + matrix.data[3][2] * vec.z + matrix.data[3][3] * vec.w;
-
+    result.x = matrix.data[0][0] * vec.x + matrix.data[0][1] * vec.y + matrix.data[0][2] * vec.z + matrix.data[0][3];
+    result.y = matrix.data[1][0] * vec.x + matrix.data[1][1] * vec.y + matrix.data[1][2] * vec.z + matrix.data[1][3];
+    result.z = matrix.data[2][0] * vec.x + matrix.data[2][1] * vec.y + matrix.data[2][2] * vec.z + matrix.data[2][3];
+    
     return (result);
 }
 
-t_matrix4d matrix4d_shearing(float xy, float xz, float yx, float yz, float zx, float zy)
+t_matrix4d matrix4d_shearing(double xy, double xz, double yx, double yz, double zx, double zy)
 {
     t_matrix4d matrix;
 
@@ -266,7 +264,7 @@ t_matrix4d matrix4d_shearing(float xy, float xz, float yx, float yz, float zx, f
     return (matrix);
 }
 
-t_matrix4d matrix4d_scaling(t_vec4 scale)
+t_matrix4d matrix4d_scaling(t_vec3 scale)
 {
     t_matrix4d matrix;
 
@@ -288,4 +286,25 @@ t_matrix4d matrix4d_scaling(t_vec4 scale)
     matrix.data[3][3] = 1.0f;
 
     return (matrix);
+}
+
+
+t_matrix4d view_matrix(t_vec3 camera_pos, t_vec3 camera_dir)
+{
+    t_matrix4d translation;
+    t_matrix4d rotation;
+    t_matrix4d view;
+    t_vec3 neg_pos;
+
+    neg_pos = vec3_negate(camera_pos);
+
+    translation = matrix4d_translation(neg_pos);
+    
+    rotation = matrix4d_rotation(camera_dir);
+    
+    rotation = matrix4d_transpose(rotation);
+    
+    view = matrix4d_mult(rotation, translation);
+
+    return (view);
 }

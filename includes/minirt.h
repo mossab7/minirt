@@ -124,6 +124,7 @@ typedef struct s_hit_info
     t_vec3 normal;
 	t_color color;
 	t_object object;
+	t_object_type object_type;
 } t_hit_info;
 
 typedef struct s_ray

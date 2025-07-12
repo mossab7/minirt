@@ -1,0 +1,24 @@
+# Ambient light
+A 0.2 255,255,255
+
+# Camera
+C 0,0,8 0,0,-1 70
+
+# Light
+L 5,5,5 0.8 255,255,255
+
+# Sphere with bump mapping (rough surface)
+sp 0,2,0 3 200,100,50 bump 2.0 0.3
+
+# Sphere with checkerboard pattern
+sp -4,0,-2 2.5 255,0,0 checkerboard 255,0,0 255,255,255 4.0
+
+# Plane with bump mapping (textured floor)
+pl 0,-2,0 0,1,0 150,150,150 bump 1.5 0.2
+
+# Cylinder with both patterns (checkerboard base + bump detail)
+cy 4,0,0 0,1,0 1.5 4 0,255,0 bump 3.0 0.25
+
+# Regular objects without patterns for comparison
+sp 0,-0.5,-5 1.8 0,0,255
+pl 0,0,-12 0,0,1 100,100,100

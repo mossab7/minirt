@@ -18,7 +18,7 @@ void init_obj_parse_func(t_parse_function *parse_func, char **obj_name)
 	obj_name[OBJ_SPHERE] = "sp";
 	obj_name[OBJ_PLANE] = "pl";
 	obj_name[OBJ_CYLINDER] = "cy";
-	
+
 	parse_func[OBJ_AMB_LIGHT] = parse_amb_light;
 	parse_func[OBJ_CAMERA] = parse_camera;
 	parse_func[OBJ_LIGHT] = parse_light;
@@ -33,6 +33,10 @@ void	parse_obj_data(char **data, t_scene *scene)
 	char				*obj_name[OBJ_COUNT];
 	int					i;
 
+	// Skip empty lines and comments
+	if (!data[0] || data[0][0] == '\n' || data[0][0] == '#' || ft_strlen(data[0]) == 0)
+		return ;
+
 	init_obj_parse_func(parse_func, obj_name);
 	i = 0;
 	while (i < OBJ_COUNT)
@@ -44,9 +48,8 @@ void	parse_obj_data(char **data, t_scene *scene)
 		}
 		i++;
 	}
-	if (i == OBJ_COUNT && data[0][0] != '\n')
+	if (i == OBJ_COUNT)
 	{
-
 		printf("Error: Unknown object type |'%s'|\n", data[0]);
 		return ;
 	}
@@ -66,9 +69,9 @@ t_color get_color(char *data)
     color.r = atof(rgb[RED_INDEX]);
     color.g = atof(rgb[GREEN_INDEX]);
     color.b = atof(rgb[BLUE_INDEX]);
-    ft_free_2d(rgb, -1); 
-    if (color.r < COLOR_MIN || color.r > COLOR_MAX 
-        || color.g < COLOR_MIN || color.g > COLOR_MAX 
+    ft_free_2d(rgb, -1);
+    if (color.r < COLOR_MIN || color.r > COLOR_MAX
+        || color.g < COLOR_MIN || color.g > COLOR_MAX
         || color.b < COLOR_MIN || color.b > COLOR_MAX)
     {
         ft_putstr_fd("Error: Invalid color value\n", 2);
@@ -143,25 +146,38 @@ void parse_camera(char **data, t_scene *scene)
 void parse_light(char **data, t_scene *scene)
 {
     scene->light.position = get_vec3(data[1]);
-    scene->light.intensity = atof(data[2]);   
+    scene->light.intensity = atof(data[2]);
     if (scene->light.intensity > 1.0f || scene->light.intensity < 0.0f)
     {
         ft_putstr_fd("Error: Invalid light intensity\n", 2);
         safe_exit(1);
-    }    
+    }
     scene->light.color = get_color(data[3]);
 }
 
 void parse_sphare(char **data, t_scene *scene)
 {
-    t_object *obj;
+    t_sphere sphere;
 
-    obj = (t_object *)alloc(sizeof(t_object));
+    sphere.center = get_vec3(data[1]);
+    sphere.diameter = atof(data[2]);
+    if (sphere.diameter <= 0)
+    {
+        ft_putstr_fd("Error: Invalid sphere diameter\n", 2);
+        safe_exit(1);
+    }
+    sphere.color = get_color(data[3]);
+
+#ifdef BONUS
+    if (data[4])
+        parse_pattern(&data[4], &sphere.pattern);
+    else
+        sphere.pattern.type = PATTERN_NONE;
+#endif
+
+    t_object *obj = malloc(sizeof(t_object));
     obj->type = SPHERE;
-    obj->obj.sphere.center = get_vec3(data[1]);
-    obj->obj.sphere.diameter = atof(data[2]);
-    
-    obj->obj.sphere.color = get_color(data[3]);
+    obj->obj.sphere = sphere;
     container_push_back(scene->objects, obj);
 }
 
@@ -175,6 +191,14 @@ void  parse_plane(char **data, t_scene *scene)
 	obj->obj.plane.normal = get_vec3(data[2]);
 	check_vec_range(obj->obj.plane.normal);
 	obj->obj.plane.color = get_color(data[3]);
+
+#ifdef BONUS
+	if (data[4])
+		parse_pattern(&data[4], &obj->obj.plane.pattern);
+	else
+		obj->obj.plane.pattern.type = PATTERN_NONE;
+#endif
+
 	container_push_back(scene->objects, obj);
 }
 void  parse_cylinder(char **data, t_scene *scene)
@@ -189,6 +213,14 @@ void  parse_cylinder(char **data, t_scene *scene)
 	obj->obj.cylinder.diameter = atof(data[3]);
 	obj->obj.cylinder.height = atof(data[4]);
 	obj->obj.cylinder.color = get_color(data[5]);
+
+#ifdef BONUS
+	if (data[6])
+		parse_pattern(&data[6], &obj->obj.cylinder.pattern);
+	else
+		obj->obj.cylinder.pattern.type = PATTERN_NONE;
+#endif
+
 	container_push_back(scene->objects, obj);
 }
 void  parse_hyperboloid(char **data, t_scene *scene)
@@ -224,15 +256,22 @@ void	read_to_scene(int fd,t_scene *scene)
 {
 	char	*line;
 	char	**data;
-	
+
 	while(true)
 	{
 		line = get_next_line(fd);
 		if(line == NULL)
 			break;
+		if (line[0] == '#' || line[0] == '\n' || ft_strlen(line) <= 1)
+		{
+			free(line);
+			continue;
+		}
 		data = ft_split(line, ' ');
-		parse_obj_data(data, scene);
+		if (data && data[0])
+			parse_obj_data(data, scene);
 		ft_free_2d(data,-1);
+		free(line);
 	}
 }
 

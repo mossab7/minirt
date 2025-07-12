@@ -1,0 +1,9 @@
+P(t) = Origin + t × Direction
+victor : v = Nx + Ny + Nz
+
+Lambertian shading : lamberts cosine law
+Color = Albedo × (AmbientStrength + LightIntensity × max(0, dot(Normal, LightDirection)))
+
+ambientstrength = 0.1
+Lightintensity = fmax(0.0, dot_vec3(hit_info->normal, light_dir))
+

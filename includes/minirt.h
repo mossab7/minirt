@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minirt.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: deepseeko <deepseeko@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/12 19:03:54 by deepseeko         #+#    #+#             */
+/*   Updated: 2025/07/12 19:03:55 by deepseeko        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINIRT_H
 #define MINIRT_H
 #include <libft.h>
@@ -19,11 +31,37 @@ typedef struct s_color
 	double b;
 }t_color;
 
+#ifdef BONUS
+/* Pattern constants */
+# define CHECKER_SIZE 1.0
+# define CHECKER_SCALE 4.0
+# define PATTERN_NONE 0
+# define PATTERN_CHECKERBOARD 1
+# define PATTERN_BUMP_MAP 2
+
+/* Bump map constants */
+# define BUMP_STRENGTH 0.1
+# define BUMP_SCALE 4.0
+
+/* Pattern structure */
+typedef struct s_pattern
+{
+	int		type;
+	t_color	color1;
+	t_color	color2;
+	double	scale;
+	double	bump_strength;
+}	t_pattern;
+#endif
+
 typedef struct s_sphere
 {
 	t_vec3 center;
 	double diameter;
 	t_color color;
+#ifdef BONUS
+	t_pattern pattern;
+#endif
 }t_sphere;
 
 typedef struct s_plane
@@ -31,6 +69,9 @@ typedef struct s_plane
 	t_vec3 center;
 	t_vec3 normal;
 	t_color color;
+#ifdef BONUS
+	t_pattern pattern;
+#endif
 }t_plane;
 
 typedef struct s_hyperboloid
@@ -58,6 +99,9 @@ typedef struct s_cylinder
 	double diameter;
 	double height;
 	t_color color;
+#ifdef BONUS
+	t_pattern pattern;
+#endif
 }t_cylinder;
 
 typedef enum e_object_type
@@ -219,4 +263,8 @@ t_vec3 matrix4d_mult_vec3(t_matrix4d matrix, t_vec3 vec);
 /* Camera/view matrix */
 t_matrix4d view_matrix(t_vec3 camera_pos, t_vec3 camera_dir);
 void render_scene(t_program *program);
+#ifdef BONUS
+# include "bonus.h"
+#endif
+
 #endif // MINIRT_H

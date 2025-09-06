@@ -98,6 +98,57 @@ t_mlx	*_init_mlx(void)
 	return (mlx);
 }
 
+int loop_hook(void *param)
+{
+	t_program 	*program;
+
+	program = (t_program *)param;
+	printf("--------------------------\n");
+	printf("Hit at distance: %f\n", program->selected_object.distance);
+	printf("Hit point: (%f, %f, %f)\n", program->selected_object.point.x, program->selected_object.point.y,
+			program->selected_object.point.z);
+	printf("Normal: (%f, %f, %f)\n", program->selected_object.normal.x, program->selected_object.normal.y,
+			program->selected_object.normal.z);
+	printf("Color: (%f, %f, %f)\n", program->selected_object.color.r, program->selected_object.color.g,
+			program->selected_object.color.b);
+	printf("--------------------------\n");
+	
+	return (0);
+}
+
+int key_hook(int keycode, void *param)
+{
+	(void)param;
+	if (keycode == 65307)
+		safe_exit(0);
+	return (0);
+}
+
+int mouse_hook(int button, int x, int y, void *param)
+{
+	t_program	*program;
+
+	program = (t_program *)param;
+	printf("Mouse button %d clicked at (%d, %d)\n", button, x, y);
+	t_vec3 screen_pos = screen_to_world(x, y);
+	t_ray ray = shoot_ray((*get_program())->scene, screen_pos);
+	t_hit_info hit_info = find_closest_intersection((*get_program())->scene->objects,
+			&ray);
+	if (hit_info.hit)
+	{
+		printf("Hit at distance: %f\n", hit_info.distance);
+		printf("Hit point: (%f, %f, %f)\n", hit_info.point.x, hit_info.point.y,
+			hit_info.point.z);
+		printf("Normal: (%f, %f, %f)\n", hit_info.normal.x, hit_info.normal.y,
+			hit_info.normal.z);
+		printf("Color: (%f, %f, %f)\n", hit_info.color.r, hit_info.color.g,
+			hit_info.color.b);
+		program->selected_object = hit_info;
+	}
+
+	return (0);
+}
+
 int	main(int argc, char **argv)
 {
 	t_program	*program;
@@ -111,6 +162,9 @@ int	main(int argc, char **argv)
 	program->scene = parse_scene(argv[1]);
 	program->mlx = _init_mlx();
 	render_scene(program);
+	mlx_key_hook(program->mlx->win_ptr, key_hook, program);
+	mlx_loop_hook(program->mlx->mlx_ptr, loop_hook, program);
+	mlx_mouse_hook(program->mlx->win_ptr, mouse_hook, program);
 	mlx_loop(program->mlx->mlx_ptr);
 	safe_exit(0);
 }

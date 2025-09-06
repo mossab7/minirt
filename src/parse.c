@@ -168,14 +168,12 @@ void parse_sphare(char **data, t_scene *scene)
     }
     sphere.color = get_color(data[3]);
 
-#ifdef BONUS
     if (data[4])
         parse_pattern(&data[4], &sphere.pattern);
     else
         sphere.pattern.type = PATTERN_NONE;
-#endif
 
-    t_object *obj = malloc(sizeof(t_object));
+    t_object *obj = alloc(sizeof(t_object));
     obj->type = SPHERE;
     obj->obj.sphere = sphere;
     container_push_back(scene->objects, obj);
@@ -192,12 +190,10 @@ void  parse_plane(char **data, t_scene *scene)
 	check_vec_range(obj->obj.plane.normal);
 	obj->obj.plane.color = get_color(data[3]);
 
-#ifdef BONUS
 	if (data[4])
 		parse_pattern(&data[4], &obj->obj.plane.pattern);
 	else
 		obj->obj.plane.pattern.type = PATTERN_NONE;
-#endif
 
 	container_push_back(scene->objects, obj);
 }
@@ -214,12 +210,10 @@ void  parse_cylinder(char **data, t_scene *scene)
 	obj->obj.cylinder.height = atof(data[4]);
 	obj->obj.cylinder.color = get_color(data[5]);
 
-#ifdef BONUS
 	if (data[6])
 		parse_pattern(&data[6], &obj->obj.cylinder.pattern);
 	else
 		obj->obj.cylinder.pattern.type = PATTERN_NONE;
-#endif
 
 	container_push_back(scene->objects, obj);
 }
@@ -264,14 +258,14 @@ void	read_to_scene(int fd,t_scene *scene)
 			break;
 		if (line[0] == '#' || line[0] == '\n' || ft_strlen(line) <= 1)
 		{
-			free(line);
+			ft_free(line);
 			continue;
 		}
 		data = ft_split(line, ' ');
 		if (data && data[0])
 			parse_obj_data(data, scene);
 		ft_free_2d(data,-1);
-		free(line);
+		ft_free(line);
 	}
 }
 

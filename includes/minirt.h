@@ -31,7 +31,6 @@ typedef struct s_color
 	double b;
 }t_color;
 
-#ifdef BONUS
 /* Pattern constants */
 # define CHECKER_SIZE 1.0
 # define CHECKER_SCALE 4.0
@@ -52,16 +51,13 @@ typedef struct s_pattern
 	double	scale;
 	double	bump_strength;
 }	t_pattern;
-#endif
 
 typedef struct s_sphere
 {
 	t_vec3 center;
 	double diameter;
 	t_color color;
-#ifdef BONUS
 	t_pattern pattern;
-#endif
 }t_sphere;
 
 typedef struct s_plane
@@ -69,9 +65,7 @@ typedef struct s_plane
 	t_vec3 center;
 	t_vec3 normal;
 	t_color color;
-#ifdef BONUS
 	t_pattern pattern;
-#endif
 }t_plane;
 
 typedef struct s_hyperboloid
@@ -99,9 +93,7 @@ typedef struct s_cylinder
 	double diameter;
 	double height;
 	t_color color;
-#ifdef BONUS
 	t_pattern pattern;
-#endif
 }t_cylinder;
 
 typedef enum e_object_type
@@ -198,6 +190,7 @@ typedef struct s_program
 {
 	t_mlx *mlx;
 	t_scene *scene;
+	t_hit_info selected_object;
 }t_program;
 
 typedef struct s_matrix4d
@@ -262,9 +255,14 @@ t_vec3 matrix4d_mult_vec3(t_matrix4d matrix, t_vec3 vec);
 
 /* Camera/view matrix */
 t_matrix4d view_matrix(t_vec3 camera_pos, t_vec3 camera_dir);
-void render_scene(t_program *program);
-#ifdef BONUS
+int render_scene(t_program *program);
 # include "bonus.h"
-#endif
+
+t_vec3	screen_to_world(int x, int y);
+t_ray	shoot_ray(t_scene *scene, t_vec3 screen_pos);
+t_hit_info	find_closest_intersection(t_container *objects, t_ray *ray);
+t_color	trace_ray(t_scene *scene, t_ray *ray);
+t_color	calculate_lighting(t_scene *scene, t_hit_info *hit_info);
+
 
 #endif // MINIRT_H

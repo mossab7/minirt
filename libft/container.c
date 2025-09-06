@@ -5,9 +5,7 @@ void container_push_back(t_container *container, void *item)
     if (container->size == container->capacity)
     {
         container->capacity *= CONTAINER_GROWTH_FACTOR;
-        container->data = realloc(container->data, container->capacity * sizeof(void *));
-        register_memory_allocation(get_memory_tracker(),
-		create_memory_record(container->data, free));
+        container->data = ft_realloc(container->data, container->capacity * sizeof(void *),container->size * sizeof(void *));
         if (!container->data)
         {
             perror("Failed to allocate memory");

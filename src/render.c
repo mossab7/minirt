@@ -45,8 +45,13 @@ t_hit_info	intersect_sphere(t_ray *ray, t_sphere *sphere)
 {
 	t_hit_info	hit_info;
 	t_vec3		oc;
+	double		a;
+	double		b;
+	double		c;
+	double		discriminant;
+	double		t1;
+	double		t2;
 
-	double a, b, c, discriminant, t1, t2;
 	hit_info.distance = -1.0;
 	hit_info.hit = false;
 	oc = sub_vec3(ray->origin, sphere->center);
@@ -66,9 +71,10 @@ t_hit_info	intersect_sphere(t_ray *ray, t_sphere *sphere)
 		hit_info.distance = t2;
 	else
 		return (hit_info);
-	hit_info.point = add_vec3(ray->origin, scale_vec3(ray->direction,
-				hit_info.distance));
-	hit_info.normal = normalize_vec3(sub_vec3(hit_info.point, sphere->center));
+	hit_info.point = add_vec3(ray->origin, 
+			scale_vec3(ray->direction, hit_info.distance));
+	hit_info.normal = normalize_vec3(sub_vec3(hit_info.point, 
+			sphere->center));
 	hit_info.color = sphere->color;
 	hit_info.hit = true;
 	return (hit_info);
@@ -101,7 +107,8 @@ t_hit_info	intersect_cylinder_side(t_ray *ray, t_cylinder *cylinder)
 	oc_dot_axis = dot_vec3(oc, axis);
 	a = dot_vec3(ray->direction, ray->direction) - pow(rd_dot_axis, 2);
 	b = 2 * (dot_vec3(ray->direction, oc) - rd_dot_axis * oc_dot_axis);
-	c = dot_vec3(oc, oc) - pow(oc_dot_axis, 2) - pow(cylinder->diameter / 2, 2);
+	c = dot_vec3(oc, oc) - pow(oc_dot_axis, 2) 
+		- pow(cylinder->diameter / 2, 2);
 	discriminant = b * b - 4 * a * c;
 	if (discriminant < 0)
 		return (hit_info);
@@ -117,7 +124,8 @@ t_hit_info	intersect_cylinder_side(t_ray *ray, t_cylinder *cylinder)
 		return (hit_info);
 	hit_info.distance = t;
 	hit_info.point = hit_point;
-	axis_point = add_vec3(cylinder->center, scale_vec3(axis, projection));
+	axis_point = add_vec3(cylinder->center, 
+			scale_vec3(axis, projection));
 	hit_info.normal = normalize_vec3(sub_vec3(hit_point, axis_point));
 	hit_info.color = cylinder->color;
 	hit_info.hit = true;
@@ -141,8 +149,8 @@ t_hit_info	intersect_cylinder_cap(t_ray *ray, t_cylinder *cylinder,
 	hit_info.distance = -1.0;
 	hit_info.hit = false;
 	axis = normalize_vec3(cylinder->axis);
-	cap_center = add_vec3(cylinder->center, scale_vec3(axis, cap_side
-				* (cylinder->height / 2)));
+	cap_center = add_vec3(cylinder->center, 
+			scale_vec3(axis, cap_side * (cylinder->height / 2)));
 	cap_normal = scale_vec3(axis, cap_side);
 	denom = dot_vec3(cap_normal, ray->direction);
 	if (fabs(denom) < EPSILON)
@@ -152,8 +160,8 @@ t_hit_info	intersect_cylinder_cap(t_ray *ray, t_cylinder *cylinder,
 		return (hit_info);
 	hit_point = add_vec3(ray->origin, scale_vec3(ray->direction, t));
 	to_center = sub_vec3(hit_point, cap_center);
-	radial_component = sub_vec3(to_center, scale_vec3(axis, dot_vec3(to_center,
-					axis)));
+	radial_component = sub_vec3(to_center, 
+			scale_vec3(axis, dot_vec3(to_center, axis)));
 	radius = cylinder->diameter / 2;
 	if (length_vec3(radial_component) > radius)
 		return (hit_info);
@@ -178,7 +186,8 @@ t_hit_info	intersect_cylinder(t_ray *ray, t_cylinder *cylinder)
 	top_cap_hit = intersect_cylinder_cap(ray, cylinder, 1);
 	bottom_cap_hit = intersect_cylinder_cap(ray, cylinder, -1);
 	if (side_hit.hit && (!top_cap_hit.hit
-			|| side_hit.distance < top_cap_hit.distance) && (!bottom_cap_hit.hit
+			|| side_hit.distance < top_cap_hit.distance) 
+		&& (!bottom_cap_hit.hit
 			|| side_hit.distance < bottom_cap_hit.distance))
 		hit_info = side_hit;
 	else if (top_cap_hit.hit && (!bottom_cap_hit.hit
@@ -192,8 +201,9 @@ t_hit_info	intersect_cylinder(t_ray *ray, t_cylinder *cylinder)
 t_hit_info	intersect_plane(t_ray *ray, t_plane *plane)
 {
 	t_hit_info	hit_info;
+	double		denom;
+	double		t;
 
-	double denom, t;
 	hit_info.distance = -1.0;
 	hit_info.hit = false;
 	denom = dot_vec3(plane->normal, ray->direction);
@@ -203,12 +213,26 @@ t_hit_info	intersect_plane(t_ray *ray, t_plane *plane)
 	if (t < 0.001)
 		return (hit_info);
 	hit_info.distance = t;
-	hit_info.point = add_vec3(ray->origin, scale_vec3(ray->direction,
-				hit_info.distance));
+	hit_info.point = add_vec3(ray->origin, 
+			scale_vec3(ray->direction, hit_info.distance));
 	hit_info.normal = plane->normal;
 	hit_info.color = plane->color;
 	hit_info.hit = true;
 	return (hit_info);
+}
+
+static t_pattern	*get_object_pattern(t_hit_info *hit_info)
+{
+	t_pattern	*pattern;
+
+	pattern = NULL;
+	if (hit_info->object_type == SPHERE)
+		pattern = &((t_sphere *)&hit_info->object.obj)->pattern;
+	else if (hit_info->object_type == PLANE)
+		pattern = &((t_plane *)&hit_info->object.obj)->pattern;
+	else if (hit_info->object_type == CYLINDER)
+		pattern = &((t_cylinder *)&hit_info->object.obj)->pattern;
+	return (pattern);
 }
 
 t_color	calculate_lighting(t_scene *scene, t_hit_info *hit_info)
@@ -219,38 +243,23 @@ t_color	calculate_lighting(t_scene *scene, t_hit_info *hit_info)
 	t_vec3		surface_normal;
 	double		light_intensity;
 	double		diffuse;
+	t_pattern	*pattern;
 
-#ifdef BONUS
 	base_color = get_pattern_color(hit_info, &hit_info->object.obj);
-
-	t_pattern *pattern = NULL;
-	if (hit_info->object_type == SPHERE)
-		pattern = &((t_sphere *)&hit_info->object.obj)->pattern;
-	else if (hit_info->object_type == PLANE)
-		pattern = &((t_plane *)&hit_info->object.obj)->pattern;
-	else if (hit_info->object_type == CYLINDER)
-		pattern = &((t_cylinder *)&hit_info->object.obj)->pattern;
-
+	pattern = get_object_pattern(hit_info);
 	if (pattern && pattern->type == PATTERN_BUMP_MAP)
 		surface_normal = apply_bump_mapping(hit_info, pattern);
 	else
 		surface_normal = hit_info->normal;
-#else
-	base_color = hit_info->color;
-	surface_normal = hit_info->normal;
-#endif
-
-	light_dir = normalize_vec3(sub_vec3(scene->light.position, hit_info->point));
+	light_dir = normalize_vec3(sub_vec3(scene->light.position, 
+			hit_info->point));
 	light_intensity = fmax(0.0, dot_vec3(surface_normal, light_dir));
-
 	if (is_in_shadow(scene, hit_info))
 		light_intensity = 0.0;
-
 	diffuse = scene->amb_light.ratio + light_intensity;
 	final_color.r = base_color.r * diffuse;
 	final_color.g = base_color.g * diffuse;
 	final_color.b = base_color.b * diffuse;
-
 	return (final_color);
 }
 
@@ -259,9 +268,11 @@ t_hit_info	find_closest_intersection(t_container *objects, t_ray *ray)
 	t_object	*object;
 	double		closest_distance;
 	size_t		i;
+	t_hit_info	hit_info;
+	t_hit_info	closest_hit;
 
-	t_hit_info hit_info, closest_hit;
-	closest_distance = closest_hit.distance = -1.0;
+	closest_distance = -1.0;
+	closest_hit.distance = -1.0;
 	closest_hit.hit = false;
 	for (i = 0; i < objects->size; i++)
 	{
@@ -274,13 +285,14 @@ t_hit_info	find_closest_intersection(t_container *objects, t_ray *ray)
 			hit_info = intersect_cylinder(ray, &object->obj.cylinder);
 		else
 			continue ;
-		if (hit_info.hit && hit_info.distance > 0 && (closest_distance < 0
+		if (hit_info.hit && hit_info.distance > 0 
+			&& (closest_distance < 0
 				|| hit_info.distance < closest_distance))
 		{
 			closest_distance = hit_info.distance;
 			closest_hit = hit_info;
 			closest_hit.object_type = object->type;
-			closest_hit.object = *object;  // Copy the entire object for pattern access
+			closest_hit.object = *object; 
 		}
 	}
 	return (closest_hit);
@@ -294,11 +306,11 @@ bool	is_in_shadow(t_scene *scene, t_hit_info *hit_info)
 
 	shadow_ray.origin = hit_info->point;
 	shadow_ray.direction = normalize_vec3(sub_vec3(scene->light.position,
-				hit_info->point));
+			hit_info->point));
 	shadow_ray.origin = add_vec3(shadow_ray.origin,
 			scale_vec3(shadow_ray.direction, 0.001));
 	light_distance = length_vec3(sub_vec3(scene->light.position,
-				hit_info->point));
+			hit_info->point));
 	shadow_hit = find_closest_intersection(scene->objects, &shadow_ray);
 	return (shadow_hit.hit && shadow_hit.distance > 0
 		&& shadow_hit.distance < light_distance);
@@ -318,7 +330,8 @@ t_color	trace_ray(t_scene *scene, t_ray *ray)
 	return (color);
 }
 
-void	put_pixel_to_image(t_canvas *canvas, int x, int y, t_color color)
+void	put_pixel_to_image(t_canvas *canvas, int x, int y, 
+		t_color color)
 {
 	char	*dst;
 	int		int_color;
@@ -332,27 +345,34 @@ void	put_pixel_to_image(t_canvas *canvas, int x, int y, t_color color)
 	g = (int)(fmin(1.0, fmax(0.0, color.g)) * 255);
 	b = (int)(fmin(1.0, fmax(0.0, color.b)) * 255);
 	int_color = (r << 16) | (g << 8) | b;
-	dst = canvas->addr + (y * canvas->line_length + x * (canvas->bpp / 8));
+	dst = canvas->addr + (y * canvas->line_length 
+			+ x * (canvas->bpp / 8));
 	*(unsigned int *)dst = int_color;
 }
 
-void	render_scene(t_program *program)
+int	render_scene(t_program *program)
 {
-	t_ray ray;
-	t_vec3 screen_pos;
-	t_color color;
-	int x, y;
+	t_ray	ray;
+	t_vec3	screen_pos;
+	t_color	color;
+	int		x;
+	int		y;
 
-	for (y = 0; y < WIN_HEIGHT; y++)
+	y = 0;
+	while (y < WIN_HEIGHT)
 	{
-		for (x = 0; x < WIN_WIDTH; x++)
+		x = 0;
+		while (x < WIN_WIDTH)
 		{
 			screen_pos = screen_to_world(x, y);
 			ray = shoot_ray(program->scene, screen_pos);
 			color = trace_ray(program->scene, &ray);
 			put_pixel_to_image(program->mlx->canvas, x, y, color);
+			x++;
 		}
+		y++;
 	}
-	mlx_put_image_to_window(program->mlx->mlx_ptr, program->mlx->win_ptr,
-		program->mlx->canvas->img_ptr, 0, 0);
+	mlx_put_image_to_window(program->mlx->mlx_ptr, 
+		program->mlx->win_ptr, program->mlx->canvas->img_ptr, 0, 0);
+	return (0);
 }

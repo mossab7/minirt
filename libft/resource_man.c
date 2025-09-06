@@ -76,6 +76,5 @@ void	*allocate_tracked_memory(size_t size)
 void 	safe_exit(int status)
 {
 	cleanup_memory_tracker(get_memory_tracker());
-	printf("hello\n");
 	exit(status);
 }

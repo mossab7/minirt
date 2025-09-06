@@ -14,7 +14,7 @@
 #define MINIRT_H
 #include <libft.h>
 #include <macros.h>
-#include "../minilibx-linux/mlx.h"
+#include "mlx.h"
 #include <math.h>
 
 typedef struct t_vec3

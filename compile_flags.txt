@@ -1,0 +1,10 @@
+-Wall 
+-ggdb 
+-Wextra 
+-Werror
+-std=c11 
+-I./includes/
+-I./libft/headers/
+-I./libtuple/headers/
+-I./minilibx-linux/headers/
+-lm

@@ -127,7 +127,10 @@ int key_hook(int keycode, void *param)
 int mouse_hook(int button, int x, int y, void *param)
 {
 	t_program	*program;
+	static int	i = 0;
 
+	if (i % 10000 != 0)
+		return (i++, 0);
 	program = (t_program *)param;
 	printf("Mouse button %d clicked at (%d, %d)\n", button, x, y);
 	t_vec3 screen_pos = screen_to_world(x, y);
@@ -145,7 +148,7 @@ int mouse_hook(int button, int x, int y, void *param)
 			hit_info.color.b);
 		program->selected_object = hit_info;
 	}
-
+	i++;
 	return (0);
 }
 

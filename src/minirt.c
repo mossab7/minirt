@@ -131,12 +131,12 @@ int key_hook(int keycode, void *param)
 		else
 			safe_exit(0);
 	}
-	if (keycode == 32) { translation.y = trans_speed; has_changed = true; } // Space -> Up
-	if (keycode == 65505) { translation.y = -trans_speed; has_changed = true; } // L-Shift -> Down
-	if (keycode == 65361) { translation.x = trans_speed; has_changed = true; } // Left
-	if (keycode == 65363) { translation.x = -trans_speed; has_changed = true; } // Right
-	if (keycode == 65362) { translation.z = trans_speed; has_changed = true; } // Arrow Up -> Depth In
-	if (keycode == 65364) { translation.z = -trans_speed; has_changed = true; } // Arrow Down -> Depth Out
+	if (keycode == 32) { translation = add_vec3(translation, scale_vec3(program->scene->camera.up, trans_speed)); has_changed = true; }
+	if (keycode == 65505) { translation = add_vec3(translation, scale_vec3(program->scene->camera.up, -trans_speed)); has_changed = true; }
+	if (keycode == 65363) { translation = add_vec3(translation, scale_vec3(program->scene->camera.right, trans_speed)); has_changed = true; }
+	if (keycode == 65361) { translation = add_vec3(translation, scale_vec3(program->scene->camera.right, -trans_speed)); has_changed = true; }
+	if (keycode == 65362) { translation = add_vec3(translation, scale_vec3(program->scene->camera.direction, trans_speed)); has_changed = true; }
+	if (keycode == 65364) { translation = add_vec3(translation, scale_vec3(program->scene->camera.direction, -trans_speed)); has_changed = true; }
 	if (keycode == 'd') { rotation.y = rot_speed; has_changed = true; }
 	if (keycode == 'a') { rotation.y = -rot_speed; has_changed = true; }
 	if (keycode == 's') { rotation.x = rot_speed; has_changed = true; }

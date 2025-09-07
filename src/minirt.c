@@ -137,12 +137,12 @@ int key_hook(int keycode, void *param)
 	if (keycode == 65363) { translation.x = -trans_speed; has_changed = true; } // Right
 	if (keycode == 65362) { translation.z = trans_speed; has_changed = true; } // Arrow Up -> Depth In
 	if (keycode == 65364) { translation.z = -trans_speed; has_changed = true; } // Arrow Down -> Depth Out
-	if (keycode == 'a') { rotation.y = rot_speed; has_changed = true; }
-	if (keycode == 'd') { rotation.y = -rot_speed; has_changed = true; }
-	if (keycode == 'w') { rotation.x = rot_speed; has_changed = true; }
-	if (keycode == 's') { rotation.x = -rot_speed; has_changed = true; }
-	if (keycode == 'q') { rotation.z = rot_speed; has_changed = true; }
-	if (keycode == 'e') { rotation.z = -rot_speed; has_changed = true; }
+	if (keycode == 'd') { rotation.y = rot_speed; has_changed = true; }
+	if (keycode == 'a') { rotation.y = -rot_speed; has_changed = true; }
+	if (keycode == 's') { rotation.x = rot_speed; has_changed = true; }
+	if (keycode == 'w') { rotation.x = -rot_speed; has_changed = true; }
+	if (keycode == 'e') { rotation.z = rot_speed; has_changed = true; }
+	if (keycode == 'q') { rotation.z = -rot_speed; has_changed = true; }
 	if (has_changed)
 	{
 		if (program->selected_object.hit)

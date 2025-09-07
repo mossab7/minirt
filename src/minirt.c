@@ -12,6 +12,7 @@
 
 #include <minirt.h>
 #include "../includes/transform_object.h"
+#include "../includes/camera.h"
 
 t_program	**get_program(void)
 {
@@ -121,29 +122,51 @@ int key_hook(int keycode, void *param)
 	bool has_changed = false;
 
 	if (keycode == 65307) // ESC
-		safe_exit(0);
-	// Translation
+	{
+		if (program->selected_object.hit)
+		{
+			program->selected_object.hit = false;
+			has_changed = true;
+		}
+		else
+			safe_exit(0);
+	}
 	if (keycode == 32) { translation.y = trans_speed; has_changed = true; } // Space -> Up
 	if (keycode == 65505) { translation.y = -trans_speed; has_changed = true; } // L-Shift -> Down
 	if (keycode == 65361) { translation.x = trans_speed; has_changed = true; } // Left
 	if (keycode == 65363) { translation.x = -trans_speed; has_changed = true; } // Right
 	if (keycode == 65362) { translation.z = trans_speed; has_changed = true; } // Arrow Up -> Depth In
 	if (keycode == 65364) { translation.z = -trans_speed; has_changed = true; } // Arrow Down -> Depth Out
-	
-	// Rotation
 	if (keycode == 'a') { rotation.y = rot_speed; has_changed = true; }
 	if (keycode == 'd') { rotation.y = -rot_speed; has_changed = true; }
 	if (keycode == 'w') { rotation.x = rot_speed; has_changed = true; }
 	if (keycode == 's') { rotation.x = -rot_speed; has_changed = true; }
 	if (keycode == 'q') { rotation.z = rot_speed; has_changed = true; }
 	if (keycode == 'e') { rotation.z = -rot_speed; has_changed = true; }
-
-	if (program->selected_object.hit && has_changed)
+	if (has_changed)
 	{
-		if (length_vec3(translation) > 0)
-			translate_object(program->selected_object.object, translation);
-		if (length_vec3(rotation) > 0)
-			rotate_object(program->selected_object.object, rotation);
+		if (program->selected_object.hit)
+		{
+			if (length_vec3(translation) > 0)
+				translate_object(program->selected_object.object, translation);
+			if (length_vec3(rotation) > 0)
+				rotate_object(program->selected_object.object, rotation);
+		}
+		else
+		{
+			t_matrix4d rot_matrix;
+			t_matrix4d rot_x = matrix4d_rotation_x(rotation.x);
+			t_matrix4d rot_y = matrix4d_rotation_y(rotation.y);
+			t_matrix4d rot_z = matrix4d_rotation_z(rotation.z);
+			program->scene->camera.position = add_vec3(program->scene->camera.position, translation);
+			if (length_vec3(rotation) > 0)
+			{
+				rot_matrix = matrix4d_mult(rot_z, matrix4d_mult(rot_y, rot_x));
+				program->scene->camera.direction = matrix4d_mult_vec3(rot_matrix, program->scene->camera.direction);
+				program->scene->camera.direction = normalize_vec3(program->scene->camera.direction);
+				recalculate_camera_vectors(&program->scene->camera);
+			}
+		}
         program->dirty = true;
 	}
 	return (0);

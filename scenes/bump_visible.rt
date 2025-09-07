@@ -1,0 +1,15 @@
+# Lumière ambiante
+A 0.2 255,255,255
+
+# Caméra
+C 0,0,25 0,0,-1 70
+
+# Source de lumière (position modifiée pour un meilleur angle)
+L 30,20,20 1.0 255,255,255
+
+# Sphère avec bump mapping (force augmentée)
+# J'ai augmenté la force de 0.2 à 1.0
+sp 0,0,0 15 200,200,200 bump 20 1.0
+
+# Un plan en arrière-plan
+pl 0,0,-30 0,0,1 150,150,150

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <minirt.h>
+#include "../includes/transform_object.h"
 
 t_program	**get_program(void)
 {
@@ -103,52 +104,68 @@ int loop_hook(void *param)
 	t_program 	*program;
 
 	program = (t_program *)param;
-	printf("--------------------------\n");
-	printf("Hit at distance: %f\n", program->selected_object.distance);
-	printf("Hit point: (%f, %f, %f)\n", program->selected_object.point.x, program->selected_object.point.y,
-			program->selected_object.point.z);
-	printf("Normal: (%f, %f, %f)\n", program->selected_object.normal.x, program->selected_object.normal.y,
-			program->selected_object.normal.z);
-	printf("Color: (%f, %f, %f)\n", program->selected_object.color.r, program->selected_object.color.g,
-			program->selected_object.color.b);
-	printf("--------------------------\n");
-	
+	render_scene(program);
 	return (0);
 }
 
 int key_hook(int keycode, void *param)
 {
-	(void)param;
-	if (keycode == 65307)
+	t_program *program = (t_program *)param;
+	t_vec3 translation = {0, 0, 0};
+	t_vec3 rotation = {0, 0, 0};
+	double trans_speed = 0.5;
+	double rot_speed = 0.1; // Radians
+
+	if (keycode == 65307) // ESC
 		safe_exit(0);
+	// Translation
+	if (keycode == 65362) // Up
+		translation.y = trans_speed;
+	if (keycode == 65364) // Down
+		translation.y = -trans_speed;
+	if (keycode == 65361) // Left
+		translation.x = -trans_speed;
+	if (keycode == 65363) // Right
+		translation.x = trans_speed;
+	
+	// Rotation
+	if (keycode == 'a')
+		rotation.y = rot_speed;
+	if (keycode == 'd')
+		rotation.y = -rot_speed;
+	if (keycode == 'w')
+		rotation.x = rot_speed;
+	if (keycode == 's')
+		rotation.x = -rot_speed;
+	if (keycode == 'q')
+		rotation.z = rot_speed;
+	if (keycode == 'e')
+		rotation.z = -rot_speed;
+
+	if (program->selected_object.hit)
+	{
+		if (length_vec3(translation) > 0)
+			translate_object(&program->selected_object.object, translation);
+		if (length_vec3(rotation) > 0)
+			rotate_object(&program->selected_object.object, rotation);
+	}
 	return (0);
 }
 
 int mouse_hook(int button, int x, int y, void *param)
 {
 	t_program	*program;
-	static int	i = 0;
 
-	if (i % 10000 != 0)
-		return (i++, 0);
+	(void)button;
 	program = (t_program *)param;
-	printf("Mouse button %d clicked at (%d, %d)\n", button, x, y);
 	t_vec3 screen_pos = screen_to_world(x, y);
 	t_ray ray = shoot_ray((*get_program())->scene, screen_pos);
 	t_hit_info hit_info = find_closest_intersection((*get_program())->scene->objects,
 			&ray);
 	if (hit_info.hit)
-	{
-		printf("Hit at distance: %f\n", hit_info.distance);
-		printf("Hit point: (%f, %f, %f)\n", hit_info.point.x, hit_info.point.y,
-			hit_info.point.z);
-		printf("Normal: (%f, %f, %f)\n", hit_info.normal.x, hit_info.normal.y,
-			hit_info.normal.z);
-		printf("Color: (%f, %f, %f)\n", hit_info.color.r, hit_info.color.g,
-			hit_info.color.b);
 		program->selected_object = hit_info;
-	}
-	i++;
+	else
+		program->selected_object.hit = false;
 	return (0);
 }
 
@@ -164,7 +181,6 @@ int	main(int argc, char **argv)
 	program = *get_program();
 	program->scene = parse_scene(argv[1]);
 	program->mlx = _init_mlx();
-	render_scene(program);
 	mlx_key_hook(program->mlx->win_ptr, key_hook, program);
 	mlx_loop_hook(program->mlx->mlx_ptr, loop_hook, program);
 	mlx_mouse_hook(program->mlx->win_ptr, mouse_hook, program);

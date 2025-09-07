@@ -20,7 +20,8 @@ SRC			= src/minirt.c \
 			  src/matrix_op.c \
 			  src/render.c \
 			  src/pattern.c \
-			  src/parse_pattern.c
+			  src/parse_pattern.c \
+			  src/transform_object.c
 
 OBJ			= $(patsubst src/%.c, obj/%.o, $(SRC))
 

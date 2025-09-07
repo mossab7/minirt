@@ -12,6 +12,8 @@
 
 #include <minirt.h>
 
+
+
 t_program	**get_program(void)
 {
 	static t_program	*program;
@@ -25,22 +27,16 @@ t_program	**get_program(void)
 	return (&program);
 }
 
-void	destroy_window(void *ptr)
+void 	safe_exit(int status)
 {
 	t_program	*program;
 
-	(void)ptr;
-	program = *get_program();
-	mlx_destroy_window(program->mlx->mlx_ptr, program->mlx->win_ptr);
-}
-
-void	destroy_image(void *ptr)
-{
-	t_program	*program;
-
-	(void)ptr;
 	program = *get_program();
 	mlx_destroy_image(program->mlx->mlx_ptr, program->mlx->canvas->img_ptr);
+	mlx_destroy_window(program->mlx->mlx_ptr, program->mlx->win_ptr);
+	mlx_destroy_display(program->mlx->mlx_ptr);
+	cleanup_memory_tracker(get_memory_tracker());
+	exit(status);
 }
 
 t_object	*get_object(t_container *container, size_t index)

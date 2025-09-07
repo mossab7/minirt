@@ -145,9 +145,9 @@ int key_hook(int keycode, void *param)
 	if (program->selected_object.hit)
 	{
 		if (length_vec3(translation) > 0)
-			translate_object(&program->selected_object.object, translation);
+			translate_object(program->selected_object.object, translation);
 		if (length_vec3(rotation) > 0)
-			rotate_object(&program->selected_object.object, rotation);
+			rotate_object(program->selected_object.object, rotation);
 	}
 	return (0);
 }

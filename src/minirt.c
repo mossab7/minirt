@@ -101,10 +101,13 @@ t_mlx	*_init_mlx(void)
 
 int loop_hook(void *param)
 {
-	t_program 	*program;
+	t_program *program = (t_program *)param;
 
-	program = (t_program *)param;
-	render_scene(program);
+	if (program->dirty)
+	{
+		render_scene(program);
+		program->dirty = false;
+	}
 	return (0);
 }
 
@@ -114,40 +117,34 @@ int key_hook(int keycode, void *param)
 	t_vec3 translation = {0, 0, 0};
 	t_vec3 rotation = {0, 0, 0};
 	double trans_speed = 0.5;
-	double rot_speed = 0.1; // Radians
+	double rot_speed = 0.1;
+	bool has_changed = false;
 
 	if (keycode == 65307) // ESC
 		safe_exit(0);
 	// Translation
-	if (keycode == 65362) // Up
-		translation.y = trans_speed;
-	if (keycode == 65364) // Down
-		translation.y = -trans_speed;
-	if (keycode == 65361) // Left
-		translation.x = -trans_speed;
-	if (keycode == 65363) // Right
-		translation.x = trans_speed;
+	if (keycode == 32) { translation.y = trans_speed; has_changed = true; } // Space -> Up
+	if (keycode == 65505) { translation.y = -trans_speed; has_changed = true; } // L-Shift -> Down
+	if (keycode == 65361) { translation.x = trans_speed; has_changed = true; } // Left
+	if (keycode == 65363) { translation.x = -trans_speed; has_changed = true; } // Right
+	if (keycode == 65362) { translation.z = trans_speed; has_changed = true; } // Arrow Up -> Depth In
+	if (keycode == 65364) { translation.z = -trans_speed; has_changed = true; } // Arrow Down -> Depth Out
 	
 	// Rotation
-	if (keycode == 'a')
-		rotation.y = rot_speed;
-	if (keycode == 'd')
-		rotation.y = -rot_speed;
-	if (keycode == 'w')
-		rotation.x = rot_speed;
-	if (keycode == 's')
-		rotation.x = -rot_speed;
-	if (keycode == 'q')
-		rotation.z = rot_speed;
-	if (keycode == 'e')
-		rotation.z = -rot_speed;
+	if (keycode == 'a') { rotation.y = rot_speed; has_changed = true; }
+	if (keycode == 'd') { rotation.y = -rot_speed; has_changed = true; }
+	if (keycode == 'w') { rotation.x = rot_speed; has_changed = true; }
+	if (keycode == 's') { rotation.x = -rot_speed; has_changed = true; }
+	if (keycode == 'q') { rotation.z = rot_speed; has_changed = true; }
+	if (keycode == 'e') { rotation.z = -rot_speed; has_changed = true; }
 
-	if (program->selected_object.hit)
+	if (program->selected_object.hit && has_changed)
 	{
 		if (length_vec3(translation) > 0)
 			translate_object(program->selected_object.object, translation);
 		if (length_vec3(rotation) > 0)
 			rotate_object(program->selected_object.object, rotation);
+        program->dirty = true;
 	}
 	return (0);
 }
@@ -166,6 +163,7 @@ int mouse_hook(int button, int x, int y, void *param)
 		program->selected_object = hit_info;
 	else
 		program->selected_object.hit = false;
+    program->dirty = true;
 	return (0);
 }
 
@@ -181,9 +179,11 @@ int	main(int argc, char **argv)
 	program = *get_program();
 	program->scene = parse_scene(argv[1]);
 	program->mlx = _init_mlx();
+	program->dirty = true;
 	mlx_key_hook(program->mlx->win_ptr, key_hook, program);
 	mlx_loop_hook(program->mlx->mlx_ptr, loop_hook, program);
 	mlx_mouse_hook(program->mlx->win_ptr, mouse_hook, program);
 	mlx_loop(program->mlx->mlx_ptr);
 	safe_exit(0);
 }
+

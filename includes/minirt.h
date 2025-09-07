@@ -191,6 +191,7 @@ typedef struct s_program
 	t_mlx *mlx;
 	t_scene *scene;
 	t_hit_info selected_object;
+	bool dirty;
 }t_program;
 
 typedef struct s_matrix4d

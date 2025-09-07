@@ -97,10 +97,15 @@ static double lerp(double t, double a, double b)
 
 static double grad(int hash, double x, double y)
 {
-    int h = hash & 7;
-    double u = h < 4 ? x : y;
-    double v = h < 4 ? y : x;
-    return ((h & 1) != 0 ? -u : u) + ((h & 2) != 0 ? -v : v);
+    int h = hash & 3;
+    if (h == 0)
+        return x + y;
+    else if (h == 1)
+        return -x + y;
+    else if (h == 2)
+        return x - y;
+    else
+        return -x - y;
 }
 
 double	noise_function(double x, double y)

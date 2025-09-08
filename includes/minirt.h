@@ -6,7 +6,7 @@
 /*   By: deepseeko <deepseeko@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 19:03:54 by deepseeko         #+#    #+#             */
-/*   Updated: 2025/07/12 19:03:55 by deepseeko        ###   ########.fr       */
+/*   Updated: 2025/09/08 17:47:47 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define MINIRT_H
 #include <libft.h>
 #include <macros.h>
+#include <X11/keysym.h>
 #include "mlx.h"
 #include <math.h>
 

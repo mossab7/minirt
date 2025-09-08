@@ -8,3 +8,4 @@
 -I./libtuple/headers/
 -I./minilibx-linux/headers/
 -lm
+-lX11

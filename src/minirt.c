@@ -267,7 +267,7 @@ int mouse_hook(int button, int x, int y, void *param)
 	return (0);
 }
 
-long get_num_cores_unix() 
+long get_num_cores_unix()
 {
 	long num_cores = sysconf(_SC_NPROCESSORS_ONLN);
 	if (num_cores > 0)
@@ -283,47 +283,47 @@ static void set_single_worker_bounds(t_worker *worker)
 	worker->end_y = WIN_HEIGHT;
 }
 
-static void set_row_division_bounds(t_worker *workers, int num_threads)
-{
-	int rows_per_thread = WIN_HEIGHT / num_threads;
-	int i;
-	
-	for (i = 0; i < num_threads; i++)
-	{
-		workers[i].start_x = 0;
-		workers[i].end_x = WIN_WIDTH;
-		workers[i].start_y = i * rows_per_thread;
-		
-		if (i == num_threads - 1)
-			workers[i].end_y = WIN_HEIGHT;
-		else
-			workers[i].end_y = (i + 1) * rows_per_thread;
-	}
-}
+// static void set_row_division_bounds(t_worker *workers, int num_threads)
+// {
+// 	int rows_per_thread = WIN_HEIGHT / num_threads;
+// 	int i;
+
+// 	for (i = 0; i < num_threads; i++)
+// 	{
+// 		workers[i].start_x = 0;
+// 		workers[i].end_x = WIN_WIDTH;
+// 		workers[i].start_y = i * rows_per_thread;
+
+// 		if (i == num_threads - 1)
+// 			workers[i].end_y = WIN_HEIGHT;
+// 		else
+// 			workers[i].end_y = (i + 1) * rows_per_thread;
+// 	}
+// }
 
 static void set_grid_division_bounds(t_worker *workers, int num_threads)
 {
 	int sqrt_threads = (int)sqrt(num_threads);
 	int tiles_x = sqrt_threads;
 	int tiles_y = (num_threads + tiles_x - 1) / tiles_x;
-	
+
 	int cols_per_tile = WIN_WIDTH / tiles_x;
 	int rows_per_tile = WIN_HEIGHT / tiles_y;
 	int i, tile_x, tile_y;
-	
+
 	for (i = 0; i < num_threads; i++)
 	{
 		tile_x = i % tiles_x;
 		tile_y = i / tiles_x;
-		
+
 		workers[i].start_x = tile_x * cols_per_tile;
 		workers[i].start_y = tile_y * rows_per_tile;
-		
+
 		if (tile_x == tiles_x - 1)
 			workers[i].end_x = WIN_WIDTH;
 		else
 			workers[i].end_x = (tile_x + 1) * cols_per_tile;
-			
+
 		if (tile_y == tiles_y - 1)
 			workers[i].end_y = WIN_HEIGHT;
 		else
@@ -335,19 +335,19 @@ void calculate_worker_bounds(t_program *program)
 {
 	int num_threads = program->num_workers;
 	t_worker *workers = program->workers;
-	
+
 	if (num_threads == 1)
 	{
 		set_single_worker_bounds(&workers[0]);
 	}
-	else if (num_threads <= 4)
-	{
-		set_row_division_bounds(workers, num_threads);
-	}
 	else
 	{
 		set_grid_division_bounds(workers, num_threads);
+		//set_row_division_bounds(workers, num_threads);
 	}
+	// else
+	// {
+	// }
 }
 
 void worker_render_scene(t_worker *worker)
@@ -356,7 +356,7 @@ void worker_render_scene(t_worker *worker)
 	t_scene *scene = program->scene;
 	t_canvas *canvas = program->mlx->canvas;
 	int x, y;
-	
+
 	t_pixel_batch batch[BATCH_SIZE];
 	int batch_count = 0;
 
@@ -369,12 +369,12 @@ void worker_render_scene(t_worker *worker)
 			t_vec3 screen_pos = screen_to_world(x, y);
 			t_ray ray = shoot_ray(scene, screen_pos);
 			t_color color = trace_ray(scene, &ray);
-			
+
 			batch[batch_count].x = x;
 			batch[batch_count].y = y;
 			batch[batch_count].color = color;
 			batch_count++;
-			
+
 			if (batch_count >= BATCH_SIZE)
 			{
 				pthread_mutex_lock(&program->render_mutex);
@@ -385,11 +385,10 @@ void worker_render_scene(t_worker *worker)
 				pthread_mutex_unlock(&program->render_mutex);
 				batch_count = 0;
 			}
-			
 			x++;
 		}
 		y++;
-	}	
+	}
 	if (batch_count > 0)
 	{
 		pthread_mutex_lock(&program->render_mutex);
@@ -406,13 +405,16 @@ void *worker_loop(void *arg)
 {
     t_worker *worker = (t_worker *)arg;
     t_program *program = worker->program;
+	int count = 1;
 
     while (1)
     {
         pthread_mutex_lock(&program->main_mutex);
-        while (!program->render_flag && program->program_running)
+        while ((!program->render_flag && program->program_running) || count > 1 )
+		{
             pthread_cond_wait(&program->render_cond, &program->main_mutex);
-        
+			count = 1;
+		}
         if (!program->program_running)
         {
             pthread_mutex_unlock(&program->main_mutex);
@@ -429,6 +431,7 @@ void *worker_loop(void *arg)
             pthread_cond_signal(&program->completion_cond);
         }
         pthread_mutex_unlock(&program->main_mutex);
+		count++;
     }
 
     return NULL;
@@ -442,8 +445,8 @@ void set_up_workers(t_program *program)
     int			i;
 
     num_threads = get_num_cores_unix();
-    if (num_threads > 8)
-        num_threads = 8;
+    // if (num_threads > 8)
+    //     num_threads = 8;
     workers = alloc(sizeof(t_worker) * num_threads);
     program->num_workers = num_threads;
     program->workers = workers;
@@ -476,7 +479,7 @@ void set_up_workers(t_program *program)
             safe_exit(1);
         }
     }
-    
+
 }
 
 int	main(int argc, char **argv)

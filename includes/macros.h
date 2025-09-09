@@ -44,8 +44,8 @@
 #define FOV_MAX 180.0f
 #define COLOR_MIN 0.0f
 #define COLOR_MAX 255.0f
-#define WIN_WIDTH 1920 //1920 
-#define WIN_HEIGHT 1000 //1080
+#define WIN_WIDTH 1920 //1920
+#define WIN_HEIGHT 1080 //1080
 #define RATIO (16.0f / 9.0f)
 #define UPVEC (t_vec3){0.0f, 1.0f, 0.0f}
 #define BATCH_SIZE 64

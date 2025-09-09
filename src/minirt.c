@@ -32,9 +32,12 @@ void 	safe_exit(int status)
 	t_program	*program;
 
 	program = *get_program();
-	mlx_destroy_image(program->mlx->mlx_ptr, program->mlx->canvas->img_ptr);
-	mlx_destroy_window(program->mlx->mlx_ptr, program->mlx->win_ptr);
-	mlx_destroy_display(program->mlx->mlx_ptr);
+	if (program->mlx && program->mlx->canvas->img_ptr)
+		mlx_destroy_image(program->mlx->mlx_ptr, program->mlx->canvas->img_ptr);
+	if (program->mlx && program->mlx->win_ptr)
+		mlx_destroy_window(program->mlx->mlx_ptr, program->mlx->win_ptr);
+	if (program->mlx && program->mlx->mlx_ptr)
+		mlx_destroy_display(program->mlx->mlx_ptr);
 	cleanup_memory_tracker(get_memory_tracker());
 	exit(status);
 }
@@ -99,15 +102,16 @@ int loop_hook(void *param)
 	t_program 	*program;
 
 	program = (t_program *)param;
-	printf("--------------------------\n");
-	printf("Hit at distance: %f\n", program->selected_object.distance);
-	printf("Hit point: (%f, %f, %f)\n", program->selected_object.point.x, program->selected_object.point.y,
-			program->selected_object.point.z);
-	printf("Normal: (%f, %f, %f)\n", program->selected_object.normal.x, program->selected_object.normal.y,
-			program->selected_object.normal.z);
-	printf("Color: (%f, %f, %f)\n", program->selected_object.color.r, program->selected_object.color.g,
-			program->selected_object.color.b);
-	printf("--------------------------\n");
+	(void)program;
+	// printf("--------------------------\n");
+	// printf("Hit at distance: %f\n", program->selected_object.distance);
+	// printf("Hit point: (%f, %f, %f)\n", program->selected_object.point.x, program->selected_object.point.y,
+	// 		program->selected_object.point.z);
+	// printf("Normal: (%f, %f, %f)\n", program->selected_object.normal.x, program->selected_object.normal.y,
+	// 		program->selected_object.normal.z);
+	// printf("Color: (%f, %f, %f)\n", program->selected_object.color.r, program->selected_object.color.g,
+	// 		program->selected_object.color.b);
+	// printf("--------------------------\n");
 	
 	return (0);
 }
@@ -130,16 +134,17 @@ int mouse_hook(int button, int x, int y, void *param)
 	t_ray ray = shoot_ray((*get_program())->scene, screen_pos);
 	t_hit_info hit_info = find_closest_intersection((*get_program())->scene->objects,
 			&ray);
+	(void)program;
 	if (hit_info.hit)
 	{
-		printf("Hit at distance: %f\n", hit_info.distance);
-		printf("Hit point: (%f, %f, %f)\n", hit_info.point.x, hit_info.point.y,
-			hit_info.point.z);
-		printf("Normal: (%f, %f, %f)\n", hit_info.normal.x, hit_info.normal.y,
-			hit_info.normal.z);
-		printf("Color: (%f, %f, %f)\n", hit_info.color.r, hit_info.color.g,
-			hit_info.color.b);
-		program->selected_object = hit_info;
+		// printf("Hit at distance: %f\n", hit_info.distance);
+		// printf("Hit point: (%f, %f, %f)\n", hit_info.point.x, hit_info.point.y,
+		// 	hit_info.point.z);
+		// printf("Normal: (%f, %f, %f)\n", hit_info.normal.x, hit_info.normal.y,
+		// 	hit_info.normal.z);
+		// printf("Color: (%f, %f, %f)\n", hit_info.color.r, hit_info.color.g,
+		// 	hit_info.color.b);
+		// program->selected_object = hit_info;
 	}
 
 	return (0);

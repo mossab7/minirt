@@ -60,12 +60,12 @@ t_color get_color(char *data)
     t_color color;
     char **rgb;
 
+	fprintf(stderr, "Parsing color: %s\n", data);
     rgb = ft_split(data, ',');
     if (!rgb || !rgb[RED_INDEX] || !rgb[GREEN_INDEX] || !rgb[BLUE_INDEX]) {
         ft_putstr_fd("Error: Invalid color format\n", 2);
         safe_exit(1);
     }
-
     color.r = atof(rgb[RED_INDEX]);
     color.g = atof(rgb[GREEN_INDEX]);
     color.b = atof(rgb[BLUE_INDEX]);
@@ -89,6 +89,11 @@ t_vec3 get_vec3(char *vec)
 	char 	**v;
 
 	v = ft_split(vec, ',');
+	if (!v || !v[X_INDEX] || !v[Y_INDEX] || !v[Z_INDEX])
+	{
+		ft_putstr_fd("Error: Invalid vector format\n", 2);
+		safe_exit(1);
+	}
 	vec3.x = atof(v[X_INDEX]);
 	vec3.y = atof(v[Y_INDEX]);
 	vec3.z = atof(v[Z_INDEX]);

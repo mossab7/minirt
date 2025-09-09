@@ -1,6 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   macros.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/08 16:28:37 by zbengued          #+#    #+#             */
+/*   Updated: 2025/09/08 17:35:47 by zbengued         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MACROS_H
 # define MACROS_H
 
+# include <X11/Xlib.h>
+# include <X11/keysymdef.h>
 
 # define EPSILON 0.0001
 # define VEC_EPSILON (t_vec3){EPSILON, EPSILON, EPSILON}

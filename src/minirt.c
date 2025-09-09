@@ -6,11 +6,17 @@
 /*   By: deepseeko <deepseeko@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 19:02:59 by deepseeko         #+#    #+#             */
-/*   Updated: 2025/07/12 19:03:00 by deepseeko        ###   ########.fr       */
+/*   Updated: 2025/09/08 19:07:36 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minirt.h>
+#include "../includes/transform_object.h"
+#include "../includes/camera.h"
+#include <X11/keysym.h>
+
+#define ROT_SPEED 0.1
+#define TRANS_SPEED 0.5
 
 
 
@@ -121,28 +127,124 @@ t_mlx	*_init_mlx(void)
 
 int loop_hook(void *param)
 {
-	t_program 	*program;
+	t_program *program;
 
 	program = (t_program *)param;
-	(void)program;
-	// printf("--------------------------\n");
-	// printf("Hit at distance: %f\n", program->selected_object.distance);
-	// printf("Hit point: (%f, %f, %f)\n", program->selected_object.point.x, program->selected_object.point.y,
-	// 		program->selected_object.point.z);
-	// printf("Normal: (%f, %f, %f)\n", program->selected_object.normal.x, program->selected_object.normal.y,
-	// 		program->selected_object.normal.z);
-	// printf("Color: (%f, %f, %f)\n", program->selected_object.color.r, program->selected_object.color.g,
-	// 		program->selected_object.color.b);
-	// printf("--------------------------\n");
-	
+	if (program->dirty)
+	{
+		render_scene(program);
+		program->dirty = false;
+	}
 	return (0);
 }
 
-int key_hook(int keycode, void *param)
+
+void	trans_keys(int key, t_vec3 *trans, t_program *program, bool *changed)
 {
-	(void)param;
-	if (keycode == 65307)
-		safe_exit(0);
+	if (key == XK_Right)
+		*trans = add_vec3(*trans,
+				scale_vec3(program->scene->camera.right, TRANS_SPEED));
+	if (key == XK_Left)
+		*trans = add_vec3(*trans,
+				scale_vec3(program->scene->camera.right, -TRANS_SPEED));
+	if (key == XK_Up)
+		*trans = add_vec3(*trans,
+				scale_vec3(program->scene->camera.direction, TRANS_SPEED));
+	if (key == XK_Down)
+		*trans = add_vec3(*trans,
+				scale_vec3(program->scene->camera.direction, -TRANS_SPEED));
+	if (key == XK_space)
+		*trans = add_vec3(*trans,
+				scale_vec3(program->scene->camera.up, TRANS_SPEED));
+	if (key == XK_Shift_L)
+		*trans = add_vec3(*trans,
+				scale_vec3(program->scene->camera.up, -TRANS_SPEED));
+	if (key == XK_Down || key == XK_Up || key == XK_Left || key == XK_Right
+		|| key == XK_Shift_L || key == XK_space)
+		*changed = true;
+}
+
+void	rot_keys(int key, t_vec3 *rot, bool *has_changed)
+{
+	if (key == 'd')
+		(*rot).y = ROT_SPEED;
+	if (key == 'a')
+		(*rot).y = -ROT_SPEED;
+	if (key == 'w')
+		(*rot).x = ROT_SPEED;
+	if (key == 's')
+		(*rot).x = -ROT_SPEED;
+	if (key == 'e')
+		(*rot).z = ROT_SPEED;
+	if (key == 'q')
+		(*rot).z = -ROT_SPEED;
+	if (key == 'w' || key == 'a' || key == 's' || key == 'd' || key == 'q'
+		|| key == 'e')
+		*has_changed = true;
+}
+
+void	transforme_camera(t_program *program, t_vec3 rotation, t_vec3 trans)
+{
+	t_matrix4d	rot_matrix;
+	t_matrix4d	rot_x;
+	t_matrix4d	rot_y;
+	t_matrix4d	rot_z;
+
+	rot_x = matrix4d_rotation_x(rotation.x);
+	rot_y = matrix4d_rotation_y(rotation.y);
+	rot_z = matrix4d_rotation_z(rotation.z);
+	program->scene->camera.position = add_vec3(
+			program->scene->camera.position, trans);
+	if (length_vec3(rotation) > 0)
+	{
+		rot_matrix = matrix4d_mult(rot_z, matrix4d_mult(rot_y, rot_x));
+		program->scene->camera.direction = matrix4d_mult_vec3(
+				rot_matrix, program->scene->camera.direction);
+		program->scene->camera.direction = normalize_vec3(
+				program->scene->camera.direction);
+		recalculate_camera_vectors(&program->scene->camera);
+	}
+}
+
+void	apply_transformation(t_program *program, t_vec3 trans, t_vec3 rot)
+{
+	if (program->selected_object.hit)
+	{
+		if (length_vec3(trans) > 0)
+			translate_object(program->selected_object.object, trans);
+		if (length_vec3(rot) > 0)
+			rotate_object(program->selected_object.object, rot);
+	}
+	else
+		transforme_camera(program, rot, trans);
+	program->dirty = true;
+}
+
+int	key_hook(int keycode, void *param)
+{
+	t_program	*program;
+	t_vec3		translation;
+	t_vec3		rotation;
+	bool		has_changed;
+
+	program = (t_program *)param;
+	translation = (t_vec3){0, 0, 0};
+	rotation = (t_vec3){0, 0, 0};
+	has_changed = false;
+	if (keycode == XK_Escape)
+	{
+		if (program->selected_object.hit)
+		{
+			program->selected_object.hit = false;
+			has_changed = true;
+		}
+		else
+			safe_exit(0);
+	}
+	trans_keys(keycode, &translation, program, &has_changed);
+	rot_keys(keycode, &rotation, &has_changed);
+	if (has_changed)
+		apply_transformation(program, translation, rotation);
 	return (0);
 }
 
@@ -150,25 +252,18 @@ int mouse_hook(int button, int x, int y, void *param)
 {
 	t_program	*program;
 
+	(void)button;
 	program = (t_program *)param;
-	printf("Mouse button %d clicked at (%d, %d)\n", button, x, y);
 	t_vec3 screen_pos = screen_to_world(x, y);
 	t_ray ray = shoot_ray((*get_program())->scene, screen_pos);
 	t_hit_info hit_info = find_closest_intersection((*get_program())->scene->objects,
 			&ray);
 	(void)program;
 	if (hit_info.hit)
-	{
-		// printf("Hit at distance: %f\n", hit_info.distance);
-		// printf("Hit point: (%f, %f, %f)\n", hit_info.point.x, hit_info.point.y,
-		// 	hit_info.point.z);
-		// printf("Normal: (%f, %f, %f)\n", hit_info.normal.x, hit_info.normal.y,
-		// 	hit_info.normal.z);
-		// printf("Color: (%f, %f, %f)\n", hit_info.color.r, hit_info.color.g,
-		// 	hit_info.color.b);
-		// program->selected_object = hit_info;
-	}
-
+		program->selected_object = hit_info;
+	else
+		program->selected_object.hit = false;
+    program->dirty = true;
 	return (0);
 }
 
@@ -398,9 +493,11 @@ int	main(int argc, char **argv)
 	program->mlx = _init_mlx();
 	set_up_workers(program);
 	render_scene(program);
+	program->dirty = true;
 	mlx_key_hook(program->mlx->win_ptr, key_hook, program);
 	mlx_loop_hook(program->mlx->mlx_ptr, loop_hook, program);
 	mlx_mouse_hook(program->mlx->win_ptr, mouse_hook, program);
 	mlx_loop(program->mlx->mlx_ptr);
 	safe_exit(0);
 }
+

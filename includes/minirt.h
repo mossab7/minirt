@@ -6,7 +6,7 @@
 /*   By: deepseeko <deepseeko@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 19:03:54 by deepseeko         #+#    #+#             */
-/*   Updated: 2025/07/12 19:03:55 by deepseeko        ###   ########.fr       */
+/*   Updated: 2025/09/08 17:47:47 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 #define MINIRT_H
 #include <libft.h>
 #include <macros.h>
-#include "../minilibx-linux/mlx.h"
+#include <X11/keysym.h>
+#include "mlx.h"
 #include <math.h>
 #include <pthread.h>
 
@@ -160,7 +161,7 @@ typedef struct s_hit_info
     t_vec3 point;
     t_vec3 normal;
 	t_color color;
-	t_object object;
+	t_object *object;
 	t_object_type object_type;
 } t_hit_info;
 
@@ -216,6 +217,7 @@ typedef struct s_program
 	t_worker *workers;
 	bool program_running;
 	int worker_finish_count;
+	bool dirty;
 }t_program;
 
 typedef struct s_matrix4d

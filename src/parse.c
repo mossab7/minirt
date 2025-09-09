@@ -1,4 +1,5 @@
 #include <minirt.h>
+#include "../includes/camera.h"
 
 int	parse_filename(char *filename)
 {
@@ -142,9 +143,7 @@ void parse_camera(char **data, t_scene *scene)
 	scene->camera.direction = normalize_vec3(scene->camera.direction);
 	scene->camera.width = tan(dgree_to_rad(scene->camera.fov / 2));
 	scene->camera.height = scene->camera.width / RATIO;
-	scene->camera.right = normalize_vec3(cross_vec3(scene->camera.direction, UPVEC));
-	scene->camera.up = normalize_vec3(cross_vec3(scene->camera.direction, scene->camera.right));
-	scene->camera.right = normalize_vec3(cross_vec3(scene->camera.direction, scene->camera.up));
+    recalculate_camera_vectors(&scene->camera);
 }
 
 void parse_light(char **data, t_scene *scene)

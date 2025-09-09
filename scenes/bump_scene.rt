@@ -1,0 +1,15 @@
+# Lumière ambiante
+A 0.2 255,255,255
+
+# Caméra
+C 0,0,25 0,0,-1 70
+
+# Source de lumière
+L -20,20,20 1.0 255,255,255
+
+# Sphère avec bump mapping
+# Syntaxe: sp [centre] [diamètre] [couleur] bump [échelle] [force]
+sp 0,0,0 15 100,100,255 bump 20 30
+
+# Un plan en arrière-plan pour mieux voir l'effet
+pl 0,0,-30 0,0,1 200,200,200

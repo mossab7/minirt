@@ -34,4 +34,5 @@
 #define WIN_HEIGHT 1000 //1080
 #define RATIO (16.0f / 9.0f)
 #define UPVEC (t_vec3){0.0f, 1.0f, 0.0f}
+#define BATCH_SIZE 64
 #endif // !MACROS_H

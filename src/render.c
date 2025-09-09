@@ -351,27 +351,21 @@ void	put_pixel_to_image(t_canvas *canvas, int x, int y,
 }
 
 int	render_scene(t_program *program)
-{
-	t_ray	ray;
-	t_vec3	screen_pos;
-	t_color	color;
-	int		x;
-	int		y;
+{	
+	pthread_mutex_lock(&program->main_mutex);
+	program->render_flag = true;
+	program->worker_finish_count = 0;
+	pthread_cond_broadcast(&program->render_cond);
+	pthread_mutex_unlock(&program->main_mutex);
 
-	y = 0;
-	while (y < WIN_HEIGHT)
+	pthread_mutex_lock(&program->main_mutex);
+	while (program->worker_finish_count < program->num_workers)
 	{
-		x = 0;
-		while (x < WIN_WIDTH)
-		{
-			screen_pos = screen_to_world(x, y);
-			ray = shoot_ray(program->scene, screen_pos);
-			color = trace_ray(program->scene, &ray);
-			put_pixel_to_image(program->mlx->canvas, x, y, color);
-			x++;
-		}
-		y++;
+		pthread_cond_wait(&program->completion_cond, &program->main_mutex);
 	}
+	program->render_flag = false;
+	pthread_mutex_unlock(&program->main_mutex);
+	
 	mlx_put_image_to_window(program->mlx->mlx_ptr, 
 		program->mlx->win_ptr, program->mlx->canvas->img_ptr, 0, 0);
 	return (0);

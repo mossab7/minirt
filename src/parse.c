@@ -60,7 +60,6 @@ t_color get_color(char *data)
     t_color color;
     char **rgb;
 
-	fprintf(stderr, "Parsing color: %s\n", data);
     rgb = ft_split(data, ',');
     if (!rgb || !rgb[RED_INDEX] || !rgb[GREEN_INDEX] || !rgb[BLUE_INDEX]) {
         ft_putstr_fd("Error: Invalid color format\n", 2);

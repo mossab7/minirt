@@ -16,6 +16,7 @@
 #include <macros.h>
 #include "../minilibx-linux/mlx.h"
 #include <math.h>
+#include <pthread.h>
 
 typedef struct t_vec3
 {
@@ -185,12 +186,36 @@ typedef struct s_mlx
 	t_canvas *canvas;
 }t_mlx;
 
+typedef struct s_worker
+{
+	pthread_t thread;
+	struct s_program *program;
+	int start_y;
+	int end_y;
+	int start_x;
+	int end_x;
+}t_worker;
+
+typedef struct 
+{
+	int x, y;
+	t_color color;
+} t_pixel_batch;
 
 typedef struct s_program
 {
 	t_mlx *mlx;
 	t_scene *scene;
 	t_hit_info selected_object;
+	bool render_flag;
+	pthread_mutex_t main_mutex;      
+	pthread_mutex_t render_mutex;    
+	pthread_cond_t render_cond;      
+	pthread_cond_t completion_cond;  
+	int num_workers;
+	t_worker *workers;
+	bool program_running;
+	int worker_finish_count;
 }t_program;
 
 typedef struct s_matrix4d
@@ -263,6 +288,7 @@ t_ray	shoot_ray(t_scene *scene, t_vec3 screen_pos);
 t_hit_info	find_closest_intersection(t_container *objects, t_ray *ray);
 t_color	trace_ray(t_scene *scene, t_ray *ray);
 t_color	calculate_lighting(t_scene *scene, t_hit_info *hit_info);
+void	put_pixel_to_image(t_canvas *canvas, int x, int y, t_color color);
 
 
 #endif // MINIRT_H

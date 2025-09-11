@@ -250,6 +250,7 @@ t_color	calculate_lighting(t_scene *scene, t_hit_info *hit_info)
 	t_vec3		view_dir;
 	t_vec3		reflect_dir;
 	double		specular_factor;
+	double		specular_intensity;
 
 	material.specular = 0.5;
 	material.diffuse = 0.9;
@@ -271,10 +272,11 @@ t_color	calculate_lighting(t_scene *scene, t_hit_info *hit_info)
 	view_dir = normalize_vec3(sub_vec3(scene->camera.position, hit_info->point));
 	reflect_dir = sub_vec3(scale_vec3(surface_normal, 2 * dot_vec3(light_dir, surface_normal)), light_dir);
 	specular_factor = pow(fmax(0.0, dot_vec3(view_dir, reflect_dir)), material.shininess);
+	specular_intensity = material.specular * specular_factor * light_intensity;
 
-	final_color.r = base_color.r * diffuse + material.specular * specular_factor * scene->light.color.r;
-	final_color.g = base_color.g * diffuse + material.specular * specular_factor * scene->light.color.g;
-	final_color.b = base_color.b * diffuse + material.specular * specular_factor * scene->light.color.b;
+	final_color.r = base_color.r * diffuse + specular_intensity * scene->light.color.r;
+	final_color.g = base_color.g * diffuse + specular_intensity * scene->light.color.g;
+	final_color.b = base_color.b * diffuse + specular_intensity * scene->light.color.b;
 
 	return (final_color);
 }

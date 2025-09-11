@@ -246,6 +246,14 @@ t_color	calculate_lighting(t_scene *scene, t_hit_info *hit_info)
 	double		light_intensity;
 	double		diffuse;
 	t_pattern	*pattern;
+	t_material	material;
+	t_vec3		view_dir;
+	t_vec3		reflect_dir;
+	double		specular_factor;
+
+	material.specular = 0.5;
+	material.diffuse = 0.9;
+	material.shininess = 32.0;
 
 	base_color = get_pattern_color(hit_info, &hit_info->object->obj);
 	pattern = get_object_pattern(hit_info);
@@ -258,10 +266,16 @@ t_color	calculate_lighting(t_scene *scene, t_hit_info *hit_info)
 	light_intensity = fmax(0.0, dot_vec3(surface_normal, light_dir));
 	if (is_in_shadow(scene, hit_info))
 		light_intensity = 0.0;
-	diffuse = scene->amb_light.ratio + light_intensity;
-	final_color.r = base_color.r * diffuse;
-	final_color.g = base_color.g * diffuse;
-	final_color.b = base_color.b * diffuse;
+	diffuse = scene->amb_light.ratio + light_intensity * material.diffuse;
+
+	view_dir = normalize_vec3(sub_vec3(scene->camera.position, hit_info->point));
+	reflect_dir = sub_vec3(scale_vec3(surface_normal, 2 * dot_vec3(light_dir, surface_normal)), light_dir);
+	specular_factor = pow(fmax(0.0, dot_vec3(view_dir, reflect_dir)), material.shininess);
+
+	final_color.r = base_color.r * diffuse + material.specular * specular_factor * scene->light.color.r;
+	final_color.g = base_color.g * diffuse + material.specular * specular_factor * scene->light.color.g;
+	final_color.b = base_color.b * diffuse + material.specular * specular_factor * scene->light.color.b;
+
 	return (final_color);
 }
 

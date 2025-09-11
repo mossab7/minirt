@@ -209,10 +209,10 @@ typedef struct s_program
 	t_scene *scene;
 	t_hit_info selected_object;
 	bool render_flag;
-	pthread_mutex_t main_mutex;      
-	pthread_mutex_t render_mutex;    
-	pthread_cond_t render_cond;      
-	pthread_cond_t completion_cond;  
+	pthread_mutex_t main_mutex;
+	pthread_mutex_t render_mutex;
+	pthread_cond_t render_cond;
+	pthread_cond_t completion_cond;
 	int num_workers;
 	t_worker *workers;
 	bool program_running;
@@ -225,12 +225,13 @@ typedef struct s_matrix4d
 	double data[4][4];
 }t_matrix4d;
 
-typedef struct t_matrial
+typedef struct t_material
 {
 	t_color color;
 	double specular;
 	double diffuse;
-}t_matrial;
+	double shininess;
+}t_material;
 
 typedef void (*t_parse_function)(char **, t_scene *);
 

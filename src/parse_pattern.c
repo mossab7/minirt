@@ -3,56 +3,64 @@
 /*                                                        :::      ::::::::   */
 /*   parse_pattern.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: deepseeko <deepseeko@student.42.fr>        +#+  +:+       +#+        */
+/*   By: gemini <gemini@google.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/12 19:02:30 by deepseeko         #+#    #+#             */
-/*   Updated: 2025/07/12 19:02:31 by deepseeko        ###   ########.fr       */
+/*   Created: 2025/09/12 18:00:00 by gemini            #+#    #+#             */
+/*   Updated: 2025/09/12 18:00:00 by gemini           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+#include "texture.h"
+
+static int count_args(char **data)
+{
+    int i = 0;
+    while (data[i])
+        i++;
+    return (i);
+}
 
 int	parse_pattern(char **data, t_pattern *pattern)
 {
-	if (!data[0])
-	{
-		pattern->type = PATTERN_NONE;
-		return (0);
-	}
-	if (ft_strcmp(data[0], "checkerboard") == 0)
-	{
-		pattern->type = PATTERN_CHECKERBOARD;
-		if (!data[1] || !data[2] || !data[3])
-		{
-			ft_putstr_fd("Error: Missing checkerboard parameters\n", 2);
-			safe_exit(1);
-		}
-		pattern->color1 = get_color(data[1]);
-		pattern->color2 = get_color(data[2]);
-		pattern->scale = atof(data[3]);
-		if (pattern->scale <= 0)
-			pattern->scale = CHECKER_SCALE;
-		pattern->bump_strength = 0.0;
-		return (1);
-	}
-	else if (ft_strcmp(data[0], "bump") == 0)
-	{
-		pattern->type = PATTERN_BUMP_MAP;
-		if (!data[1] || !data[2])
-		{
-			ft_putstr_fd("Error: Missing bump map parameters\n", 2);
-			safe_exit(1);
-		}
-		pattern->scale = atof(data[1]);
-		pattern->bump_strength = atof(data[2]);
-		if (pattern->scale <= 0)
-			pattern->scale = BUMP_SCALE;
-		if (pattern->bump_strength <= 0)
-			pattern->bump_strength = BUMP_STRENGTH;
-		pattern->color1 = (t_color){1.0, 1.0, 1.0};
-		pattern->color2 = (t_color){0.0, 0.0, 0.0};
-		return (1);
-	}
+	int i;
+	int total_args;
+
+	i = 0;
+	total_args = count_args(data);
 	pattern->type = PATTERN_NONE;
+
+	while (i < total_args)
+	{
+		if (ft_strcmp(data[i], "checkerboard") == 0)
+		{
+			pattern->type |= PATTERN_CHECKERBOARD;
+			if (i + 3 >= total_args)
+				return (ft_putstr_fd("Error: Missing checkerboard params\n", 2), 1);
+			pattern->color1 = get_color(data[i + 1]);
+			pattern->color2 = get_color(data[i + 2]);
+			pattern->scale = atof(data[i + 3]);
+			i += 4;
+		}
+		else if (ft_strcmp(data[i], "bump") == 0)
+		{
+			pattern->type |= PATTERN_BUMP_MAP;
+			if (i + 2 >= total_args)
+				return (ft_putstr_fd("Error: Missing bump map params\n", 2), 1);
+			pattern->scale = atof(data[i + 1]);
+			pattern->bump_strength = atof(data[i + 2]);
+			i += 3;
+		}
+		else if (ft_strcmp(data[i], "texture") == 0)
+		{
+			pattern->type |= PATTERN_TEXTURE;
+			if (i + 1 >= total_args)
+				return (ft_putstr_fd("Error: Missing texture filename\n", 2), 1);
+			pattern->texture = load_texture(data[i + 1]);
+			i += 2;
+		}
+		else
+			return (ft_putstr_fd("Error: Unknown pattern type\n", 2), 1);
+	}
 	return (0);
 }

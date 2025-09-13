@@ -21,6 +21,9 @@ void	translate_object(t_object *obj, t_vec3 translation)
 		case PARABOLOID:
 			obj->obj.paraboloid.center = add_vec3(obj->obj.paraboloid.center, translation);
 			break ;
+		case CONE:
+			obj->obj.cone.center = add_vec3(obj->obj.cone.center, translation);
+			break ;
 	}
 }
 
@@ -52,6 +55,9 @@ void	rotate_object(t_object *obj, t_vec3 rotation_angles)
 			break ;
 		case PARABOLOID:
 			axis = &obj->obj.paraboloid.axis;
+			break ;
+		case CONE:
+			axis = &obj->obj.cone.axis;
 			break ;
 		case SPHERE:
 			break ;

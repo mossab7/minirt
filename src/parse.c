@@ -19,6 +19,7 @@ void init_obj_parse_func(t_parse_function *parse_func, char **obj_name)
 	obj_name[OBJ_SPHERE] = "sp";
 	obj_name[OBJ_PLANE] = "pl";
 	obj_name[OBJ_CYLINDER] = "cy";
+	obj_name[OBJ_CONE] = "co";
 
 	parse_func[OBJ_AMB_LIGHT] = parse_amb_light;
 	parse_func[OBJ_CAMERA] = parse_camera;
@@ -26,6 +27,7 @@ void init_obj_parse_func(t_parse_function *parse_func, char **obj_name)
 	parse_func[OBJ_SPHERE] = parse_sphare;
 	parse_func[OBJ_PLANE] = parse_plane;
 	parse_func[OBJ_CYLINDER] = parse_cylinder;
+	parse_func[OBJ_CONE] = parse_cone;
 }
 
 void	parse_obj_data(char **data, t_scene *scene)
@@ -148,14 +150,18 @@ void parse_camera(char **data, t_scene *scene)
 
 void parse_light(char **data, t_scene *scene)
 {
-    scene->light.position = get_vec3(data[1]);
-    scene->light.intensity = atof(data[2]);
-    if (scene->light.intensity > 1.0f || scene->light.intensity < 0.0f)
+	t_light *light;
+
+	light = (t_light *)alloc(sizeof(t_light));
+    light->position = get_vec3(data[1]);
+    light->intensity = atof(data[2]);
+    if (light->intensity > 1.0f || light->intensity < 0.0f)
     {
         ft_putstr_fd("Error: Invalid light intensity\n", 2);
         safe_exit(1);
     }
-    scene->light.color = get_color(data[3]);
+    light->color = get_color(data[3]);
+	container_push_back(scene->lights, light);
 }
 
 void parse_sphare(char **data, t_scene *scene)
@@ -220,6 +226,33 @@ void  parse_cylinder(char **data, t_scene *scene)
 
 	container_push_back(scene->objects, obj);
 }
+void  parse_cone(char **data, t_scene *scene)
+{
+	t_object	*obj;
+
+	obj = (t_object *)alloc(sizeof(t_object));
+	obj->type = CONE;
+	obj->obj.cone.center = sub_vec3(get_vec3(data[1]), scale_vec3(obj->obj.cone.axis, obj->obj.cone.height));
+	obj->obj.cone.axis = get_vec3(data[2]);
+	
+	check_vec_range(obj->obj.cone.axis);
+	obj->obj.cone.diameter = atof(data[3]);
+	obj->obj.cone.height = atof(data[4]);
+	obj->obj.cone.color = get_color(data[5]);
+
+	if (obj->obj.cone.diameter <= 0 || obj->obj.cone.height <= 0)
+	{
+		ft_putstr_fd("Error: Invalid cone diameter or height\n", 2);
+		safe_exit(1);
+	}
+
+	if (data[6])
+		parse_pattern(&data[6], &obj->obj.cone.pattern);
+	else
+		obj->obj.cone.pattern.type = PATTERN_NONE;
+
+	container_push_back(scene->objects, obj);
+}
 void  parse_hyperboloid(char **data, t_scene *scene)
 {
 	t_object	*obj;
@@ -264,6 +297,9 @@ void	read_to_scene(int fd,t_scene *scene)
 			ft_free(line);
 			continue;
 		}
+		size_t len = ft_strlen(line);
+		if (len > 0 && line[len - 1] == '\n')
+			line[len - 1] = '\0';
 		data = ft_split(line, ' ');
 		if (data && data[0])
 			parse_obj_data(data, scene);
@@ -278,6 +314,7 @@ t_scene	*init_scene(void)
 
 	scene = (t_scene *)alloc(sizeof(t_scene));
 	scene->objects = container_init();
+	scene->lights = container_init();
 	return (scene);
 }
 

@@ -38,13 +38,25 @@ typedef struct s_color
 # define CHECKER_SCALE 4.0
 # define PATTERN_NONE 0
 # define PATTERN_CHECKERBOARD 1
-# define PATTERN_BUMP_MAP 2
+# define PATTERN_BUMP_MAP     2
+# define PATTERN_TEXTURE      4
 
 /* Bump map constants */
 # define BUMP_STRENGTH 0.1
 # define BUMP_SCALE 4.0
 
 /* Pattern structure */
+typedef struct s_texture
+{
+	void	*img_ptr;
+	char	*addr;
+	int		width;
+	int		height;
+	int		bpp;
+	int		line_length;
+	int		endian;
+}t_texture;
+
 typedef struct s_pattern
 {
 	int		type;
@@ -52,6 +64,7 @@ typedef struct s_pattern
 	t_color	color2;
 	double	scale;
 	double	bump_strength;
+	t_texture *texture;
 }	t_pattern;
 
 typedef struct s_sphere
@@ -98,11 +111,22 @@ typedef struct s_cylinder
 	t_pattern pattern;
 }t_cylinder;
 
+typedef struct s_cone
+{
+	t_vec3 center;
+	t_vec3 axis;
+	double diameter;
+	double height;
+	t_color color;
+	t_pattern pattern;
+}t_cone;
+
 typedef enum e_object_type
 {
 	SPHERE,
 	PLANE,
 	CYLINDER,
+	CONE,
 	HYPERBOLDOID,
 	PARABOLOID
 }t_object_type;
@@ -115,6 +139,7 @@ typedef struct s_object
 		t_sphere sphere;
 		t_plane plane;
 		t_cylinder cylinder;
+		t_cone cone;
 		t_hyperboloid hyperboloid;
 		t_paraboloid paraboloid;
 	}obj;
@@ -148,7 +173,7 @@ typedef struct s_light
 typedef struct s_scene
 {
 	t_camera camera;
-	t_light light;
+	t_container *lights;
 	t_amb_light amb_light;
 	t_container *objects;
 }t_scene;
@@ -241,6 +266,7 @@ void parse_light(char **data, t_scene *scene);
 void parse_sphare(char **data, t_scene *scene);
 void parse_plane(char **data, t_scene *scene);
 void parse_cylinder(char **data, t_scene *scene);
+void parse_cone(char **data, t_scene *scene);
 void parse_hyperboloid(char **data, t_scene *scene);
 void parse_paraboloid(char **data, t_scene *scene);
 void parse_obj_data(char **data, t_scene *scene);
@@ -251,6 +277,7 @@ t_vec3 get_vec3(char *data);
 void check_vec_range(t_vec3 vec);
 t_scene *parse_scene(char *filename);
 t_object *get_object(t_container *container, size_t index);
+t_light *get_light(t_container *container, size_t index);
 t_vec3  add_vec3(t_vec3 a, t_vec3 b);
 t_vec3  sub_vec3(t_vec3 a, t_vec3 b);
 t_vec3  mul_vec3(t_vec3 a, t_vec3 b);
@@ -264,6 +291,7 @@ double  distance_vec3(t_vec3 a, t_vec3 b);
 t_vec3  cross_vec3(t_vec3 a, t_vec3 b);
 t_vec3  vec3_negate(t_vec3 vec);
 t_vec3 scale_vec3(t_vec3 a, double scalar);
+t_color scale_color(t_color a, double scalar);
 /* Matrix creation */
 t_matrix4d matrix4d_identity(void);
 t_matrix4d matrix4d_translation(t_vec3 translation);
@@ -284,6 +312,7 @@ t_vec3 matrix4d_mult_vec3(t_matrix4d matrix, t_vec3 vec);
 /* Camera/view matrix */
 t_matrix4d view_matrix(t_vec3 camera_pos, t_vec3 camera_dir);
 int render_scene(t_program *program);
+t_program **get_program(void);
 # include "bonus.h"
 
 t_vec3	screen_to_world(int x, int y);
@@ -292,6 +321,12 @@ t_hit_info	find_closest_intersection(t_container *objects, t_ray *ray);
 t_color	trace_ray(t_scene *scene, t_ray *ray);
 t_color	calculate_lighting(t_scene *scene, t_hit_info *hit_info);
 void	put_pixel_to_image(t_canvas *canvas, int x, int y, t_color color);
+
+// Cone intersection prototypes
+t_hit_info	intersect_cone_side(t_ray *ray, t_cone *cone);
+t_hit_info	intersect_cone_base(t_ray *ray, t_cone *cone);
+t_hit_info	intersect_cone(t_ray *ray, t_cone *cone);
+t_vec3		get_cone_normal(t_cone *cone, t_vec3 point);
 
 
 #endif // MINIRT_H

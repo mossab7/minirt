@@ -1,0 +1,22 @@
+# Combo Test Scene - Texture + Bump Mapping
+
+# Ambient light & Camera
+A 0.2 255,255,255
+C 0,5,12 0,-0.3,-1 70
+
+# Light
+L -10,15,-9 1 255,255,255
+
+# Main Test Object: A plane with both texture and bump mapping
+# The base color is white (1,1,1) so the texture is tinted by 50%.
+# pl 0,0,-100 0,1,0 50,50,50 texture textures/universe.xpm
+pl 0,0,-10 0,0,1 250,250,250 texture textures/universe.xpm
+
+# Comparison Object 1: Texture only
+sp -5,2.5,0 5 255,255,255  bump 25 30 texture textures/marss.xpm
+
+
+# Comparison Object 2: Bump map only
+sp 5,2.5,0 5 200,200,200 bump 25 30 texture textures/earth.xpm
+
+sp 0,2.5,0 5 0,200,0 bump 25 30 texture textures/sand_1.xpm

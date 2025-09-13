@@ -22,6 +22,17 @@ t_vec3 scale_vec3(t_vec3 a, double scalar)
     return (result);
 }
 
+t_color scale_color(t_color a, double scalar)
+{
+    t_color result;
+
+    result.r = a.r * scalar;
+    result.g = a.g * scalar;
+    result.b = a.b * scalar;
+
+    return (result);
+}
+
 t_vec3 sub_vec3(t_vec3 a, t_vec3 b)
 {
     t_vec3 result;

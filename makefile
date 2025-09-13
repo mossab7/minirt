@@ -22,7 +22,8 @@ SRC			= src/minirt.c \
 			  src/pattern.c \
 			  src/parse_pattern.c \
 			  src/transform_object.c \
-			  src/camera.c
+  src/camera.c \
+  src/texture.c
 
 OBJ			= $(patsubst src/%.c, obj/%.o, $(SRC))
 

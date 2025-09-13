@@ -80,6 +80,16 @@ t_object	*get_object(t_container *container, size_t index)
 	return (obj);
 }
 
+t_light	*get_light(t_container *container, size_t index)
+{
+	t_light	*light;
+
+	if (index >= container->size)
+		return (NULL);
+	light = ((t_light **)container->data)[index];
+	return (light);
+}
+
 void	register_allocation(void *ptr, void (*free_func)(void *))
 {
 	register_memory_allocation(get_memory_tracker(), create_memory_record(ptr,
@@ -486,14 +496,15 @@ int	main(int argc, char **argv)
 {
 	t_program	*program;
 
+
 	if (argc != 2)
 	{
 		ft_putstr_fd("Error: Wrong number of arguments\n", 2);
 		return (1);
 	}
 	program = *get_program();
-	program->scene = parse_scene(argv[1]);
 	program->mlx = _init_mlx();
+	program->scene = parse_scene(argv[1]);
 	set_up_workers(program);
 	render_scene(program);
 	program->dirty = true;

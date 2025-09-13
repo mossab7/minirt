@@ -33,6 +33,11 @@ t_color	apply_checkerboard_pattern(t_hit_info *hit_info, t_pattern *pattern)
 		u = atan2(hit_info->normal.x, hit_info->normal.z) / (2 * M_PI);
 		v = hit_info->point.y * pattern->scale;
 	}
+	else if (hit_info->object_type == CONE)
+	{
+		u = atan2(hit_info->point.x, hit_info->point.z) / (2 * M_PI);
+		v = hit_info->point.y;
+	}
 	else
 	{
 		u = 0;
@@ -133,6 +138,13 @@ t_color	get_pattern_color(t_hit_info *hit_info, void *object)
 		if (pattern && pattern->type == PATTERN_CHECKERBOARD)
 			return (apply_checkerboard_pattern(hit_info, pattern));
 		return (((t_cylinder *)object)->color);
+	}
+	else if (hit_info->object_type == CONE)
+	{
+		pattern = &((t_cone *)object)->pattern;
+		if (pattern && pattern->type == PATTERN_CHECKERBOARD)
+			return (apply_checkerboard_pattern(hit_info, pattern));
+		return (((t_cone *)object)->color);
 	}
 	return ((t_color){0, 0, 0});
 }

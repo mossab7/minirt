@@ -25,7 +25,6 @@
 #define Y_INDEX 1
 #define Z_INDEX 2
 #define W_INDEX 3
-#define OBJ_COUNT 6
 #define RED_INDEX 0
 #define GREEN_INDEX 1
 #define BLUE_INDEX 2
@@ -35,7 +34,8 @@
 #define OBJ_SPHERE 3
 #define OBJ_PLANE 4
 #define OBJ_CYLINDER 5
-#define OBJ_COUNT 6
+#define OBJ_CONE 6
+#define OBJ_COUNT 7
 #define VEC_MIN -1.0f
 #define VEC_MAX 1.0f
 #define LIGHT_RATIO_MIN 0.0f

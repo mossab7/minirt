@@ -17,13 +17,22 @@ MLX42		= $(addprefix $(MLX_DIR)/, libmlx_Linux.a)
 SRC			= src/minirt.c \
 			  src/parse.c \
 			  src/vec_op.c \
-			  src/matrix_op.c \
+			  src/matrix_op/matrix-1.c \
+			  src/matrix_op/matrix-2.c \
+			  src/matrix_op/matrix-3.c \
+			  src/matrix_op/matrix-4.c \
 			  src/render.c \
 			  src/pattern.c \
 			  src/parse_pattern.c \
 			  src/transform_object.c \
-  src/camera.c \
-  src/texture.c
+			  src/camera.c \
+			  src/texture.c \
+			  src/geters.c \
+			  src/controles.c \
+			  src/safe_exit.c \
+			  src/workers.c \
+			  src/workers_logic.c \
+			  src/workers_utils.c
 
 OBJ			= $(patsubst src/%.c, obj/%.o, $(SRC))
 

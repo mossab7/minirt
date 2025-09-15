@@ -1,0 +1,18 @@
+
+[x] camera.c
+[x] controles.c
+[x] geters.c
+[x] matrix_op.c
+[x] minirt.c
+[x] parse.c
+[x] parse_pattern.c
+[ ] pattern.c
+[ ] print_scene.c
+[ ] render.c
+[x] safe_exit.c
+[ ] texture.c
+[ ] transform_object.c
+[ ] vec_op.c
+[x] workers.c
+[x] workers_logic.c
+[x] workers_utils.c

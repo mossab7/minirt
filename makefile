@@ -15,7 +15,6 @@ MLX_DIR		= minilibx-linux
 LIBFT		= $(addprefix $(LIBFT_DIR)/, libft.a)
 MLX42		= $(addprefix $(MLX_DIR)/, libmlx_Linux.a)
 SRC			= src/minirt.c \
-			  src/vec_op.c \
 			  src/render.c \
 			  src/transform_object.c \
 			  src/parsing/parsing-1.c\
@@ -32,8 +31,9 @@ SRC			= src/minirt.c \
 			  src/texturing/texturing-3.c \
 			  src/texturing/texturing-4.c \
 			  src/texturing/texturing-5.c \
-			  src/camera.c \
-			  src/texture.c
+			  src/vec_op/vec-1.c \
+			  src/vec_op/vec-2.c \
+			  src/vec_op/vec-3.c
 
 OBJ			= $(patsubst src/%.c, obj/%.o, $(SRC))
 

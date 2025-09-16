@@ -1,70 +1,71 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   transform_object.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/16 23:28:53 by zbengued          #+#    #+#             */
+/*   Updated: 2025/09/16 23:29:00 by zbengued         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/transform_object.h"
 
 void	translate_object(t_object *obj, t_vec3 translation)
 {
 	if (!obj)
 		return ;
-	switch (obj->type)
-	{
-		case SPHERE:
-			obj->obj.sphere.center = add_vec3(obj->obj.sphere.center, translation);
-			break ;
-		case PLANE:
-			obj->obj.plane.center = add_vec3(obj->obj.plane.center, translation);
-			break ;
-		case CYLINDER:
-			obj->obj.cylinder.center = add_vec3(obj->obj.cylinder.center, translation);
-			break ;
-		case HYPERBOLDOID:
-			obj->obj.hyperboloid.center = add_vec3(obj->obj.hyperboloid.center, translation);
-			break ;
-		case PARABOLOID:
-			obj->obj.paraboloid.center = add_vec3(obj->obj.paraboloid.center, translation);
-			break ;
-		case CONE:
-			obj->obj.cone.center = add_vec3(obj->obj.cone.center, translation);
-			break ;
-	}
+	if (obj->type == SPHERE)
+		obj->obj.sphere.center = add_vec3(obj->obj.sphere.center, translation);
+	else if (obj->type == PLANE)
+		obj->obj.plane.center = add_vec3(obj->obj.plane.center, translation);
+	else if (obj->type == CYLINDER)
+		obj->obj.cylinder.center = add_vec3(obj->obj.cylinder.center,
+				translation);
+	else if (obj->type == CONE)
+		obj->obj.cone.center = add_vec3(obj->obj.cone.center, translation);
 }
 
-void	rotate_object(t_object *obj, t_vec3 rotation_angles)
+static t_matrix4d	rot_mat(t_vec3 rotation_angles)
 {
 	t_matrix4d	rot_x;
 	t_matrix4d	rot_y;
 	t_matrix4d	rot_z;
+
+	rot_x = matrix4d_rotation_x(rotation_angles.x);
+	rot_y = matrix4d_rotation_y(rotation_angles.y);
+	rot_z = matrix4d_rotation_z(rotation_angles.z);
+	return (matrix4d_mult(rot_z, matrix4d_mult(rot_y, rot_x)));
+}
+
+void	rotate_object(t_object *obj, t_vec3 rotation_angles)
+{
 	t_matrix4d	rot_matrix;
 	t_vec3		*axis;
 
 	if (!obj)
 		return ;
-	rot_x = matrix4d_rotation_x(rotation_angles.x);
-	rot_y = matrix4d_rotation_y(rotation_angles.y);
-	rot_z = matrix4d_rotation_z(rotation_angles.z);
-	rot_matrix = matrix4d_mult(rot_z, matrix4d_mult(rot_y, rot_x));
+	rot_matrix = rot_mat(rotation_angles);
 	axis = NULL;
-	switch (obj->type)
-	{
-		case PLANE:
-			axis = &obj->obj.plane.normal;
-			break ;
-		case CYLINDER:
-			axis = &obj->obj.cylinder.axis;
-			break ;
-		case HYPERBOLDOID:
-			axis = &obj->obj.hyperboloid.axis;
-			break ;
-		case PARABOLOID:
-			axis = &obj->obj.paraboloid.axis;
-			break ;
-		case CONE:
-			axis = &obj->obj.cone.axis;
-			break ;
-		case SPHERE:
-			break ;
-	}
+	if (obj->type == PLANE)
+		axis = &obj->obj.plane.normal;
+	else if (obj->type == CYLINDER)
+		axis = &obj->obj.cylinder.axis;
+	else if (obj->type == CONE)
+		axis = &obj->obj.cone.axis;
+	else if (obj->type == SPHERE)
+		return ;
 	if (axis)
 	{
 		*axis = matrix4d_mult_vec3(rot_matrix, *axis);
 		*axis = normalize_vec3(*axis);
 	}
+}
+
+void	recalculate_camera_vectors(t_camera *camera)
+{
+	camera->right = normalize_vec3(cross_vec3(camera->direction, UPVEC));
+	camera->up = normalize_vec3(cross_vec3(camera->direction, camera->right));
+	camera->right = normalize_vec3(cross_vec3(camera->direction, camera->up));
 }

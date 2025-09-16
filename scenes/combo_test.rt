@@ -11,3 +11,4 @@ sp -10,2.5,0 5 255,255,255  checkerboard 255,0,0 255,255,255 4.0
 sp -5,2.5,0 5 255,255,255  bump 25 30 texture textures/marss.xpm
 sp 5,2.5,0  5 200,200,200 bump 25 30 texture textures/earth.xpm
 sp 0,2.5,0  5 0,200,0 bump 25 30 texture textures/sand_1.xpm
+sp 10,2.5,0  5 0,0,0 bump 25 30 texture textures/world_map.xpm

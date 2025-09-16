@@ -268,6 +268,7 @@ void					parse_cylinder(char **data, t_scene *scene);
 void					parse_cone(char **data, t_scene *scene);
 void					parse_hyperboloid(char **data, t_scene *scene);
 void					parse_paraboloid(char **data, t_scene *scene);
+void					free_object(void *obj_void);
 void					parse_obj_data(char **data, t_scene *scene);
 int						parse_filename(char *filename);
 void					init_obj_parse_func(t_parse_function *parse_func,

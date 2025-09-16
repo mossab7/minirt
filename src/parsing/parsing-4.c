@@ -16,7 +16,9 @@ void	parse_paraboloid(char **data, t_scene *scene)
 {
 	t_object	*obj;
 
-	obj = (t_object *)alloc(sizeof(t_object));
+	obj = ft_calloc(1, sizeof(t_object));
+	handle_allocation_failure(obj);
+	register_memory_allocation(get_memory_tracker(), create_memory_record(obj, free_object));
 	obj->type = PARABOLOID;
 	obj->obj.paraboloid.center = get_vec3(data[1]);
 	obj->obj.paraboloid.axis = get_vec3(data[2]);

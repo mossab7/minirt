@@ -29,7 +29,9 @@ void	parse_sphare(char **data, t_scene *scene)
 		parse_pattern(&data[4], &sphere.pattern);
 	else
 		sphere.pattern.type = PATTERN_NONE;
-	obj = alloc(sizeof(t_object));
+	obj = ft_calloc(1, sizeof(t_object));
+	handle_allocation_failure(obj);
+	register_memory_allocation(get_memory_tracker(), create_memory_record(obj, free_object));
 	obj->type = SPHERE;
 	obj->obj.sphere = sphere;
 	container_push_back(scene->objects, obj);
@@ -39,7 +41,9 @@ void	parse_plane(char **data, t_scene *scene)
 {
 	t_object	*obj;
 
-	obj = (t_object *)alloc(sizeof(t_object));
+	obj = ft_calloc(1, sizeof(t_object));
+	handle_allocation_failure(obj);
+	register_memory_allocation(get_memory_tracker(), create_memory_record(obj, free_object));
 	obj->type = PLANE;
 	obj->obj.plane.center = get_vec3(data[1]);
 	obj->obj.plane.normal = get_vec3(data[2]);
@@ -56,7 +60,9 @@ void	parse_cylinder(char **data, t_scene *scene)
 {
 	t_object	*obj;
 
-	obj = (t_object *)alloc(sizeof(t_object));
+	obj = ft_calloc(1, sizeof(t_object));
+	handle_allocation_failure(obj);
+	register_memory_allocation(get_memory_tracker(), create_memory_record(obj, free_object));
 	obj->type = CYLINDER;
 	obj->obj.cylinder.center = get_vec3(data[1]);
 	obj->obj.cylinder.axis = get_vec3(data[2]);
@@ -75,7 +81,9 @@ void	parse_cone(char **data, t_scene *scene)
 {
 	t_object	*obj;
 
-	obj = (t_object *)alloc(sizeof(t_object));
+	obj = ft_calloc(1, sizeof(t_object));
+	handle_allocation_failure(obj);
+	register_memory_allocation(get_memory_tracker(), create_memory_record(obj, free_object));
 	obj->type = CONE;
 	obj->obj.cone.center = sub_vec3(get_vec3(data[1]),
 			scale_vec3(obj->obj.cone.axis, obj->obj.cone.height));
@@ -100,7 +108,9 @@ void	parse_hyperboloid(char **data, t_scene *scene)
 {
 	t_object	*obj;
 
-	obj = (t_object *)alloc(sizeof(t_object));
+	obj = ft_calloc(1, sizeof(t_object));
+	handle_allocation_failure(obj);
+	register_memory_allocation(get_memory_tracker(), create_memory_record(obj, free_object));
 	obj->type = HYPERBOLDOID;
 	obj->obj.hyperboloid.center = get_vec3(data[1]);
 	obj->obj.hyperboloid.axis = get_vec3(data[2]);

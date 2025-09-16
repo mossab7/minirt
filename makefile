@@ -21,7 +21,9 @@ SRC			= src/minirt.c \
 			  src/parsing/parsing-2.c\
 			  src/parsing/parsing-3.c\
 			  src/parsing/parsing-4.c\
-			  src/parsing/parsing-5.c\
+			  src/parsing/parsing-5.c
+			  src/free_object.c
+
 			  src/matrix_op/matrix-1.c \
 			  src/matrix_op/matrix-2.c \
 			  src/matrix_op/matrix-3.c \

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <minirt.h>
+#include "texture.h"
 
 t_texture	*load_texture(char *filename)
 {
@@ -18,20 +19,25 @@ t_texture	*load_texture(char *filename)
 	t_texture	*texture;
 
 	program = *get_program();
-	texture = alloc(sizeof(t_texture));
+	texture = ft_calloc(1, sizeof(t_texture));
+	handle_allocation_failure(texture);
 	texture->img_ptr = mlx_xpm_file_to_image(program->mlx->mlx_ptr, filename,
 			&texture->width, &texture->height);
 	if (!texture->img_ptr)
 	{
+		free(texture);
 		ft_putstr_fd("Error: Failed to load texture file: ", 2);
 		ft_putstr_fd(filename, 2);
 		ft_putstr_fd("\n", 2);
 		safe_exit(1);
 	}
+	register_memory_allocation(get_memory_tracker(),
+		create_memory_record(texture, free_texture));
 	texture->addr = mlx_get_data_addr(texture->img_ptr, &texture->bpp,
 			&texture->line_length, &texture->endian);
 	return (texture);
 }
+
 
 t_color	get_pixel_color(t_texture *texture, int x, int y)
 {

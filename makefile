@@ -31,6 +31,7 @@ SRC			= src/minirt.c \
 			  src/texturing/texturing-3.c \
 			  src/texturing/texturing-4.c \
 			  src/texturing/texturing-5.c \
+			  src/texturing/texture_cleanup.c \
 			  src/vec_op/vec-1.c \
 			  src/vec_op/vec-2.c \
 			  src/vec_op/vec-3.c

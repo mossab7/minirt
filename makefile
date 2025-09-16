@@ -15,15 +15,18 @@ MLX_DIR		= minilibx-linux
 LIBFT		= $(addprefix $(LIBFT_DIR)/, libft.a)
 MLX42		= $(addprefix $(MLX_DIR)/, libmlx_Linux.a)
 SRC			= src/minirt.c \
-			  src/parse.c \
 			  src/vec_op.c \
 			  src/matrix_op.c \
 			  src/render.c \
 			  src/pattern.c \
 			  src/parse_pattern.c \
 			  src/transform_object.c \
-  src/camera.c \
-  src/texture.c
+			  src/parsing/parsing-1.c\
+			  src/parsing/parsing-2.c\
+			  src/parsing/parsing-3.c\
+			  src/parsing/parsing-4.c\
+			  src/camera.c \
+			  src/texture.c
 
 OBJ			= $(patsubst src/%.c, obj/%.o, $(SRC))
 

@@ -30,13 +30,8 @@ void	cleanup_memory_tracker(t_alloc_record **memory_records)
 	current = *memory_records;
 	while (current != NULL)
 	{
-		free_resource(current->free_func, current->resource);
-		current = current->next;
-	}
-	current = *memory_records;
-	while (current != NULL)
-	{
 		next = current->next;
+		free_resource(current->free_func, current->resource);
 		free(current);
 		current = next;
 	}

@@ -19,12 +19,12 @@ SRC			= src/minirt.c \
 			  src/matrix_op.c \
 			  src/render.c \
 			  src/pattern.c \
-			  src/parse_pattern.c \
 			  src/transform_object.c \
 			  src/parsing/parsing-1.c\
 			  src/parsing/parsing-2.c\
 			  src/parsing/parsing-3.c\
 			  src/parsing/parsing-4.c\
+			  src/parsing/parsing-5.c\
 			  src/camera.c \
 			  src/texture.c
 

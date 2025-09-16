@@ -6,7 +6,7 @@
 /*   By: deepseeko <deepseeko@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 19:03:54 by deepseeko         #+#    #+#             */
-/*   Updated: 2025/09/16 18:11:25 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/16 18:16:54 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -344,7 +344,6 @@ t_vec3					get_cone_normal(t_cone *cone, t_vec3 point);
 void					recalculate_camera_vectors(t_camera *camera);
 
 // parsing
-
 int						parse_filename(char *filename);
 void					init_obj_parse_func(t_parse_function *parse_func,
 							char **obj_name);
@@ -365,5 +364,6 @@ void					parse_paraboloid(char **data, t_scene *scene);
 void					read_to_scene(int fd, t_scene *scene);
 t_scene					*init_scene(void);
 t_scene					*parse_scene(char *filename);
+int						parse_pattern(char **data, t_pattern *pattern);
 
 #endif // MINIRT_H

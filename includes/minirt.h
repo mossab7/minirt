@@ -6,7 +6,7 @@
 /*   By: deepseeko <deepseeko@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 19:03:54 by deepseeko         #+#    #+#             */
-/*   Updated: 2025/09/16 18:20:28 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/16 22:01:43 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -386,5 +386,22 @@ t_matrix4d				matrix4d_rotation(t_vec3 rotation);
 t_matrix4d				matrix4d_scale(t_vec3 scale);
 t_matrix4d				matrix4d_identity(void);
 t_matrix4d				matrix4d_transpose(t_matrix4d matrix);
+
+// texturing
+
+t_color					apply_checkerboard_pattern(t_hit_info *hit_info,
+							t_pattern *pattern);
+int						*get_perm(void);
+const int				*get_p(void);
+void					init_permutation_table(void);
+double					fade(double t);
+double					lerp(double t, double a, double b);
+double					noise_function(double x, double y);
+t_vec3					calculate_bump_normal(t_hit_info *hit_info,
+							t_pattern *pattern);
+t_color					apply_texture(t_hit_info *hit_info, t_pattern *pattern);
+t_vec3					apply_bump_mapping(t_hit_info *hit_info,
+							t_pattern *pattern);
+t_color					get_pattern_color(t_hit_info *hit_info, void *object);
 
 #endif // MINIRT_H

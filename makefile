@@ -17,7 +17,6 @@ MLX42		= $(addprefix $(MLX_DIR)/, libmlx_Linux.a)
 SRC			= src/minirt.c \
 			  src/vec_op.c \
 			  src/render.c \
-			  src/pattern.c \
 			  src/transform_object.c \
 			  src/parsing/parsing-1.c\
 			  src/parsing/parsing-2.c\
@@ -28,6 +27,11 @@ SRC			= src/minirt.c \
 			  src/matrix_op/matrix-2.c \
 			  src/matrix_op/matrix-3.c \
 			  src/matrix_op/matrix-4.c \
+			  src/texturing/texturing-1.c \
+			  src/texturing/texturing-2.c \
+			  src/texturing/texturing-3.c \
+			  src/texturing/texturing-4.c \
+			  src/texturing/texturing-5.c \
 			  src/camera.c \
 			  src/texture.c
 

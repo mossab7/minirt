@@ -6,7 +6,7 @@
 /*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 16:28:37 by zbengued          #+#    #+#             */
-/*   Updated: 2025/09/08 17:35:47 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/16 21:36:32 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,6 @@
 #define RATIO (16.0f / 9.0f)
 #define UPVEC (t_vec3){0.0f, 1.0f, 0.0f}
 #define BATCH_SIZE 64
+# define M_PI 3.14159265358979323846
+# define ALPHA 0.5
 #endif // !MACROS_H

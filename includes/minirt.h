@@ -6,7 +6,7 @@
 /*   By: deepseeko <deepseeko@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 19:03:54 by deepseeko         #+#    #+#             */
-/*   Updated: 2025/09/16 18:16:54 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/16 18:20:28 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -365,5 +365,26 @@ void					read_to_scene(int fd, t_scene *scene);
 t_scene					*init_scene(void);
 t_scene					*parse_scene(char *filename);
 int						parse_pattern(char **data, t_pattern *pattern);
+
+// matrix_op
+t_matrix4d				matrix4d_translation(t_vec3 translation);
+t_matrix4d				matrix4d_rotation_x(double angle);
+t_matrix4d				matrix4d_rotation_y(double angle);
+t_matrix4d				matrix4d_rotation_z(double angle);
+t_matrix4d				matrix4d_mult(t_matrix4d a, t_matrix4d b);
+t_matrix4d				matrix4d_translation(t_vec3 translation);
+t_matrix4d				matrix4d_rotation_x(double angle);
+t_matrix4d				matrix4d_rotation_y(double angle);
+t_matrix4d				matrix4d_rotation_z(double angle);
+t_matrix4d				matrix4d_mult(t_matrix4d a, t_matrix4d b);
+double					calculate_determinant3x3(t_matrix4d matrix);
+t_matrix4d				inverse_rotation_scale(t_matrix4d matrix, double det);
+void					inverse_translation(t_matrix4d *result,
+							t_matrix4d original_matrix);
+t_matrix4d				matrix4d_inverse(t_matrix4d matrix);
+t_matrix4d				matrix4d_rotation(t_vec3 rotation);
+t_matrix4d				matrix4d_scale(t_vec3 scale);
+t_matrix4d				matrix4d_identity(void);
+t_matrix4d				matrix4d_transpose(t_matrix4d matrix);
 
 #endif // MINIRT_H

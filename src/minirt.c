@@ -88,14 +88,15 @@ void	safe_exit(int status)
 		pthread_cond_destroy(&program->render_cond);
 		pthread_cond_destroy(&program->completion_cond);
 	}
+	cleanup_memory_tracker(get_memory_tracker()); // Nettoyer toutes les ressources enregistrées en premier
+
+	// Ensuite, détruire les ressources spécifiques à MLX qui ne sont pas gérées par le tracker
 	if (program->mlx && program->mlx->canvas->img_ptr)
 		mlx_destroy_image(program->mlx->mlx_ptr, program->mlx->canvas->img_ptr);
 	if (program->mlx && program->mlx->win_ptr)
 		mlx_destroy_window(program->mlx->mlx_ptr, program->mlx->win_ptr);
 	if (program->mlx && program->mlx->mlx_ptr)
 		mlx_destroy_display(program->mlx->mlx_ptr);
-	iterate_over_scene_objects(program->scene);
-	cleanup_memory_tracker(get_memory_tracker());
 	exit(status);
 }
 
@@ -152,7 +153,7 @@ t_mlx	*_init_mlx(void)
 		ft_putstr_fd("Error: Failed to initiate mlx connection\n", 2);
 		safe_exit(1);
 	}
-	register_allocation(mlx->mlx_ptr, free);
+	register_allocation(mlx, free); // Enregistrer la structure t_mlx
 	mlx->win_ptr = mlx_new_window(mlx->mlx_ptr, WIN_WIDTH, WIN_HEIGHT,
 			"MiniRT");
 	if (!mlx->win_ptr)

@@ -6,7 +6,7 @@
 /*   By: gemini <gemini@google.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 00:00:00 by gemini            #+#    #+#             */
-/*   Updated: 2025/09/17 03:10:27 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/17 04:32:49 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ void	free_object(void *obj_void)
 	if (!obj_void)
 		return ;
 	obj = (t_object *)obj_void;
-	if ((obj->pattern.type & PATTERN_TEXTURE) && obj->pattern.texture)
-	{
-		free_texture(obj->pattern.texture);
-		obj->pattern.texture = NULL;
-	}
+	// if ((obj->pattern.type & PATTERN_TEXTURE) && obj->pattern.texture)
+	// {
+	// 	free_texture(obj->pattern.texture);
+	// 	obj->pattern.texture = NULL;
+	// }
 	free(obj);
 }

@@ -13,6 +13,7 @@
 #include <minirt.h>
 #include "../includes/transform_object.h"
 #include "../includes/camera.h"
+#include "texture.h"
 #include <X11/keysym.h>
 #include <mlx.h>
 #include <stdio.h>
@@ -35,30 +36,28 @@ t_program	**get_program(void)
 	return (&program);
 }
 
-static void	destroy_texture(t_program *program, void **img)
-{
-	if (*img)
-	{
-		// mlx_destroy_image(program->mlx->mlx_ptr, *img);
-		*img = NULL;
-	}
-	(void)program;
-}
+// static void	destroy_texture(t_program *program, void **img)
+// {
+// 	if (*img)
+// 	{
+// 		// mlx_destroy_image(program->mlx->mlx_ptr, *img);
+// 		*img = NULL;
+// 	}
+// 	(void)program;
+// }
 
-void	iterate_over_scene_objects(t_scene *scene)
+void	free_all_textures(t_scene *scene)
 {
 	size_t		i;
 	t_object	*obj;
-	t_program	*program;
 	t_object	**array;
 
-	program = *get_program();
 	array = (t_object **)scene->objects->data;
 	i = 0;
 	while (i < scene->objects->size)
 	{
 		obj = array[i];
-		destroy_texture(program->mlx->mlx_ptr, &obj->pattern.texture->img_ptr);
+		free_texture(obj->pattern.texture);
 		i++;
 	}
 }
@@ -88,13 +87,13 @@ void	safe_exit(int status)
 		pthread_cond_destroy(&program->render_cond);
 		pthread_cond_destroy(&program->completion_cond);
 	}
+	free_all_textures(program->scene);
 	if (program->mlx && program->mlx->canvas->img_ptr)
 		mlx_destroy_image(program->mlx->mlx_ptr, program->mlx->canvas->img_ptr);
 	if (program->mlx && program->mlx->win_ptr)
 		mlx_destroy_window(program->mlx->mlx_ptr, program->mlx->win_ptr);
 	if (program->mlx && program->mlx->mlx_ptr)
 		mlx_destroy_display(program->mlx->mlx_ptr);
-	iterate_over_scene_objects(program->scene);
 	cleanup_memory_tracker(get_memory_tracker());
 	exit(status);
 }

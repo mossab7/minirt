@@ -415,7 +415,7 @@ t_color	calculate_lighting(t_scene *scene, t_hit_info *hit_info)
 	material.diffuse = DEFAULT_DIFFUSE;
 	material.shininess = DEFAULT_SHININESS;
 
-	base_color = get_pattern_color(hit_info, &hit_info->object->obj);
+	base_color = get_pattern_color(hit_info);
 	pattern = get_object_pattern(hit_info);
 	if (pattern && (pattern->type & PATTERN_BUMP_MAP))
 		surface_normal = apply_bump_mapping(hit_info, pattern);

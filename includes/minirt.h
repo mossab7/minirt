@@ -72,7 +72,6 @@ typedef struct s_sphere
 	t_vec3				center;
 	double				diameter;
 	t_color				color;
-	t_pattern			pattern;
 }						t_sphere;
 
 typedef struct s_plane
@@ -80,7 +79,6 @@ typedef struct s_plane
 	t_vec3				center;
 	t_vec3				normal;
 	t_color				color;
-	t_pattern			pattern;
 }						t_plane;
 
 typedef struct s_hyperboloid
@@ -108,7 +106,6 @@ typedef struct s_cylinder
 	double				diameter;
 	double				height;
 	t_color				color;
-	t_pattern			pattern;
 }						t_cylinder;
 
 typedef struct s_cone
@@ -118,7 +115,6 @@ typedef struct s_cone
 	double				diameter;
 	double				height;
 	t_color				color;
-	t_pattern			pattern;
 }						t_cone;
 
 typedef enum e_object_type
@@ -143,6 +139,7 @@ typedef struct s_object
 		t_hyperboloid	hyperboloid;
 		t_paraboloid	paraboloid;
 	} obj;
+	t_pattern			pattern;
 }						t_object;
 
 typedef struct s_amb_light

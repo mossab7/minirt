@@ -6,7 +6,7 @@
 /*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 21:48:16 by zbengued          #+#    #+#             */
-/*   Updated: 2025/09/16 21:56:40 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/17 15:30:12 by deepseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,43 +19,31 @@ t_vec3	apply_bump_mapping(t_hit_info *hit_info, t_pattern *pattern)
 	return (hit_info->normal);
 }
 
-static void	fil_patt(t_hit_info *hit_info, t_pattern **pattern,
-		void *object, t_color *base_color)
+static t_color	get_base_color(t_object *obj)
 {
-	if (hit_info->object_type == SPHERE)
-	{
-		*pattern = &((t_sphere *)object)->pattern;
-		*base_color = ((t_sphere *)object)->color;
-	}
-	else if (hit_info->object_type == PLANE)
-	{
-		*pattern = &((t_plane *)object)->pattern;
-		*base_color = ((t_plane *)object)->color;
-	}
-	else if (hit_info->object_type == CYLINDER)
-	{
-		*pattern = &((t_cylinder *)object)->pattern;
-		*base_color = ((t_cylinder *)object)->color;
-	}
-	else if (hit_info->object_type == CONE)
-	{
-		*pattern = &((t_cone *)object)->pattern;
-		*base_color = ((t_cone *)object)->color;
-	}
+	if (obj->type == SPHERE)
+		return (obj->obj.sphere.color);
+	if (obj->type == PLANE)
+		return (obj->obj.plane.color);
+	if (obj->type == CYLINDER)
+		return (obj->obj.cylinder.color);
+	if (obj->type == CONE)
+		return (obj->obj.cone.color);
+	if (obj->type == HYPERBOLDOID)
+		return (obj->obj.hyperboloid.color);
+	if (obj->type == PARABOLOID)
+		return (obj->obj.paraboloid.color);
+	return ((t_color){0, 0, 0});
 }
 
-t_color	get_pattern_color(t_hit_info *hit_info, void *object)
+t_color	get_pattern_color(t_hit_info *hit_info)
 {
 	t_pattern	*pattern;
 	t_color		base_color;
 	t_color		texture_color;
 
-	pattern = NULL;
-	if (hit_info->object_type == SPHERE || hit_info->object_type == PLANE
-		|| hit_info->object_type == CYLINDER || hit_info->object_type == CONE)
-		fil_patt(hit_info, &pattern, object, &base_color);
-	else
-		return ((t_color){0, 0, 0});
+	pattern = &hit_info->object->pattern;
+	base_color = get_base_color(hit_info->object);
 	if (pattern && (pattern->type & PATTERN_TEXTURE))
 	{
 		texture_color = apply_texture(hit_info, pattern);

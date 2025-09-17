@@ -25,12 +25,12 @@ void	parse_sphare(char **data, t_scene *scene)
 		safe_exit(1);
 	}
 	sphere.color = get_color(data[3]);
-	if (data[4])
-		parse_pattern(&data[4], &sphere.pattern);
-	else
-		sphere.pattern.type = PATTERN_NONE;
 	obj = ft_calloc(1, sizeof(t_object));
 	handle_allocation_failure(obj);
+	if (data[4])
+		parse_pattern(&data[4], &obj->pattern);
+	else
+		obj->pattern.type = PATTERN_NONE;
 	register_memory_allocation(get_memory_tracker(), create_memory_record(obj, free_object));
 	obj->type = SPHERE;
 	obj->obj.sphere = sphere;
@@ -50,9 +50,9 @@ void	parse_plane(char **data, t_scene *scene)
 	check_vec_range(obj->obj.plane.normal);
 	obj->obj.plane.color = get_color(data[3]);
 	if (data[4])
-		parse_pattern(&data[4], &obj->obj.plane.pattern);
+		parse_pattern(&data[4], &obj->pattern);
 	else
-		obj->obj.plane.pattern.type = PATTERN_NONE;
+		obj->pattern.type = PATTERN_NONE;
 	container_push_back(scene->objects, obj);
 }
 
@@ -71,9 +71,9 @@ void	parse_cylinder(char **data, t_scene *scene)
 	obj->obj.cylinder.height = atof(data[4]);
 	obj->obj.cylinder.color = get_color(data[5]);
 	if (data[6])
-		parse_pattern(&data[6], &obj->obj.cylinder.pattern);
+		parse_pattern(&data[6], &obj->pattern);
 	else
-		obj->obj.cylinder.pattern.type = PATTERN_NONE;
+		obj->pattern.type = PATTERN_NONE;
 	container_push_back(scene->objects, obj);
 }
 
@@ -98,9 +98,9 @@ void	parse_cone(char **data, t_scene *scene)
 		safe_exit(1);
 	}
 	if (data[6])
-		parse_pattern(&data[6], &obj->obj.cone.pattern);
+		parse_pattern(&data[6], &obj->pattern);
 	else
-		obj->obj.cone.pattern.type = PATTERN_NONE;
+		obj->pattern.type = PATTERN_NONE;
 	container_push_back(scene->objects, obj);
 }
 

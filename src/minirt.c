@@ -97,6 +97,8 @@ void	safe_exit(int status)
 		mlx_destroy_window(program->mlx->mlx_ptr, program->mlx->win_ptr);
 	if (program->mlx && program->mlx->mlx_ptr)
 		mlx_destroy_display(program->mlx->mlx_ptr);
+	if (program->mlx)
+		free(program->mlx);
 	exit(status);
 }
 
@@ -146,14 +148,19 @@ t_mlx	*_init_mlx(void)
 {
 	t_mlx	*mlx;
 
-	mlx = alloc(sizeof(t_mlx));
+	mlx = ft_calloc(1, sizeof(t_mlx)); // Utiliser ft_calloc directement
+	if (!mlx)
+	{
+		ft_putstr_fd("Error: Failed to allocate t_mlx\n", 2);
+		safe_exit(1);
+	}
 	mlx->mlx_ptr = mlx_init();
+
 	if (!mlx->mlx_ptr)
 	{
 		ft_putstr_fd("Error: Failed to initiate mlx connection\n", 2);
 		safe_exit(1);
 	}
-	register_allocation(mlx, free); // Enregistrer la structure t_mlx
 	mlx->win_ptr = mlx_new_window(mlx->mlx_ptr, WIN_WIDTH, WIN_HEIGHT,
 			"MiniRT");
 	if (!mlx->win_ptr)

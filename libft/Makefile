@@ -18,7 +18,7 @@ OBJS=$(SRCS:%.c=%.o)
 NAME=libft.a
 INCLUDE=-I../includes
 CC=cc
-CFLAGS=-Wall -Wextra -Werror
+CFLAGS=-Wall -Wextra -Werror -g3
 AR=ar -rsc
 RM=rm -f
 

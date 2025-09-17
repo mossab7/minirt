@@ -35,12 +35,12 @@ t_program	**get_program(void)
 	return (&program);
 }
 
-static void	destroy_texture(t_program *program, void **img)
+static void	destroy_texture(t_program *program, void *img)
 {
-	if (*img)
+	if (img)
 	{
-		// mlx_destroy_image(program->mlx->mlx_ptr, *img);
-		*img = NULL;
+		mlx_destroy_image(program->mlx->mlx_ptr, img);
+		img = NULL;
 	}
 	(void)program;
 }
@@ -58,7 +58,7 @@ void	iterate_over_scene_objects(t_scene *scene)
 	while (i < scene->objects->size)
 	{
 		obj = array[i];
-		destroy_texture(program->mlx->mlx_ptr, &obj->pattern.texture->img_ptr);
+		destroy_texture(program->mlx->mlx_ptr, obj->pattern.texture->img_ptr);
 		i++;
 	}
 }
@@ -67,8 +67,11 @@ void	safe_exit(int status)
 {
 	t_program	*program;
 	int i;
+	t_mlx		*mlx;
 
 	program = *get_program();
+	iterate_over_scene_objects(program->scene);
+	mlx = program->mlx;
 	if (program->workers)
 	{
 		pthread_mutex_lock(&program->main_mutex);
@@ -88,17 +91,17 @@ void	safe_exit(int status)
 		pthread_cond_destroy(&program->render_cond);
 		pthread_cond_destroy(&program->completion_cond);
 	}
-	cleanup_memory_tracker(get_memory_tracker()); // Nettoyer toutes les ressources enregistrées en premier
 
 	// Ensuite, détruire les ressources spécifiques à MLX qui ne sont pas gérées par le tracker
-	if (program->mlx && program->mlx->canvas->img_ptr)
-		mlx_destroy_image(program->mlx->mlx_ptr, program->mlx->canvas->img_ptr);
-	if (program->mlx && program->mlx->win_ptr)
-		mlx_destroy_window(program->mlx->mlx_ptr, program->mlx->win_ptr);
-	if (program->mlx && program->mlx->mlx_ptr)
-		mlx_destroy_display(program->mlx->mlx_ptr);
-	if (program->mlx)
-		free(program->mlx);
+	if (mlx && mlx->canvas->img_ptr)
+		mlx_destroy_image(mlx->mlx_ptr, mlx->canvas->img_ptr);
+	if (mlx && mlx->win_ptr)
+		mlx_destroy_window(mlx->mlx_ptr, mlx->win_ptr);
+	if (mlx && mlx->mlx_ptr)
+		mlx_destroy_display(mlx->mlx_ptr);
+	if (mlx)
+		free(mlx);
+	cleanup_memory_tracker(get_memory_tracker()); // Nettoyer toutes les ressources enregistrées en premier
 	exit(status);
 }
 

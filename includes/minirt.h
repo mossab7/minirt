@@ -315,7 +315,7 @@ t_program				**get_program(void);
 // bonus
 t_color					apply_checkerboard_pattern(t_hit_info *hit_info,
 							t_pattern *pattern);
-t_color					get_pattern_color(t_hit_info *hit_info, void *object);
+t_color					get_pattern_color(t_hit_info *hit_info);
 int						parse_pattern(char **data, t_pattern *pattern);
 t_vec3					apply_bump_mapping(t_hit_info *hit_info,
 							t_pattern *pattern);
@@ -400,6 +400,6 @@ t_vec3					calculate_bump_normal(t_hit_info *hit_info,
 t_color					apply_texture(t_hit_info *hit_info, t_pattern *pattern);
 t_vec3					apply_bump_mapping(t_hit_info *hit_info,
 							t_pattern *pattern);
-t_color					get_pattern_color(t_hit_info *hit_info, void *object);
+t_color					get_pattern_color(t_hit_info *hit_info);
 
 #endif // MINIRT_H

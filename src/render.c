@@ -379,20 +379,9 @@ t_vec3	get_cone_normal(t_cone *cone, t_vec3 point)
 
 static t_pattern	*get_object_pattern(t_hit_info *hit_info)
 {
-	t_pattern	*pattern;
-
-	pattern = NULL;
 	if (!hit_info->object)
 		return (NULL);
-	if (hit_info->object_type == SPHERE)
-		pattern = &hit_info->object->obj.sphere.pattern;
-	else if (hit_info->object_type == PLANE)
-		pattern = &hit_info->object->obj.plane.pattern;
-	else if (hit_info->object_type == CYLINDER)
-		pattern = &hit_info->object->obj.cylinder.pattern;
-	else if (hit_info->object_type == CONE)
-		pattern = &hit_info->object->obj.cone.pattern;
-	return (pattern);
+	return (&hit_info->object->pattern);
 }
 
 t_color	calculate_lighting(t_scene *scene, t_hit_info *hit_info)

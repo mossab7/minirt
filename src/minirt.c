@@ -14,6 +14,8 @@
 #include "../includes/transform_object.h"
 #include "../includes/camera.h"
 #include <X11/keysym.h>
+#include <mlx.h>
+#include <stdio.h>
 
 #define ROT_SPEED 0.1
 #define TRANS_SPEED 0.5
@@ -33,13 +35,40 @@ t_program	**get_program(void)
 	return (&program);
 }
 
-void 	safe_exit(int status)
+static void	destroy_texture(t_program *program, void **img)
+{
+	if (*img)
+	{
+		// mlx_destroy_image(program->mlx->mlx_ptr, *img);
+		*img = NULL;
+	}
+	(void)program;
+}
+
+void	iterate_over_scene_objects(t_scene *scene)
+{
+	size_t		i;
+	t_object	*obj;
+	t_program	*program;
+	t_object	**array;
+
+	program = *get_program();
+	array = (t_object **)scene->objects->data;
+	i = 0;
+	while (i < scene->objects->size)
+	{
+		obj = array[i];
+		destroy_texture(program->mlx->mlx_ptr, &obj->pattern.texture->img_ptr);
+		i++;
+	}
+}
+
+void	safe_exit(int status)
 {
 	t_program	*program;
 	int i;
 
 	program = *get_program();
-
 	if (program->workers)
 	{
 		pthread_mutex_lock(&program->main_mutex);
@@ -59,13 +88,13 @@ void 	safe_exit(int status)
 		pthread_cond_destroy(&program->render_cond);
 		pthread_cond_destroy(&program->completion_cond);
 	}
-
 	if (program->mlx && program->mlx->canvas->img_ptr)
 		mlx_destroy_image(program->mlx->mlx_ptr, program->mlx->canvas->img_ptr);
 	if (program->mlx && program->mlx->win_ptr)
 		mlx_destroy_window(program->mlx->mlx_ptr, program->mlx->win_ptr);
 	if (program->mlx && program->mlx->mlx_ptr)
 		mlx_destroy_display(program->mlx->mlx_ptr);
+	iterate_over_scene_objects(program->scene);
 	cleanup_memory_tracker(get_memory_tracker());
 	exit(status);
 }

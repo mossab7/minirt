@@ -55,6 +55,7 @@ typedef struct s_texture
 	int					bpp;
 	int					line_length;
 	int					endian;
+	void				*mlx_ptr;
 }						t_texture;
 
 typedef struct s_pattern

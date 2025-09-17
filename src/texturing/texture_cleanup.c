@@ -16,15 +16,13 @@
 void	free_texture(void *texture_void)
 {
 	t_texture	*texture;
-	t_program	*program;
 
 	if (!texture_void)
 		return ;
 	texture = (t_texture *)texture_void;
-	program = *get_program();
-	if (texture->img_ptr && program->mlx && program->mlx->mlx_ptr)
+	if (texture->img_ptr && texture->mlx_ptr)
 	{
-		mlx_destroy_image(program->mlx->mlx_ptr, texture->img_ptr);
+		mlx_destroy_image(texture->mlx_ptr, texture->img_ptr);
 		texture->img_ptr = NULL;
 	}
 	free(texture);

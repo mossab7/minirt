@@ -33,6 +33,7 @@ t_texture	*load_texture(char *filename)
 	}
 	register_memory_allocation(get_memory_tracker(),
 		create_memory_record(texture, free_texture));
+	texture->mlx_ptr = program->mlx->mlx_ptr;
 	texture->addr = mlx_get_data_addr(texture->img_ptr, &texture->bpp,
 			&texture->line_length, &texture->endian);
 	return (texture);

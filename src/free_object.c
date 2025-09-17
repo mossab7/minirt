@@ -22,10 +22,5 @@ void	free_object(void *obj_void)
 	if (!obj_void)
 		return ;
 	obj = (t_object *)obj_void;
-	if ((obj->pattern.type & PATTERN_TEXTURE) && obj->pattern.texture)
-	{
-		// free_texture(obj->pattern.texture);
-		obj->pattern.texture = NULL;
-	}
 	free(obj);
 }

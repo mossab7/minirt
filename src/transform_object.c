@@ -6,7 +6,7 @@
 /*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 23:28:53 by zbengued          #+#    #+#             */
-/*   Updated: 2025/09/16 23:29:00 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/17 17:27:54 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,26 @@ void	recalculate_camera_vectors(t_camera *camera)
 	camera->right = normalize_vec3(cross_vec3(camera->direction, UPVEC));
 	camera->up = normalize_vec3(cross_vec3(camera->direction, camera->right));
 	camera->right = normalize_vec3(cross_vec3(camera->direction, camera->up));
+}
+
+void	transforme_camera(t_program *program, t_vec3 rotation, t_vec3 trans)
+{
+	t_matrix4d	rot_matrix;
+	t_matrix4d	rot_x;
+	t_matrix4d	rot_y;
+	t_matrix4d	rot_z;
+
+	rot_x = matrix4d_rotation_x(rotation.x);
+	rot_y = matrix4d_rotation_y(rotation.y);
+	rot_z = matrix4d_rotation_z(rotation.z);
+	program->scene->camera.position = add_vec3(program->scene->camera.position,
+			trans);
+	if (length_vec3(rotation) > 0)
+	{
+		rot_matrix = matrix4d_mult(rot_z, matrix4d_mult(rot_y, rot_x));
+		program->scene->camera.direction = matrix4d_mult_vec3(rot_matrix,
+				program->scene->camera.direction);
+		program->scene->camera.direction = normalize_vec3(program->scene->camera.direction);
+		recalculate_camera_vectors(&program->scene->camera);
+	}
 }

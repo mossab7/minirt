@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 20:11:07 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/04/19 11:04:11 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/09/17 18:33:49 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef LIBFT_H
@@ -145,4 +145,5 @@ bool						is_dir(const char *filename);
 void						ft_free_2d(char **v, size_t size);
 char						**ft_split_set(char const *s, char *set);
 char						*ft_strcpy(char *dest, char *src);
+void						*ternary(int condition, void *a, void *b);
 #endif // LIBFT_H

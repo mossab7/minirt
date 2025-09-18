@@ -1,26 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_object.c                                      :+:      :+:    :+:   */
+/*   ternary.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gemini <gemini@google.com>                 +#+  +:+       +#+        */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/17 00:00:00 by gemini            #+#    #+#             */
-/*   Updated: 2025/09/17 04:32:49 by zbengued         ###   ########.fr       */
+/*   Created: 2025/09/17 18:33:29 by zbengued          #+#    #+#             */
+/*   Updated: 2025/09/17 18:33:37 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
-#include "texture.h"
+#include <libft.h>
 
-void	free_texture(void *texture_void);
-
-void	free_object(void *obj_void)
+void	*ternary(int condition, void *a, void *b)
 {
-	t_object	*obj;
-
-	if (!obj_void)
-		return ;
-	obj = (t_object *)obj_void;
-	free(obj);
+	if (condition)
+		return (a);
+	else
+		return (b);
 }

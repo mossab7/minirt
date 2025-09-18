@@ -6,7 +6,7 @@
 /*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 18:08:52 by zbengued          #+#    #+#             */
-/*   Updated: 2025/09/16 18:09:00 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/18 17:11:38 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ void	parse_paraboloid(char **data, t_scene *scene)
 
 	obj = ft_calloc(1, sizeof(t_object));
 	handle_allocation_failure(obj);
-	register_memory_allocation(get_memory_tracker(), create_memory_record(obj, free_object));
+	register_memory_allocation(get_memory_tracker(),
+		create_memory_record(obj, free_object));
 	obj->type = PARABOLOID;
 	obj->obj.paraboloid.center = get_vec3(data[1]);
 	obj->obj.paraboloid.axis = get_vec3(data[2]);
@@ -74,14 +75,14 @@ t_scene	*parse_scene(char *filename)
 	if (parse_filename(filename) == -1)
 	{
 		ft_putstr_fd("Error: Invalid file name\n", 2);
-		return (NULL);
+		safe_exit(1);	
 	}
 	scene = init_scene();
 	fd = ft_open(filename, O_RDONLY);
 	if (fd < 0)
 	{
-		ft_free(scene);
-		return (NULL);
+		ft_putstr_fd("Error: Invalid file name\n", 2);
+		safe_exit(1);
 	}
 	read_to_scene(fd, scene);
 	ft_close((void *)(intptr_t)fd);

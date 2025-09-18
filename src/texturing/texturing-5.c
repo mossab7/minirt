@@ -31,8 +31,6 @@ t_texture	*load_texture(char *filename)
 		ft_putstr_fd("\n", 2);
 		safe_exit(1);
 	}
-	// register_memory_allocation(get_memory_tracker(),
-	// 	create_memory_record(texture, free_texture));
 	texture->addr = mlx_get_data_addr(texture->img_ptr, &texture->bpp,
 			&texture->line_length, &texture->endian);
 	return (texture);

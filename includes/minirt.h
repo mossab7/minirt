@@ -6,7 +6,7 @@
 /*   By: deepseeko <deepseeko@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 19:03:54 by deepseeko         #+#    #+#             */
-/*   Updated: 2025/09/16 22:01:43 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/17 17:28:38 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -402,4 +402,23 @@ t_vec3					apply_bump_mapping(t_hit_info *hit_info,
 							t_pattern *pattern);
 t_color					get_pattern_color(t_hit_info *hit_info);
 
+t_texture				*load_texture(char *filename);
+t_color					get_pixel_color(t_texture *texture, int x, int y);
+void					free_texture(void *texture_void);
+
+t_program				**get_program(void);
+void					free_all_textures(t_scene *scene);
+t_object				*get_object(t_container *container, size_t index);
+t_light					*get_light(t_container *container, size_t index);
+void					register_allocation(void *ptr,
+							void (*free_func)(void *));
+void					trans_keys(int key, t_vec3 *trans, t_program *program,
+							bool *changed);
+void					rot_keys(int key, t_vec3 *rot, bool *has_changed);
+void					transforme_camera(t_program *program, t_vec3 rotation,
+							t_vec3 trans);
+void					apply_transformation(t_program *program, t_vec3 trans,
+							t_vec3 rot);
+int						key_hook(int keycode, void *param);
+int						mouse_hook(int button, int x, int y, void *param);
 #endif // MINIRT_H

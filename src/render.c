@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/17 18:38:55 by zbengued          #+#    #+#             */
+/*   Updated: 2025/09/17 18:38:55 by zbengued         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
 #include <minirt.h>
 
 #define BASE_OFFSET 2 // Example offset, adjust as needed
@@ -50,25 +63,17 @@ t_ray	shoot_ray(t_scene *scene, t_vec3 screen_pos)
 t_hit_info	intersect_sphere(t_ray *ray, t_sphere *sphere)
 {
 	t_hit_info	hit_info;
-	t_vec3		oc;
-	double		a;
-	double		b;
-	double		c;
-	double		discriminant;
-	double		t1;
-	double		t2;
 
+	double (a), b, c, discriminant, t1, t2;
 	hit_info.distance = -1.0;
 	hit_info.hit = false;
-	oc = sub_vec3(ray->origin, sphere->center);
 	a = dot_vec3(ray->direction, ray->direction);
-	b = 2.0 * dot_vec3(oc, ray->direction);
-	c = dot_vec3(oc, oc) - (sphere->diameter * sphere->diameter) / 4.0;
+	b = 2.0 * dot_vec3(sub_vec3(ray->origin, sphere->center), ray->direction);
+	c = dot_vec3(sub_vec3(ray->origin, sphere->center), sub_vec3(ray->origin,
+				sphere->center)) - (sphere->diameter * sphere->diameter) / 4.0;
 	discriminant = b * b - 4 * a * c;
 	if (discriminant < 0)
-	{
 		return (hit_info);
-	}
 	t1 = (-b - sqrt(discriminant)) / (2.0 * a);
 	t2 = (-b + sqrt(discriminant)) / (2.0 * a);
 	if (t1 > 0.001)
@@ -80,62 +85,60 @@ t_hit_info	intersect_sphere(t_ray *ray, t_sphere *sphere)
 	hit_info.point = add_vec3(ray->origin,
 			scale_vec3(ray->direction, hit_info.distance));
 	hit_info.normal = normalize_vec3(sub_vec3(hit_info.point,
-			sphere->center));
-	hit_info.color = sphere->color;
-	hit_info.hit = true;
-	return (hit_info);
+				sphere->center));
+	return ((hit_info.color = sphere->color), (hit_info.hit = true), hit_info);
 }
 
-t_hit_info	intersect_cylinder_side(t_ray *ray, t_cylinder *cylinder)
+t_hit_info	compute_cylinder_hit(t_ray *ray, t_cylinder *cylinder,
+		t_vec3 axis, double *val)
 {
-	t_hit_info	hit_info;
-	t_vec3		axis;
-	t_vec3		oc;
-	double		rd_dot_axis;
-	double		oc_dot_axis;
-	double		a;
-	double		b;
-	double		c;
-	double		discriminant;
-	double		t1;
-	double		t2;
-	double		t;
+	t_hit_info	hit;
 	t_vec3		hit_point;
 	t_vec3		center_to_hit;
-	double		projection;
 	t_vec3		axis_point;
 
-	hit_info.distance = -1.0;
-	hit_info.hit = false;
-	axis = normalize_vec3(cylinder->axis);
-	oc = sub_vec3(ray->origin, cylinder->center);
-	rd_dot_axis = dot_vec3(ray->direction, axis);
-	oc_dot_axis = dot_vec3(oc, axis);
-	a = dot_vec3(ray->direction, ray->direction) - pow(rd_dot_axis, 2);
-	b = 2 * (dot_vec3(ray->direction, oc) - rd_dot_axis * oc_dot_axis);
-	c = dot_vec3(oc, oc) - pow(oc_dot_axis, 2)
-		- pow(cylinder->diameter / 2, 2);
-	discriminant = b * b - 4 * a * c;
-	if (discriminant < 0)
-		return (hit_info);
-	t1 = (-b - sqrt(discriminant)) / (2 * a);
-	t2 = (-b + sqrt(discriminant)) / (2 * a);
-	t = t1 > 0.001 ? t1 : t2;
+	double (t1), t2, t, projection;
+	hit.hit = false;
+	hit.distance = -1.0;
+	t1 = (-val[2] - sqrt(val[0])) / (2 * val[1]);
+	t2 = (-val[2] + sqrt(val[0])) / (2 * val[1]);
+	t = *(double *)ternary((t1 > 0.001), &t1, &t2);
 	if (t < 0.001)
-		return (hit_info);
+		return (hit);
 	hit_point = add_vec3(ray->origin, scale_vec3(ray->direction, t));
 	center_to_hit = sub_vec3(hit_point, cylinder->center);
 	projection = dot_vec3(center_to_hit, axis);
 	if (fabs(projection) > cylinder->height / 2)
-		return (hit_info);
-	hit_info.distance = t;
-	hit_info.point = hit_point;
-	axis_point = add_vec3(cylinder->center,
-			scale_vec3(axis, projection));
-	hit_info.normal = normalize_vec3(sub_vec3(hit_point, axis_point));
-	hit_info.color = cylinder->color;
-	hit_info.hit = true;
-	return (hit_info);
+		return (hit);
+	axis_point = add_vec3(cylinder->center, scale_vec3(axis, projection));
+	hit.point = hit_point;
+	hit.normal = normalize_vec3(sub_vec3(hit_point, axis_point));
+	hit.distance = t;
+	return ((hit.hit = true), (hit.color = cylinder->color), hit);
+}
+
+t_hit_info	intersect_cylinder_side(t_ray *ray, t_cylinder *cylinder)
+{
+	t_hit_info	hit;
+	t_vec3		axis;
+	t_vec3		oc;
+
+	double (a), b, c, discriminant, rd_dot_axis, oc_dot_axis;
+	hit.hit = false;
+	hit.distance = -1.0;
+	axis = normalize_vec3(cylinder->axis);
+	oc = sub_vec3(ray->origin, cylinder->center);
+	rd_dot_axis = dot_vec3(ray->direction, axis);
+	oc_dot_axis = dot_vec3(oc, axis);
+	a = dot_vec3(ray->direction, ray->direction) - rd_dot_axis * rd_dot_axis;
+	b = 2 * (dot_vec3(ray->direction, oc) - rd_dot_axis * oc_dot_axis);
+	c = dot_vec3(oc, oc) - oc_dot_axis * oc_dot_axis
+		- pow(cylinder->diameter / 2, 2);
+	discriminant = b * b - 4 * a * c;
+	if (discriminant < 0)
+		return (hit);
+	return (compute_cylinder_hit(ray, cylinder, axis,
+			(double [3]){discriminant, a, b}));
 }
 
 t_hit_info	intersect_cylinder_cap(t_ray *ray, t_cylinder *cylinder,

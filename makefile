@@ -6,8 +6,8 @@ BOLD		= \033[1m
 CLEAR		= \033[K\r
 NAME		= minirt
 CC			= cc
-CFLAGS		= -Wall -Wextra -Werror -g3 -fsanitize=address
-LFLAGS		= -lm -lmlx_Linux -lXext -lX11 -lm -lbsd -g3 -fsanitize=address
+CFLAGS		= -Wall -Wextra -Werror -g3 #-fsanitize=address -fsanitize=leak
+LFLAGS		= -lm -lmlx_Linux -lXext -lX11 -lm -lbsd -g3 #-fsanitize=address -fsanitize=leak
 AR			= ar rcs
 INCLUDES	= -I./includes/ -I./libft/ -I./minilibx-linux/
 LIBFT_DIR	= libft
@@ -17,6 +17,7 @@ MLX42		= $(addprefix $(MLX_DIR)/, libmlx_Linux.a)
 SRC			= src/minirt.c \
 			  src/render.c \
 			  src/free_object.c \
+			  src/keys.c \
 			  src/transform_object.c \
 			  src/parsing/parsing-1.c\
 			  src/parsing/parsing-2.c\
@@ -33,6 +34,7 @@ SRC			= src/minirt.c \
 			  src/texturing/texturing-4.c \
 			  src/texturing/texturing-5.c \
 			  src/texturing/texture_cleanup.c \
+			  src/calculation/equations-1.c \
 			  src/vec_op/vec-1.c \
 			  src/vec_op/vec-2.c \
 			  src/vec_op/vec-3.c

@@ -6,7 +6,7 @@
 /*   By: deepseeko <deepseeko@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 19:03:54 by deepseeko         #+#    #+#             */
-/*   Updated: 2025/09/17 17:28:38 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/19 21:34:57 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -421,4 +421,26 @@ void					apply_transformation(t_program *program, t_vec3 trans,
 							t_vec3 rot);
 int						key_hook(int keycode, void *param);
 int						mouse_hook(int button, int x, int y, void *param);
+
+t_hit_info				intersect_cylinder_side(t_ray *ray,
+							t_cylinder *cylinder);
+t_vec3					cross_product(t_vec3 a, t_vec3 b);
+t_vec3					screen_to_world(int x, int y);
+t_ray					shoot_ray(t_scene *scene, t_vec3 screen_pos);
+t_hit_info				intersect_sphere(t_ray *ray, t_sphere *sphere);
+t_program				**get_program(void);
+void					free_all_textures(t_scene *scene);
+t_object				*get_object(t_container *container, size_t index);
+t_light					*get_light(t_container *container, size_t index);
+t_hit_info				compute_cylinder_hit(t_ray *ray, t_cylinder *cylinder,
+							t_vec3 axis, double *val);
+void					register_allocation(void *ptr,
+							void (*free_func)(void *));
+t_hit_info				intersect_cylinder_side(t_ray *ray,
+							t_cylinder *cylinder);
+t_hit_info				intersect_cylinder_cap(t_ray *ray, t_cylinder *cylinder,
+							int cap_side);
+t_hit_info				intersect_cone_side(t_ray *ray, t_cone *cone);
+t_hit_info				intersect_cone_base(t_ray *ray, t_cone *cone);
+t_hit_info				intersect_cone(t_ray *ray, t_cone *cone);
 #endif // MINIRT_H

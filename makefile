@@ -35,6 +35,10 @@ SRC			= src/minirt.c \
 			  src/texturing/texturing-5.c \
 			  src/texturing/texture_cleanup.c \
 			  src/calculation/equations-1.c \
+			  src/calculation/equations-2.c \
+			  src/calculation/equations-3.c \
+			  src/calculation/equations-4.c \
+			  src/calculation/equations-5.c \
 			  src/vec_op/vec-1.c \
 			  src/vec_op/vec-2.c \
 			  src/vec_op/vec-3.c

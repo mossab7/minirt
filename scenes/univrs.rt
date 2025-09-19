@@ -5,7 +5,7 @@ C   50,70,50                   -0.2,-0.2,-1.0     70
 
 L   0,0,0                1.0         255,255,255
 
-sp -38.00,0.00,-100.00       10.5           200,200,200 texture textures/others/solar_system/merrcury.xpm
+sp -38.00,0.00,-100.00       10.5           200,200,200 texture textures/others/solar_system/mercury.xpm
 sp 64.00,0.00,-278.00        26.0           200,200,200 texture textures/others/solar_system/venus.xpm
 sp 174.00,0.00,-500.00       27.3           200,200,200 texture textures/others/solar_system/earth.xpm
 sp 298.00,0.00,-716.00       14.6           200,200,200 texture textures/others/solar_system/mars.xpm

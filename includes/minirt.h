@@ -244,7 +244,7 @@ typedef struct s_program
 	bool				program_running;
 	int					worker_finish_count;
 	bool				dirty;
-	bool				keys[7000];
+	bool				keys[70000];
 }						t_program;
 
 typedef struct s_matrix4d
@@ -470,11 +470,12 @@ void					set_single_worker_bounds(t_worker *worker);
 void					set_grid_division_bounds(t_worker *workers,
 							int num_threads);
 void					calculate_worker_bounds(t_program *program);
-void					safe_exit(int status);
+int						safe_exit(int status);
 t_canvas				*init_canvas(void *mlx_ptr, int width, int height);
 t_mlx					*_init_mlx(void);
 
 int						key_press(int keycode, void *param);
 int						key_release(int keycode, void *param);
+int						*get_keys(void);
 
 #endif // MINIRT_H

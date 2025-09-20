@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 20:11:07 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/09/17 18:33:49 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/20 14:53:17 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef LIBFT_H
@@ -131,7 +131,7 @@ void						cleanup_memory_tracker(
 								t_alloc_record **memory_records);
 void						free_resource(void (*free_func)(void *),
 								void *resource);
-void						safe_exit(int code);
+int							safe_exit(int code);
 int							ft_open(const char *filename, int flags);
 void						*ft_realloc(void *ptr, size_t new_sz,
 								size_t old_sz);

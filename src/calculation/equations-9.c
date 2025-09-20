@@ -47,7 +47,7 @@ static void	cleanup_mlx(t_program *program)
 		mlx_destroy_display(program->mlx->mlx_ptr);
 }
 
-void	safe_exit(int status)
+int	safe_exit(int status)
 {
 	t_program	*program;
 

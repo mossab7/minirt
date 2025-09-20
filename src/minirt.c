@@ -15,7 +15,7 @@
 static void	set_keys(t_program *program)
 {
 	int (i) = 0;
-	while (i < 7000)
+	while (i < 70000)
 	{
 		program->keys[i] = false;
 		i++;
@@ -40,6 +40,7 @@ int	main(int argc, char **argv)
 	set_keys(program);
 	mlx_hook(program->mlx->win_ptr, 2, 1L << 0, key_press, program);
 	mlx_hook(program->mlx->win_ptr, 3, 1L << 1, key_release, program);
+	mlx_hook(program->mlx->win_ptr, 17, 0, safe_exit, program);
 	mlx_loop_hook(program->mlx->mlx_ptr, loop_hook, program);
 	mlx_mouse_hook(program->mlx->win_ptr, mouse_hook, program);
 	mlx_loop(program->mlx->mlx_ptr);

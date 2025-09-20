@@ -12,21 +12,25 @@
 
 #include <minirt.h>
 
+#define KEY_COUNT 10
+
 int	loop_hook(void *param)
 {
 	t_program (*program) = (t_program *)param;
 	t_vec3 (translation) = (t_vec3){0, 0, 0};
 	t_vec3 (rotation) = (t_vec3){0, 0, 0};
 	bool (changed) = false;
-	int (key) = 0;
-	while (key < 7000)
+	int (key), i;
+	i = 0;
+	while (i < KEY_COUNT)
 	{
+		key = get_keys()[i];
 		if (program->keys[key])
 		{
 			trans_keys(key, &translation, program, &changed);
 			rot_keys(key, &rotation, &changed);
 		}
-		key++;
+		i++;
 	}
 	if (changed)
 		apply_transformation(program, translation, rotation);

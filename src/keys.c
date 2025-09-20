@@ -6,7 +6,7 @@
 /*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 17:26:54 by zbengued          #+#    #+#             */
-/*   Updated: 2025/09/20 03:13:46 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/20 03:09:59 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #include <stdio.h>
 #include <transform_object.h>
 
-#define ROT_SPEED 0.05
-#define TRANS_SPEED 0.5
-#define K_UP 'i'
+#define ROT_SPEED 0.1
+#define TRANS_SPEED 3
+#define UP 65362
 #define K_DOWN 'k'
 #define K_LEFT 'j'
 #define K_RIGHT 'l'
@@ -25,27 +25,29 @@
 
 void	trans_keys(int key, t_vec3 *trans, t_program *program, bool *changed)
 {
-	if (key == K_RIGHT)
+	if (key == XK_Right)
 		*trans = add_vec3(*trans,
 				scale_vec3(program->scene->camera.right, TRANS_SPEED));
-	if (key == K_LEFT)
+	if (key == XK_Left)
 		*trans = add_vec3(*trans,
 				scale_vec3(program->scene->camera.right, -TRANS_SPEED));
-	if (key == K_UP)
+	if (key == XK_Up)
 		*trans = add_vec3(*trans,
 				scale_vec3(program->scene->camera.direction, TRANS_SPEED));
-	if (key == K_DOWN)
+	if (key == XK_Down)
 		*trans = add_vec3(*trans,
 				scale_vec3(program->scene->camera.direction, -TRANS_SPEED));
-	if (key == K_SPACE)
+	if (key == XK_space)
 		*trans = add_vec3(*trans,
 				scale_vec3(program->scene->camera.up, TRANS_SPEED));
-	if (key == K_SHIFT)
+	if (key == XK_Shift_L)
 		*trans = add_vec3(*trans,
 				scale_vec3(program->scene->camera.up, -TRANS_SPEED));
-	if (key == K_DOWN || key == K_UP || key == K_LEFT || key == K_RIGHT
-		|| key == K_SHIFT || key == K_SPACE)
+	if (key == XK_Down || key == XK_Up || key == XK_Left || key == XK_Right
+		|| key == XK_Shift_L || key == XK_space)
+	{
 		*changed = true;
+	}
 }
 
 void	rot_keys(int key, t_vec3 *rot, bool *has_changed)

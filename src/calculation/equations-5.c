@@ -16,7 +16,8 @@
 
 static t_vec3	get_cone_base_center(t_cone *cone, t_vec3 axis)
 {
-	return (add_vec3(sub_vec3(cone->center, scale_vec3(axis, cone->height / 4.0)),
+	return (add_vec3(sub_vec3(cone->center,
+				scale_vec3(axis, cone->height / 4.0)),
 			scale_vec3(axis, cone->height * BASE_OFFSET)));
 }
 
@@ -77,7 +78,8 @@ t_hit_info	intersect_cone(t_ray *ray, t_cone *cone)
 	hit_info.hit = false;
 	side_hit = intersect_cone_side(ray, cone);
 	base_hit = intersect_cone_base(ray, cone);
-	if (side_hit.hit && (!base_hit.hit || side_hit.distance < base_hit.distance))
+	if (side_hit.hit
+		&& (!base_hit.hit || side_hit.distance < base_hit.distance))
 		hit_info = side_hit;
 	else if (base_hit.hit)
 		hit_info = base_hit;

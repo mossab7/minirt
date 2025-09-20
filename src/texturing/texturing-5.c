@@ -36,7 +36,6 @@ t_texture	*load_texture(char *filename)
 	return (texture);
 }
 
-
 t_color	get_pixel_color(t_texture *texture, int x, int y)
 {
 	char	*dst;
@@ -52,6 +51,7 @@ t_color	get_pixel_color(t_texture *texture, int x, int y)
 	color.b = (color_val & 0xFF) / 255.0;
 	return (color);
 }
+
 static void	calc_plane(t_hit_info *hit_info, double *u, double *v)
 {
 	t_vec3	up;

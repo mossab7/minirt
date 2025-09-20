@@ -18,6 +18,7 @@ SRC			= src/minirt.c \
 			  src/render.c \
 			  src/free_object.c \
 			  src/keys.c \
+			  src/keys-2.c \
 			  src/transform_object.c \
 			  src/parsing/parsing-1.c\
 			  src/parsing/parsing-2.c\
@@ -39,6 +40,13 @@ SRC			= src/minirt.c \
 			  src/calculation/equations-3.c \
 			  src/calculation/equations-4.c \
 			  src/calculation/equations-5.c \
+			  src/calculation/equations-6.c \
+			  src/calculation/equations-7.c \
+			  src/calculation/equations-8.c \
+			  src/calculation/equations-9.c \
+			  src/calculation/equations-10.c \
+			  src/calculation/equations-11.c \
+			  src/calculation/equations-12.c \
 			  src/vec_op/vec-1.c \
 			  src/vec_op/vec-2.c \
 			  src/vec_op/vec-3.c

@@ -6,7 +6,7 @@
 /*   By: deepseeko <deepseeko@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 19:03:54 by deepseeko         #+#    #+#             */
-/*   Updated: 2025/09/19 21:34:57 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/20 03:17:31 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@
 # include <macros.h>
 # include <math.h>
 # include <pthread.h>
+# include <X11/keysym.h>
+# include <mlx.h>
+# include <stdbool.h>
+# include <stdio.h>
 
 typedef struct t_vec3
 {
@@ -218,9 +222,10 @@ typedef struct s_worker
 	int					end_x;
 }						t_worker;
 
-typedef struct
+typedef struct s_pixel_batch
 {
-	int x, y;
+	int	x;
+	int	y;
 	t_color				color;
 }						t_pixel_batch;
 
@@ -239,6 +244,7 @@ typedef struct s_program
 	bool				program_running;
 	int					worker_finish_count;
 	bool				dirty;
+	bool				keys[7000];
 }						t_program;
 
 typedef struct s_matrix4d
@@ -443,4 +449,32 @@ t_hit_info				intersect_cylinder_cap(t_ray *ray, t_cylinder *cylinder,
 t_hit_info				intersect_cone_side(t_ray *ray, t_cone *cone);
 t_hit_info				intersect_cone_base(t_ray *ray, t_cone *cone);
 t_hit_info				intersect_cone(t_ray *ray, t_cone *cone);
+t_hit_info				intersect_cylinder(t_ray *ray, t_cylinder *cylinder);
+t_hit_info				intersect_plane(t_ray *ray, t_plane *plane);
+t_vec3					get_cone_normal(t_cone *cone, t_vec3 point);
+t_pattern				*get_object_pattern(t_hit_info *hit_info);
+t_vec3					compute_light_dir(t_hit_info *hit_info, t_light *light);
+bool					is_in_shadow(t_scene *scene, t_hit_info *hit_info,
+							t_light *light);
+t_vec3					compute_light_dir(t_hit_info *hit_info, t_light *light);
+t_hit_info				find_closest_intersection(t_container *objects,
+							t_ray *ray);
+bool					is_in_shadow(t_scene *scene, t_hit_info *hit_info,
+							t_light *light);
+void					set_up_workers(t_program *program);
+void					worker_render_scene(t_worker *worker);
+void					*worker_loop(void *arg);
+int						loop_hook(void *param);
+long					get_num_cores_unix(void);
+void					set_single_worker_bounds(t_worker *worker);
+void					set_grid_division_bounds(t_worker *workers,
+							int num_threads);
+void					calculate_worker_bounds(t_program *program);
+void					safe_exit(int status);
+t_canvas				*init_canvas(void *mlx_ptr, int width, int height);
+t_mlx					*_init_mlx(void);
+
+int						key_press(int keycode, void *param);
+int						key_release(int keycode, void *param);
+
 #endif // MINIRT_H

@@ -1,19 +1,60 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   wasakh.c                                           :+:      :+:    :+:   */
+/*   equations-10.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/08 19:00:34 by zbengued          #+#    #+#             */
-/*   Updated: 2025/09/17 18:50:13 by zbengued         ###   ########.fr       */
+/*   Created: 2025/09/20 01:26:33 by zbengued          #+#    #+#             */
+/*   Updated: 2025/09/20 03:04:43 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minirt.h>
-#include <stdbool.h>
-#include "../includes/transform_object.h"
-#include "../includes/camera.h"
+
+int	loop_hook(void *param)
+{
+	t_program (*program) = (t_program *)param;
+	t_vec3 (translation) = (t_vec3){0, 0, 0};
+	t_vec3 (rotation) = (t_vec3){0, 0, 0};
+	bool (changed) = false;
+	int (key) = 0;
+	while (key < 7000)
+	{
+		if (program->keys[key])
+		{
+			trans_keys(key, &translation, program, &changed);
+			rot_keys(key, &rotation, &changed);
+		}
+		key++;
+	}
+	if (changed)
+		apply_transformation(program, translation, rotation);
+	if (program->dirty)
+	{
+		render_scene(program);
+		program->dirty = false;
+	}
+	return (0);
+}
+
+long	get_num_cores_unix(void)
+{
+	long	num_cores;
+
+	num_cores = sysconf(_SC_NPROCESSORS_ONLN);
+	if (num_cores > 0)
+		return (num_cores);
+	return (1);
+}
+
+void	set_single_worker_bounds(t_worker *worker)
+{
+	worker->start_x = 0;
+	worker->end_x = WIN_WIDTH;
+	worker->start_y = 0;
+	worker->end_y = WIN_HEIGHT;
+}
 
 void	set_grid_division_bounds(t_worker *workers, int num_threads)
 {
@@ -40,4 +81,14 @@ void	set_grid_division_bounds(t_worker *workers, int num_threads)
 			workers[i].end_y = (tile_y + 1) * rows_per_tile;
 		i++;
 	}
+}
+
+void	calculate_worker_bounds(t_program *program)
+{
+	t_worker (*workers) = program->workers;
+	int (num_threads) = program->num_workers;
+	if (num_threads == 1)
+		set_single_worker_bounds(&workers[0]);
+	else
+		set_grid_division_bounds(workers, num_threads);
 }

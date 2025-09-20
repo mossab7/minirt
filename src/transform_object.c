@@ -87,7 +87,8 @@ void	transforme_camera(t_program *program, t_vec3 rotation, t_vec3 trans)
 		rot_matrix = matrix4d_mult(rot_z, matrix4d_mult(rot_y, rot_x));
 		program->scene->camera.direction = matrix4d_mult_vec3(rot_matrix,
 				program->scene->camera.direction);
-		program->scene->camera.direction = normalize_vec3(program->scene->camera.direction);
+		program->scene->camera.direction = normalize_vec3(
+				program->scene->camera.direction);
 		recalculate_camera_vectors(&program->scene->camera);
 	}
 }

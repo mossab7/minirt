@@ -75,7 +75,7 @@ t_scene	*parse_scene(char *filename)
 	if (parse_filename(filename) == -1)
 	{
 		ft_putstr_fd("Error: Invalid file name\n", 2);
-		safe_exit(1);	
+		safe_exit(1);
 	}
 	scene = init_scene();
 	fd = ft_open(filename, O_RDONLY);

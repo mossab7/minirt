@@ -71,4 +71,3 @@ double	lerp(double t, double a, double b)
 {
 	return (a + t * (b - a));
 }
-

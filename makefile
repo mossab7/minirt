@@ -1,3 +1,17 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/09/24 00:06:20 by zbengued          #+#    #+#              #
+#    Updated: 2025/09/24 01:08:21 by zbengued         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+MAKEFLAGS += --no-print-directory
+
 GREEN  		= \033[0;32m
 YELLOW 		= \033[0;33m
 RED    		= \033[0;31m
@@ -9,22 +23,17 @@ CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -g3 #-fsanitize=address -fsanitize=leak
 LFLAGS		= -lm -lmlx_Linux -lXext -lX11 -lm -lbsd -g3 #-fsanitize=address -fsanitize=leak
 AR			= ar rcs
-INCLUDES	= -I./includes/ -I./libft/ -I./minilibx-linux/
+INCLUDES	= -I./includes/ -I./libft/headers/ -I./minilibx-linux/
 LIBFT_DIR	= libft
 MLX_DIR		= minilibx-linux
 LIBFT		= $(addprefix $(LIBFT_DIR)/, libft.a)
 MLX42		= $(addprefix $(MLX_DIR)/, libmlx_Linux.a)
-SRC			= src/minirt.c \
+SRC			= src/my_parsing.c \
 			  src/render.c \
 			  src/free_object.c \
 			  src/keys.c \
 			  src/keys-2.c \
 			  src/transform_object.c \
-			  src/parsing/parsing-1.c\
-			  src/parsing/parsing-2.c\
-			  src/parsing/parsing-3.c\
-			  src/parsing/parsing-4.c\
-			  src/parsing/parsing-5.c \
 			  src/matrix_op/matrix-1.c \
 			  src/matrix_op/matrix-2.c \
 			  src/matrix_op/matrix-3.c \
@@ -51,7 +60,15 @@ SRC			= src/minirt.c \
 			  src/vec_op/vec-2.c \
 			  src/vec_op/vec-3.c
 
+			  # src/parsing/parsing-1.c\
+			  # src/parsing/parsing-2.c\
+			  # src/parsing/parsing-3.c\
+			  # src/parsing/parsing-4.c\
+			  # src/parsing/parsing-5.c
 OBJ			= $(patsubst src/%.c, obj/%.o, $(SRC))
+
+test: $(NAME)
+
 
 all: $(NAME)
 	@printf "$(GREEN)$(BOLD)$(NAME) done!$(RESET)\n"
@@ -62,23 +79,34 @@ $(NAME): $(MLX42) $(LIBFT) $(OBJ)
 
 obj/%.o: src/%.c
 	@mkdir -p $(dir $@)
-	@printf "[$(GREEN)$(BOLD) OK $(RESET)$(BOLD)]$(RESET) compiling $(BOLD)$@...$(RESET)$(CLEAR)\n"
+	@printf "\r[$(GREEN)$(BOLD) OK $(RESET)$(BOLD)]$(RESET) compiling $(BOLD)$@...$(RESET)$(CLEAR)"
 	@$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $@
 
 $(LIBFT):
 	@make -C $(LIBFT_DIR)/ all
 	
 $(MLX42):
-	@make -C $(MLX_DIR)/ all
+	@printf "$(YELLOW)Making MLX...\n$(RESET)"
+	@printf "Building MLX"; \
+	( $(MAKE) --no-print-directory -C $(MLX_DIR) 2> /dev/null > /dev/null) & pid=$$!; \
+	while kill -0 $$pid 2>/dev/null; do \
+		for dots in "" "." ".." "..."; do \
+			printf "\r$(YELLOW)Building MLX%s " "$$dots"; \
+			sleep 0.3; \
+		done; \
+	done; \
+	wait $$pid; \
+	printf "$(GREEN)\rMLX done!      \n$(RESET)"
 
 clean:
 	@make -C $(LIBFT_DIR)/ clean
-	@make -C $(MLX_DIR)/ clean
+	@printf "$(RED)Cleaning MLX\n$(RESET)"
+	@make -C $(MLX_DIR)/ clean 2> /dev/null > /dev/null
 	@rm -rf obj
 
 fclean: clean
 	@make -C $(LIBFT_DIR)/ fclean
-	@make -C $(MLX_DIR)/ clean
+	@make -C $(MLX_DIR)/ clean 2> /dev/null > /dev/null
 	@rm -f $(NAME)
 
 re: fclean all

@@ -22,13 +22,13 @@ static t_hit_info	intersect_object(t_object *object, t_ray *ray)
 	t_hit_info	no_hit;
 
 	if (object->type == SPHERE)
-		return (intersect_sphere(ray, &object->obj.sphere));
+		return (intersect_sphere(ray, &object->u_obj.sphere));
 	else if (object->type == PLANE)
-		return (intersect_plane(ray, &object->obj.plane));
+		return (intersect_plane(ray, &object->u_obj.plane));
 	else if (object->type == CYLINDER)
-		return (intersect_cylinder(ray, &object->obj.cylinder));
+		return (intersect_cylinder(ray, &object->u_obj.cylinder));
 	else if (object->type == CONE)
-		return (intersect_cone(ray, &object->obj.cone));
+		return (intersect_cone(ray, &object->u_obj.cone));
 	no_hit.hit = false;
 	no_hit.distance = -1.0;
 	return (no_hit);

@@ -17,14 +17,14 @@ void	translate_object(t_object *obj, t_vec3 translation)
 	if (!obj)
 		return ;
 	if (obj->type == SPHERE)
-		obj->obj.sphere.center = add_vec3(obj->obj.sphere.center, translation);
+		obj->u_obj.sphere.center = add_vec3(obj->u_obj.sphere.center, translation);
 	else if (obj->type == PLANE)
-		obj->obj.plane.center = add_vec3(obj->obj.plane.center, translation);
+		obj->u_obj.plane.center = add_vec3(obj->u_obj.plane.center, translation);
 	else if (obj->type == CYLINDER)
-		obj->obj.cylinder.center = add_vec3(obj->obj.cylinder.center,
+		obj->u_obj.cylinder.center = add_vec3(obj->u_obj.cylinder.center,
 				translation);
 	else if (obj->type == CONE)
-		obj->obj.cone.center = add_vec3(obj->obj.cone.center, translation);
+		obj->u_obj.cone.center = add_vec3(obj->u_obj.cone.center, translation);
 }
 
 static t_matrix4d	rot_mat(t_vec3 rotation_angles)
@@ -49,11 +49,11 @@ void	rotate_object(t_object *obj, t_vec3 rotation_angles)
 	rot_matrix = rot_mat(rotation_angles);
 	axis = NULL;
 	if (obj->type == PLANE)
-		axis = &obj->obj.plane.normal;
+		axis = &obj->u_obj.plane.normal;
 	else if (obj->type == CYLINDER)
-		axis = &obj->obj.cylinder.axis;
+		axis = &obj->u_obj.cylinder.axis;
 	else if (obj->type == CONE)
-		axis = &obj->obj.cone.axis;
+		axis = &obj->u_obj.cone.axis;
 	else if (obj->type == SPHERE)
 		return ;
 	if (axis)
@@ -65,7 +65,8 @@ void	rotate_object(t_object *obj, t_vec3 rotation_angles)
 
 void	recalculate_camera_vectors(t_camera *camera)
 {
-	camera->right = normalize_vec3(cross_vec3(camera->direction, UPVEC));
+	camera->right = normalize_vec3(cross_vec3(camera->direction,
+				(t_vec3){0.0f, 1.0f, 0.0f}));
 	camera->up = normalize_vec3(cross_vec3(camera->direction, camera->right));
 	camera->right = normalize_vec3(cross_vec3(camera->direction, camera->up));
 }

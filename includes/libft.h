@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 20:11:07 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/09/20 14:53:17 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/24 00:03:43 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef LIBFT_H
@@ -25,7 +25,6 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
-
 
 # define MAX_LONG 9223372036854775807
 # define NON -2
@@ -79,7 +78,7 @@ size_t						ft_strlcpy(char *restrict dst,
 								const char *restrict src, size_t dstsize);
 size_t						ft_strlcat(char *restrict dst,
 								const char *restrict src, size_t dstsize);
-size_t						ft_strlen(char *s);
+size_t						ft_strlen(const char *s);
 char						*ft_strnstr(const char *haystack,
 								const char *needle, size_t len);
 int							ft_strcmp(const char *s1, const char *s2);
@@ -146,4 +145,5 @@ void						ft_free_2d(char **v, size_t size);
 char						**ft_split_set(char const *s, char *set);
 char						*ft_strcpy(char *dest, char *src);
 void						*ternary(int condition, void *a, void *b);
+double						ft_atof(char *str);
 #endif // LIBFT_H

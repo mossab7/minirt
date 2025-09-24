@@ -6,10 +6,11 @@
 /*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 18:08:52 by zbengued          #+#    #+#             */
-/*   Updated: 2025/09/18 17:11:38 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/24 02:26:26 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_string.h"
 #include <minirt.h>
 
 void	parse_paraboloid(char **data, t_scene *scene)
@@ -21,12 +22,12 @@ void	parse_paraboloid(char **data, t_scene *scene)
 	register_memory_allocation(get_memory_tracker(),
 		create_memory_record(obj, free_object));
 	obj->type = PARABOLOID;
-	obj->obj.paraboloid.center = get_vec3(data[1]);
-	obj->obj.paraboloid.axis = get_vec3(data[2]);
-	check_vec_range(obj->obj.paraboloid.axis);
-	obj->obj.paraboloid.diameter = atof(data[3]);
-	obj->obj.paraboloid.height = atof(data[4]);
-	obj->obj.paraboloid.color = get_color(data[5]);
+	obj->u_obj.paraboloid.center = get_vec3(data[1]);
+	obj->u_obj.paraboloid.axis = get_vec3(data[2]);
+	check_vec_range(obj->u_obj.paraboloid.axis);
+	obj->u_obj.paraboloid.diameter = ft_atof(data[3]);
+	obj->u_obj.paraboloid.height = ft_atof(data[4]);
+	obj->u_obj.paraboloid.color = get_color(data[5]);
 	container_push_back(scene->objects, obj);
 }
 

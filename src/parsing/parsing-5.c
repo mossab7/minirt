@@ -33,7 +33,7 @@ static void	checkerboard(t_pattern *pattern, char **data, int *i, int totalargs)
 	}
 	pattern->color1 = get_color(data[*i + 1]);
 	pattern->color2 = get_color(data[*i + 2]);
-	pattern->scale = atof(data[*i + 3]);
+	pattern->scale = ft_atof(data[*i + 3]);
 	*i += 4;
 }
 
@@ -45,8 +45,8 @@ static void	bump(t_pattern *pattern, char **data, int *i, int totalargs)
 		ft_putstr_fd("Error: Missing bump map params\n", 2);
 		return ;
 	}
-	pattern->scale = atof(data[*i + 1]);
-	pattern->bump_strength = atof(data[*i + 2]);
+	pattern->scale = ft_atof(data[*i + 1]);
+	pattern->bump_strength = ft_atof(data[*i + 2]);
 	*i += 3;
 }
 

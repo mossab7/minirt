@@ -18,7 +18,7 @@ void	parse_sphare(char **data, t_scene *scene)
 	t_object	*obj;
 
 	sphere.center = get_vec3(data[1]);
-	sphere.diameter = atof(data[2]);
+	sphere.diameter = ft_atof(data[2]);
 	if (sphere.diameter <= 0)
 	{
 		ft_putstr_fd("Error: Invalid sphere diameter\n", 2);
@@ -31,7 +31,7 @@ void	parse_sphare(char **data, t_scene *scene)
 	else
 		obj->pattern.type = PATTERN_NONE;
 	obj->type = SPHERE;
-	obj->obj.sphere = sphere;
+	obj->u_obj.sphere = sphere;
 	container_push_back(scene->objects, obj);
 }
 
@@ -41,10 +41,10 @@ void	parse_plane(char **data, t_scene *scene)
 
 	obj = alloc(sizeof(t_object));
 	obj->type = PLANE;
-	obj->obj.plane.center = get_vec3(data[1]);
-	obj->obj.plane.normal = get_vec3(data[2]);
-	check_vec_range(obj->obj.plane.normal);
-	obj->obj.plane.color = get_color(data[3]);
+	obj->u_obj.plane.center = get_vec3(data[1]);
+	obj->u_obj.plane.normal = get_vec3(data[2]);
+	check_vec_range(obj->u_obj.plane.normal);
+	obj->u_obj.plane.color = get_color(data[3]);
 	if (data[4])
 		parse_pattern(&data[4], &obj->pattern);
 	else
@@ -58,12 +58,12 @@ void	parse_cylinder(char **data, t_scene *scene)
 
 	obj = alloc(sizeof(t_object));
 	obj->type = CYLINDER;
-	obj->obj.cylinder.center = get_vec3(data[1]);
-	obj->obj.cylinder.axis = get_vec3(data[2]);
-	check_vec_range(obj->obj.cylinder.axis);
-	obj->obj.cylinder.diameter = atof(data[3]);
-	obj->obj.cylinder.height = atof(data[4]);
-	obj->obj.cylinder.color = get_color(data[5]);
+	obj->u_obj.cylinder.center = get_vec3(data[1]);
+	obj->u_obj.cylinder.axis = get_vec3(data[2]);
+	check_vec_range(obj->u_obj.cylinder.axis);
+	obj->u_obj.cylinder.diameter = ft_atof(data[3]);
+	obj->u_obj.cylinder.height = ft_atof(data[4]);
+	obj->u_obj.cylinder.color = get_color(data[5]);
 	if (data[6])
 		parse_pattern(&data[6], &obj->pattern);
 	else
@@ -77,14 +77,14 @@ void	parse_cone(char **data, t_scene *scene)
 
 	obj = alloc(sizeof(t_object));
 	obj->type = CONE;
-	obj->obj.cone.center = sub_vec3(get_vec3(data[1]),
-			scale_vec3(obj->obj.cone.axis, obj->obj.cone.height));
-	obj->obj.cone.axis = get_vec3(data[2]);
-	check_vec_range(obj->obj.cone.axis);
-	obj->obj.cone.diameter = atof(data[3]);
-	obj->obj.cone.height = atof(data[4]);
-	obj->obj.cone.color = get_color(data[5]);
-	if (obj->obj.cone.diameter <= 0 || obj->obj.cone.height <= 0)
+	obj->u_obj.cone.center = sub_vec3(get_vec3(data[1]),
+			scale_vec3(obj->u_obj.cone.axis, obj->u_obj.cone.height));
+	obj->u_obj.cone.axis = get_vec3(data[2]);
+	check_vec_range(obj->u_obj.cone.axis);
+	obj->u_obj.cone.diameter = ft_atof(data[3]);
+	obj->u_obj.cone.height = ft_atof(data[4]);
+	obj->u_obj.cone.color = get_color(data[5]);
+	if (obj->u_obj.cone.diameter <= 0 || obj->u_obj.cone.height <= 0)
 	{
 		ft_putstr_fd("Error: Invalid cone diameter or height\n", 2);
 		safe_exit(1);
@@ -102,11 +102,11 @@ void	parse_hyperboloid(char **data, t_scene *scene)
 
 	obj = alloc(sizeof(t_object));
 	obj->type = HYPERBOLDOID;
-	obj->obj.hyperboloid.center = get_vec3(data[1]);
-	obj->obj.hyperboloid.axis = get_vec3(data[2]);
-	check_vec_range(obj->obj.hyperboloid.axis);
-	obj->obj.hyperboloid.diameter = atof(data[3]);
-	obj->obj.hyperboloid.height = atof(data[4]);
-	obj->obj.hyperboloid.color = get_color(data[5]);
+	obj->u_obj.hyperboloid.center = get_vec3(data[1]);
+	obj->u_obj.hyperboloid.axis = get_vec3(data[2]);
+	check_vec_range(obj->u_obj.hyperboloid.axis);
+	obj->u_obj.hyperboloid.diameter = ft_atof(data[3]);
+	obj->u_obj.hyperboloid.height = ft_atof(data[4]);
+	obj->u_obj.hyperboloid.color = get_color(data[5]);
 	container_push_back(scene->objects, obj);
 }

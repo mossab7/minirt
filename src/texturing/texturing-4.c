@@ -22,17 +22,17 @@ t_vec3	apply_bump_mapping(t_hit_info *hit_info, t_pattern *pattern)
 static t_color	get_base_color(t_object *obj)
 {
 	if (obj->type == SPHERE)
-		return (obj->obj.sphere.color);
+		return (obj->u_obj.sphere.color);
 	if (obj->type == PLANE)
-		return (obj->obj.plane.color);
+		return (obj->u_obj.plane.color);
 	if (obj->type == CYLINDER)
-		return (obj->obj.cylinder.color);
+		return (obj->u_obj.cylinder.color);
 	if (obj->type == CONE)
-		return (obj->obj.cone.color);
+		return (obj->u_obj.cone.color);
 	if (obj->type == HYPERBOLDOID)
-		return (obj->obj.hyperboloid.color);
+		return (obj->u_obj.hyperboloid.color);
 	if (obj->type == PARABOLOID)
-		return (obj->obj.paraboloid.color);
+		return (obj->u_obj.paraboloid.color);
 	return ((t_color){0, 0, 0});
 }
 

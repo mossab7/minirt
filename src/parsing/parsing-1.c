@@ -63,6 +63,7 @@ void	parse_obj_data(char **data, t_scene *scene)
 	if (i == OBJ_COUNT)
 	{
 		printf("Error: Unknown object type |'%s'|\n", data[0]);
+		// TOFIX : safe_exit();
 		return ;
 	}
 }
@@ -72,15 +73,17 @@ t_color	get_color(char *data)
 	t_color	color;
 	char	**rgb;
 
+
+	// TOFIX : Here we need to check if there are too many ','s like "255,255,,,,,,,255"
 	rgb = ft_split(data, ',');
-	if (!rgb || !rgb[RED_INDEX] || !rgb[GREEN_INDEX] || !rgb[BLUE_INDEX])
+	if (!rgb || !rgb[RED_INDEX] || !rgb[GREEN_INDEX] || !rgb[BLUE_INDEX] || rgb[3])
 	{
 		ft_putstr_fd("Error: Invalid color format\n", 2);
 		safe_exit(1);
 	}
-	color.r = atof(rgb[RED_INDEX]);
-	color.g = atof(rgb[GREEN_INDEX]);
-	color.b = atof(rgb[BLUE_INDEX]);
+	color.r = ft_atof(rgb[RED_INDEX]);
+	color.g = ft_atof(rgb[GREEN_INDEX]);
+	color.b = ft_atof(rgb[BLUE_INDEX]);
 	ft_free_2d(rgb, -1);
 	if (color.r < COLOR_MIN || color.r > COLOR_MAX || color.g < COLOR_MIN
 		|| color.g > COLOR_MAX || color.b < COLOR_MIN || color.b > COLOR_MAX)
@@ -105,9 +108,9 @@ t_vec3	get_vec3(char *vec)
 		ft_putstr_fd("Error: Invalid vector format\n", 2);
 		safe_exit(1);
 	}
-	vec3.x = atof(v[X_INDEX]);
-	vec3.y = atof(v[Y_INDEX]);
-	vec3.z = atof(v[Z_INDEX]);
+	vec3.x = ft_atof(v[X_INDEX]);
+	vec3.y = ft_atof(v[Y_INDEX]);
+	vec3.z = ft_atof(v[Z_INDEX]);
 	ft_free_2d(v, -1);
 	return (vec3);
 }

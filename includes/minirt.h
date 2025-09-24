@@ -6,7 +6,7 @@
 /*   By: deepseeko <deepseeko@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 19:03:54 by deepseeko         #+#    #+#             */
-/*   Updated: 2025/09/20 03:17:31 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/20 16:08:15 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <mlx.h>
 # include <stdbool.h>
 # include <stdio.h>
+#include "ft_string.h"
 
 typedef struct t_vec3
 {
@@ -142,7 +143,7 @@ typedef struct s_object
 		t_cone			cone;
 		t_hyperboloid	hyperboloid;
 		t_paraboloid	paraboloid;
-	} obj;
+	} u_obj;
 	t_pattern			pattern;
 }						t_object;
 
@@ -224,8 +225,8 @@ typedef struct s_worker
 
 typedef struct s_pixel_batch
 {
-	int	x;
-	int	y;
+	int					x;
+	int					y;
 	t_color				color;
 }						t_pixel_batch;
 
@@ -261,6 +262,13 @@ typedef struct t_material
 }						t_material;
 
 typedef void			(*t_parse_function)(char **, t_scene *);
+typedef void (*t_parse_fn)(t_scene *s_scene, t_str *line);
+typedef struct s_parse_entry
+{
+	char		*key;
+	t_parse_fn	fn;
+	size_t		len;
+}	t_parse_entry;
 
 void					parse_amb_light(char **data, t_scene *scene);
 void					parse_camera(char **data, t_scene *scene);
@@ -305,8 +313,6 @@ t_matrix4d				matrix4d_rotation_z(double angle);
 t_matrix4d				matrix4d_rotation(t_vec3 rotation);
 t_matrix4d				matrix4d_scale(t_vec3 scale);
 t_matrix4d				matrix4d_scaling(t_vec3 scale);
-t_matrix4d				matrix4d_shearing(double xy, double xz, double yx,
-							double yz, double zx, double zy);
 
 /* Matrix operations */
 t_matrix4d				matrix4d_mult(t_matrix4d a, t_matrix4d b);

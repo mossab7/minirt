@@ -68,8 +68,8 @@ static void	fil_uv(t_hit_info *hit_info, double *u, double *v,
 	{
 		*u = atan2(hit_info->normal.x, hit_info->normal.z) / (2 * M_PI);
 		*v = dot_vec3(sub_vec3(hit_info->point,
-					hit_info->object->obj.cone.center),
-				normalize_vec3(hit_info->object->obj.cone.axis));
+					hit_info->object->u_obj.cone.center),
+				normalize_vec3(hit_info->object->u_obj.cone.axis));
 		*u *= pattern->scale;
 		*v *= pattern->scale;
 	}

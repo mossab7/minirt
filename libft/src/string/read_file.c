@@ -44,5 +44,4 @@ t_str	read_file_fd(int fd)
 		tmp = str_from_cstr(get_next_line(fd));
 	}
 	return (file);
-
 }

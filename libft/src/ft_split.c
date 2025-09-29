@@ -3,105 +3,69 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/24 17:24:10 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/01/30 13:04:54 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
+/*   Updated: 2025/08/19 11:31:24 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <libft.h>
 
-static int	count_words(char const *s, char c)
+static size_t	count_words(const char *s, char c)
 {
-	int	words_len;
-	int	word_len;
-	int	i;
+	size_t	count;
 
-	i = 0;
-	words_len = 0;
-	word_len = 0;
-	while (s[i])
+	count = 0;
+	while (*s)
 	{
-		if (c == s[i])
-		{
-			if (word_len)
-			{
-				words_len++;
-				word_len = 0;
-			}
-			i++;
-			continue ;
-		}
-		word_len++;
-		i++;
+		while (*s == c)
+			s++;
+		if (*s)
+			count++;
+		while (*s && *s != c)
+			s++;
 	}
-	if (word_len > 0)
-		words_len++;
-	return (words_len);
+	return (count);
 }
 
-static int	length_until(char const *s, int idx, char c)
+static size_t	get_word_len(const char *s, char c)
 {
-	int	len;
+	size_t	len;
 
 	len = 0;
-	while (c != s[idx + len] && s[idx + len])
+	while (*s && *s != c)
+	{
+		s++;
 		len++;
+	}
 	return (len);
-}
-
-static char	**xfree(char **v, size_t size)
-{
-	size_t	e;
-
-	if (v)
-	{
-		e = 0;
-		while (e < size)
-		{
-			ft_free(v[e]);
-			e++;
-		}
-		ft_free(v);
-	}
-	return (NULL);
-}
-
-static char	**ft_split_private(char **vec, char const *s, char c,
-		size_t vec_idx)
-{
-	int	wlength;
-	int	i;
-	int	k;
-
-	k = 0;
-	i = 0;
-	while (s[i])
-	{
-		while (c == s[i] && s[i])
-			i++;
-		wlength = length_until(s, i, c);
-		if (wlength > 0)
-		{
-			vec[vec_idx] = alloc(wlength + 1);
-			if (!vec[vec_idx])
-				return (xfree(vec, vec_idx));
-			while (k < wlength && s[i])
-				vec[vec_idx][k++] = s[i++];
-			vec[vec_idx++][k] = 0;
-			k = 0;
-		}
-	}
-	vec[vec_idx] = NULL;
-	return (vec);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	char	**vec;
+	size_t	word_count;
+	char	**list;
+	char	*word;
+	size_t	i;
 
-	vec = alloc(sizeof(char *) * (count_words(s, c) + 1));
-	if (!vec)
+	if (!s)
 		return (NULL);
-	return (ft_split_private(vec, s, c, 0));
+	i = 0;
+	word_count = count_words(s, c);
+	list = ft_calloc(word_count + 1, sizeof(char *));
+	if (!list)
+		return (NULL);
+	while (i < word_count)
+	{
+		while (*s == c)
+			s++;
+		word = ft_substr(s, 0, get_word_len(s, c));
+		if (!word)
+			return ((char **)ft_free_vector(list));
+		list[i++] = word;
+		while (*s && *s != c)
+			s++;
+	}
+	return (list);
 }

@@ -3,38 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/24 12:03:20 by lazmoud           #+#    #+#             */
-/*   Updated: 2024/10/24 12:29:00 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
+/*   Updated: 2025/08/19 11:31:24 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <libft.h>
-
-static size_t	ft_strlen_static(unsigned char *s)
-{
-	size_t	len;
-
-	len = 0;
-	while (s[len])
-		len++;
-	return (len);
-}
 
 char	*ft_strrchr(const char *s, int c)
 {
-	unsigned char	byte;
-	unsigned char	*ptr;
-	int				end;
+	size_t	i;
 
-	ptr = (unsigned char *)s;
-	byte = (unsigned char)c;
-	end = ft_strlen_static(ptr);
-	while (end >= 0)
-	{
-		if (ptr[end] == byte)
-			return ((char *)ptr + end);
-		end--;
-	}
+	c = (char)c;
+	i = ft_strlen(s);
+	while (i > 0 && *(s + i) != c)
+		i--;
+	if (*(s + i) == c)
+		return ((char *)(s + i));
 	return (NULL);
 }

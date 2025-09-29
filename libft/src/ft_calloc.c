@@ -3,38 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/24 13:53:12 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/01/30 13:32:32 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
+/*   Updated: 2025/08/19 11:31:24 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <libft.h>
 
-static void	ft_bzero_static(void *s, size_t n)
+#include "libft.h"
+
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	unsigned char	*ptr;
-
-	if (!n)
-		return ;
-	ptr = s;
-	while (1)
-	{
-		ptr[n - 1] = 0;
-		if (n == 1)
-			break ;
-		n--;
-	}
-}
-
-void	*ft_calloc(size_t count, size_t size)
-{
-	size_t	storage;
 	void	*mem;
+	size_t	total;
 
-	storage = count * size;
-	mem = malloc(storage);
-	if (mem)
-		ft_bzero_static(mem, storage);
+	total = nmemb * size;
+	if (nmemb && size && total / nmemb != size)
+		return (NULL);
+	mem = malloc(total);
+	if (!mem)
+		return (NULL);
+	ft_memset(mem, 0, total);
 	return (mem);
 }

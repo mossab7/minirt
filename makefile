@@ -29,6 +29,8 @@ MLX_DIR		= minilibx-linux
 LIBFT		= $(addprefix $(LIBFT_DIR)/, libft.a)
 MLX42		= $(addprefix $(MLX_DIR)/, libmlx_Linux.a)
 SRC			= src/my_parsing.c \
+			  src/parsing_utils.c \
+			  src/container.c \
 			  src/render.c \
 			  src/free_object.c \
 			  src/keys.c \

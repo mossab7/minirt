@@ -3,93 +3,63 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/24 20:30:43 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/01/30 13:06:00 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
+/*   Updated: 2025/08/19 11:31:24 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <libft.h>
 
-static size_t	len(char const *s)
+static int	issep(char c, char const *set)
+{
+	while (*set)
+	{
+		if (*set == c)
+			return (1);
+		set++;
+	}
+	return (0);
+}
+
+static size_t	get_end(char const *s1, char const *set)
+{
+	size_t	i;
+
+	i = ft_strlen(s1);
+	while (i-- > 0)
+	{
+		if (!issep(s1[i], set))
+			return (i);
+	}
+	return (i);
+}
+
+static size_t	get_start(char const *s1, char const *set)
 {
 	size_t	i;
 
 	i = 0;
-	while (s[i])
+	while (s1[i] && issep(s1[i], set))
 		i++;
 	return (i);
 }
 
-static int	exists(char c, char const *set)
-{
-	int	i;
-
-	if (!set)
-		return (0);
-	i = 0;
-	while (set[i])
-	{
-		if (set[i] == c)
-			break ;
-		i++;
-	}
-	return ((set[i] == c) && c);
-}
-
-static void	trim_(char **start, char **end, char const *set)
-{
-	while (*end > *start)
-	{
-		if (exists(**end, set))
-			*end -= 1;
-		else
-			break ;
-	}
-	while (*start < *end)
-	{
-		if (exists(**start, set))
-			*start += 1;
-		else
-			break ;
-	}
-}
-
-static char	*trim_core_private(size_t storage, char *start, char *end)
-{
-	char	*new;
-	size_t	idx;
-
-	idx = 0;
-	new = alloc(storage + 1);
-	if (!new)
-		return (NULL);
-	if (start == end)
-	{
-		new[idx] = 0;
-		return (new);
-	}
-	while (start <= end)
-	{
-		new[idx] = *start;
-		idx++;
-		start++;
-	}
-	new[idx] = 0;
-	return (new);
-}
-
 char	*ft_strtrim(char const *s1, char const *set)
 {
-	char	*start;
-	char	*end;
-	size_t	storage;
+	char	*str;
+	size_t	s;
+	size_t	e;
 
 	if (!s1)
 		return (NULL);
-	start = (char *)s1;
-	end = (char *)(&s1[len(s1) - 1]);
-	trim_(&start, &end, set);
-	storage = (int)(end - start + 1);
-	return (trim_core_private(storage, start, end));
+	if (!set)
+		return (ft_strdup(s1));
+	s = get_start(s1, set);
+	e = get_end(s1, set);
+	str = ft_substr(s1, s, e - s + 1);
+	if (!str)
+		return (NULL);
+	return (str);
 }

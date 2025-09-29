@@ -3,26 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/21 21:31:52 by lazmoud           #+#    #+#             */
-/*   Updated: 2024/10/21 21:33:39 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
+/*   Updated: 2025/08/20 17:48:04 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <libft.h>
 
 void	ft_bzero(void *s, size_t n)
 {
-	unsigned char	*ptr;
-
-	if (!n)
-		return ;
-	ptr = s;
-	while (1)
-	{
-		ptr[n - 1] = 0;
-		if (n == 1)
-			break ;
-		n--;
-	}
+	ft_memset(s, 0, n);
 }

@@ -3,47 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/24 11:35:11 by lazmoud           #+#    #+#             */
-/*   Updated: 2024/10/24 11:51:11 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
+/*   Updated: 2025/08/19 11:31:24 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <libft.h>
 
-static size_t	ft_strlen_static_(const char *restrict str)
+size_t	ft_strlcat(char *dst, const char *src, size_t dsize)
 {
-	int	i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		i++;
-	}
-	return (i);
-}
-
-size_t	ft_strlcat(char *restrict dst, const char *restrict src, size_t dstsize)
-{
-	size_t	i;
-	size_t	j;
-	size_t	dlen;
 	size_t	slen;
+	size_t	dlen;
+	int		i;
 
 	i = 0;
-	j = 0;
-	while (dst[j] != '\0')
-		j++;
-	dlen = j;
-	slen = ft_strlen_static_(src);
-	if (dstsize == 0 || dlen >= dstsize)
-		return (slen + dstsize);
-	while (src[i] && i < dstsize - dlen - 1)
+	slen = ft_strlen(src);
+	if (!dsize)
+		return (slen);
+	dlen = ft_strlen(dst);
+	if (dsize <= dlen)
+		return (slen + dsize);
+	while (src[i] && dlen + i < dsize - 1)
 	{
-		dst[j] = src[i];
+		dst[dlen + i] = src[i];
 		i++;
-		j++;
 	}
-	dst[j] = '\0';
-	return (dlen + slen);
+	dst[dlen + i] = '\0';
+	return (slen + dlen);
 }

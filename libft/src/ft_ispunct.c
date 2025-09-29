@@ -6,9 +6,10 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 15:06:24 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/01/30 17:56:44 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/09/27 01:25:12 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <libft.h>
 
 int	ft_ispunct(int c)

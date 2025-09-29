@@ -6,12 +6,13 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 18:01:39 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/25 18:03:06 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/09/27 01:23:35 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <libft.h>
 
-bool	is_dir(const char *filename)
+bool	ft_isdir(const char *filename)
 {
 	struct stat	file_stat;
 

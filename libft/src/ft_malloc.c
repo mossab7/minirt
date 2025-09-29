@@ -6,9 +6,10 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 12:59:20 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/01/30 18:01:14 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/09/27 01:27:57 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <libft.h>
 
 void	*alloc(size_t cap)

@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 20:20:31 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/03/25 20:20:32 by mbouhia          ###   ########.fr       */
+/*   Updated: 2025/09/27 01:59:04 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,7 @@
 void	free_resource(void (*free_func)(void *), void *resource)
 {
 	if (free_func && resource)
-	{
 		free_func(resource);
-	}
 }
 
 void	cleanup_memory_tracker(t_alloc_record **memory_records)

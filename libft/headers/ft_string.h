@@ -6,7 +6,7 @@
 /*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
-/*   Updated: 2025/08/24 17:13:40 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/28 21:36:00 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,9 @@ void		str_erase(t_str *str, size_t pos, size_t len);
 void		str_repeat(t_str *str, size_t n);
 void		str_clear(t_str *str);
 void		str_append_char(t_str *str, char c);
+
+// str_mod3.c
+void		str_reduce_spaces(t_str *str);
 
 // str_peek.c
 char		str_peek(t_str *str);

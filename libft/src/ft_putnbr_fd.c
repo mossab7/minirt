@@ -3,30 +3,51 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/25 16:43:27 by lazmoud           #+#    #+#             */
-/*   Updated: 2024/10/25 16:51:17 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
+/*   Updated: 2025/08/19 11:31:24 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <libft.h>
 
-static void	putchar_fd(char c, int fd)
+static size_t	write_num(char *buf, int n)
 {
-	write(fd, &c, 1);
-}
+	long	num;
+	size_t	i;
 
-void	ft_putnbr_fd(int n, int fd)
-{
-	unsigned int	num;
-
-	num = n;
+	i = 0;
+	if (!n)
+	{
+		buf[i++] = '0';
+	}
 	if (n < 0)
 	{
-		putchar_fd('-', fd);
-		num = -1 * n;
+		num = -(long)n;
 	}
-	if (num > 9)
-		ft_putnbr_fd(num / 10, fd);
-	putchar_fd(num % 10 + '0', fd);
+	else
+		num = (long)n;
+	while (num > 0)
+	{
+		buf[i++] = (num % 10) + '0';
+		num /= 10;
+	}
+	if (n < 0)
+		buf[i++] = '-';
+	buf[i] = '\0';
+	return (i);
+}
+
+int	ft_putnbr_fd(int n, int fd)
+{
+	char	str[12];
+	size_t	bytes;
+	int		count;
+
+	bytes = write_num(str, n);
+	count = 0;
+	while (bytes--)
+		count += ft_putchar_fd(str[bytes], fd);
+	return (count);
 }

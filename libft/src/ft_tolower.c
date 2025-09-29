@@ -3,20 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_tolower.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 16:36:39 by lazmoud           #+#    #+#             */
-/*   Updated: 2024/10/22 17:14:04 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
+/*   Updated: 2025/08/19 11:31:24 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <libft.h>
-
-int	ft_isupper(int c)
-{
-	return (c >= 'A' && c <= 'Z');
-}
 
 int	ft_tolower(int c)
 {
-	return (c + (32 * ft_isupper(c)));
+	return (c + ('a' - 'A') * (c >= 'A' && c <= 'Z'));
 }

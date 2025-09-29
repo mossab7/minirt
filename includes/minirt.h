@@ -6,7 +6,7 @@
 /*   By: deepseeko <deepseeko@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 19:03:54 by deepseeko         #+#    #+#             */
-/*   Updated: 2025/09/20 16:08:15 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/28 23:19:32 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@
 # include <mlx.h>
 # include <stdbool.h>
 # include <stdio.h>
-#include "ft_string.h"
+# include "ft_string.h"
+# include <stdint.h>
+# include <error_handler.h>
 
 typedef struct t_vec3
 {
@@ -270,15 +272,24 @@ typedef struct s_parse_entry
 	size_t		len;
 }	t_parse_entry;
 
-void					parse_amb_light(char **data, t_scene *scene);
-void					parse_camera(char **data, t_scene *scene);
-void					parse_light(char **data, t_scene *scene);
-void					parse_sphare(char **data, t_scene *scene);
-void					parse_plane(char **data, t_scene *scene);
-void					parse_cylinder(char **data, t_scene *scene);
-void					parse_cone(char **data, t_scene *scene);
-void					parse_hyperboloid(char **data, t_scene *scene);
-void					parse_paraboloid(char **data, t_scene *scene);
+typedef void	(*t_parse_pattern)(t_pattern *pattern, t_str *fields, size_t *peek, size_t total);
+
+typedef struct t_pattern_entry
+{
+	char	*pattern_name;
+	size_t	len;
+	t_parse_pattern	fn;
+}	t_pattern_entry;
+
+// void					parse_amb_light(char **data, t_scene *scene);
+// void					parse_camera(char **data, t_scene *scene);
+// void					parse_light(char **data, t_scene *scene);
+// void					parse_sphare(char **data, t_scene *scene);
+// void					parse_plane(char **data, t_scene *scene);
+// void					parse_cylinder(char **data, t_scene *scene);
+// void					parse_cone(char **data, t_scene *scene);
+// void					parse_hyperboloid(char **data, t_scene *scene);
+// void					parse_paraboloid(char **data, t_scene *scene);
 void					free_object(void *obj_void);
 void					parse_obj_data(char **data, t_scene *scene);
 int						parse_filename(char *filename);
@@ -363,14 +374,14 @@ t_vec3					get_vec3(char *vec);
 void					parse_amb_light(char **data, t_scene *scene);
 void					check_vec_range(t_vec3 vec);
 double					dgree_to_rad(double degree);
-void					parse_camera(char **data, t_scene *scene);
-void					parse_light(char **data, t_scene *scene);
-void					parse_sphare(char **data, t_scene *scene);
-void					parse_plane(char **data, t_scene *scene);
-void					parse_cylinder(char **data, t_scene *scene);
-void					parse_cone(char **data, t_scene *scene);
-void					parse_hyperboloid(char **data, t_scene *scene);
-void					parse_paraboloid(char **data, t_scene *scene);
+// void					parse_camera(char **data, t_scene *scene);
+// void					parse_light(char **data, t_scene *scene);
+// void					parse_sphare(char **data, t_scene *scene);
+// void					parse_plane(char **data, t_scene *scene);
+// void					parse_cylinder(char **data, t_scene *scene);
+// void					parse_cone(char **data, t_scene *scene);
+// void					parse_hyperboloid(char **data, t_scene *scene);
+// void					parse_paraboloid(char **data, t_scene *scene);
 void					read_to_scene(int fd, t_scene *scene);
 t_scene					*init_scene(void);
 t_scene					*parse_scene(char *filename);
@@ -483,5 +494,16 @@ t_mlx					*_init_mlx(void);
 int						key_press(int keycode, void *param);
 int						key_release(int keycode, void *param);
 int						*get_keys(void);
+
+// parsing
+void	extract_pattern(t_str *pattern_field, t_pattern *pattern,
+			size_t count, size_t start);
+t_str	extract_identifier(t_str *line);
+double	extract_fov(t_str *fov_field);
+double	extract_diameter(t_str *diameter_field);
+double	extract_ratio(t_str *ratio_field);
+t_color	extract_color(t_str *color_field);
+t_vec3	extract_vec3(t_str *vec3_field);
+t_vec3	extract_normalvec(t_str *vec3_field);
 
 #endif // MINIRT_H

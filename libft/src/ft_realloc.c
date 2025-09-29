@@ -3,33 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   ft_realloc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/29 18:16:27 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/01/30 13:07:07 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
+/*   Updated: 2025/08/19 11:31:24 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <libft.h>
 
-void	*ft_realloc(void *ptr, size_t new_sz, size_t old_sz)
+void	*ft_realloc(void *ptr, size_t old_size, size_t new_size)
 {
-	char	*new;
-	size_t	index;
+	void	*new;
+	size_t	size_to_copy;
 
-	index = 0;
-	new = alloc(new_sz);
-	if (new == NULL)
+	if (new_size == 0)
 	{
-		ft_free(ptr);
+		free(ptr);
 		return (NULL);
 	}
-	if (!ptr)
-		return (new);
-	while (index < old_sz)
+	new = malloc(new_size);
+	if (!new)
+		return (NULL);
+	if (ptr && old_size > 0)
 	{
-		new[index] = ((char *)ptr)[index];
-		index++;
+		if (old_size < new_size)
+			size_to_copy = old_size;
+		else
+			size_to_copy = new_size;
+		ft_memcpy(new, ptr, size_to_copy);
+		free(ptr);
 	}
-	ft_free(ptr);
+	else
+		free(ptr);
 	return (new);
 }

@@ -3,40 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/25 15:07:01 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/01/30 13:07:18 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
+/*   Updated: 2025/08/19 11:31:24 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <libft.h>
-
-static size_t	len(char const *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
 
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	char			*mem;
-	unsigned int	idx;
+	char	*str;
+	size_t	i;
 
-	if (!s)
+	i = 0;
+	if (!s || !f)
 		return (NULL);
-	mem = alloc(len(s) + 1);
-	if (!mem)
+	str = ft_calloc(ft_strlen(s) + 1, 1);
+	if (!str)
 		return (NULL);
-	idx = 0;
-	while (s[idx])
+	while (s[i])
 	{
-		mem[idx] = f(idx, s[idx]);
-		idx++;
+		str[i] = f(i, s[i]);
+		i++;
 	}
-	mem[idx] = 0;
-	return (mem);
+	return (str);
 }

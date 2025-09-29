@@ -3,64 +3,53 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/21 21:26:02 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/01/30 17:56:32 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
+/*   Updated: 2025/08/20 17:37:25 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <libft.h>
 
-static int	ft_isdigit_(char c)
+static const char	*skip_spaces(const char *nptr)
 {
-	return (c >= '0' && c <= '9');
+	while (*nptr && ft_isspace(*nptr))
+		nptr++;
+	return (nptr);
 }
 
-static int	ft_derive_sign(char c, int *index)
+static const char	*resolve_sign(const char *nptr, int *sign)
 {
-	if (c == '-')
+	*sign = 1;
+	if (*nptr && (*nptr == '-' || *nptr == '+'))
 	{
-		*index = *index + 1;
-		return (-1);
+		if (*nptr == '-')
+			*sign = -(*sign);
+		nptr++;
 	}
-	if (c == '+')
-		*index = *index + 1;
-	return (1);
+	return (nptr);
 }
 
-static int	fetch_digit(unsigned long *num, char digit, int *index, int sign)
+int	ft_atoi(const char *nptr)
 {
-	if (ft_isdigit_(digit))
+	long	n;
+	long	prev;
+	int		sign;
+
+	n = 0;
+	nptr = skip_spaces(nptr);
+	nptr = resolve_sign(nptr, &sign);
+	while (*nptr && ft_isdigit(*nptr))
 	{
-		*num = (*num * 10) + (digit - '0');
-		if ((*num * 10 + digit - '0') >= 9223372036854775807)
+		prev = n;
+		n = (*(nptr++) - '0') + n * 10;
+		if (n < prev)
 		{
-			if (sign == 1)
-				*num = -1;
-			else
-				*num = 0;
-			return (0);
+			if (sign == -1)
+				return (0);
+			return (-1);
 		}
-		*index = (*index + 1);
-		return (1);
 	}
-	*num = (sign * (*num));
-	return (0);
-}
-
-int	ft_atoi(const char *str)
-{
-	unsigned long	num;
-	int				index;
-	int				sign;
-
-	sign = 1;
-	index = 0;
-	while (ft_isspace(str[index]))
-		index++;
-	sign = ft_derive_sign(str[index], &index);
-	num = 0;
-	while (fetch_digit(&num, str[index], &index, sign))
-		continue ;
-	return (num);
+	return (n * sign);
 }

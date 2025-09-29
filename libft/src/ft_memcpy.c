@@ -3,29 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 17:41:00 by lazmoud           #+#    #+#             */
-/*   Updated: 2024/10/23 18:51:51 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
+/*   Updated: 2025/08/19 11:31:24 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <libft.h>
 
-void	*ft_memcpy(void *restrict dst, const void *restrict src, size_t n)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	unsigned char	*udst;
-	unsigned char	*usrc;
-	size_t			index;
+	unsigned char		*dp;
+	const unsigned char	*sp;
 
-	if (!dst && !src)
+	if (!dest && !src)
 		return (NULL);
-	udst = (unsigned char *)dst;
-	usrc = (unsigned char *)src;
-	index = 0;
-	while (index < n)
-	{
-		udst[index] = usrc[index];
-		index++;
-	}
-	return (dst);
+	if (n == 0)
+		return (dest);
+	dp = (unsigned char *)dest;
+	sp = (const unsigned char *)src;
+	while (n--)
+		*(dp++) = *(sp++);
+	return (dest);
 }

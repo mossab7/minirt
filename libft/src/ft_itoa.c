@@ -3,67 +3,71 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/24 16:09:18 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/01/30 13:03:55 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
+/*   Updated: 2025/08/19 11:31:24 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <libft.h>
 
-static int	digit_length_base(unsigned long num)
+static unsigned int	count_digits(long n)
 {
-	int	n;
+	unsigned int	digits;
 
-	n = 0;
-	if (num == 0)
-		return (1);
-	while (num > 0)
+	digits = 1;
+	while (n > 9)
 	{
-		num /= 10;
-		n++;
-		if (num == 0)
-			return (n);
+		n /= 10;
+		digits++;
 	}
-	return (n);
+	return (digits);
 }
 
-static char	*fill_number(unsigned long num, int n, int digcount)
+static int	resolve_sign(int n, long *num)
 {
-	char	*ascii;
-
-	ascii = alloc(digcount + 1);
-	if (!ascii)
-		return (NULL);
-	ascii[digcount--] = 0;
-	if (num == 0)
+	if (n < 0)
 	{
-		ascii[digcount--] = '0';
-		return (ascii);
+		*num = -(long)n;
+		return (-1);
 	}
-	while (num > 0)
+	*num = n;
+	return (1);
+}
+
+static void	write_num(char *str, long num, unsigned int chars)
+{
+	int	i;
+
+	i = chars;
+	str[i--] = '\0';
+	while (i >= 0)
 	{
-		if (num == 0)
-			break ;
-		ascii[digcount--] = '0' + (num % 10);
+		str[i--] = (num % 10) + '0';
 		num /= 10;
 	}
-	if (n < 0)
-		ascii[digcount--] = '-';
-	return (ascii);
 }
 
 char	*ft_itoa(int n)
 {
-	unsigned long	num;
-	int				nsz;
+	long			num;
+	unsigned int	chars;
+	char			*str;
+	int				sign;
 
-	nsz = 0;
-	num = n;
-	if (n < 0)
-		nsz++;
-	if (nsz)
-		num = -num;
-	nsz += digit_length_base(num);
-	return (fill_number(num, n, nsz));
+	sign = resolve_sign(n, &num);
+	chars = count_digits(num);
+	str = ft_calloc(chars + (sign < 0) + 1, 1);
+	if (str == NULL)
+		return (NULL);
+	if (sign < 0)
+	{
+		chars++;
+		write_num(str, num, chars);
+		str[0] = '-';
+	}
+	else
+		write_num(str, num, chars);
+	return (str);
 }

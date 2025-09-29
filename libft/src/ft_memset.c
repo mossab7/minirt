@@ -3,23 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 18:51:50 by lazmoud           #+#    #+#             */
-/*   Updated: 2024/10/22 21:09:21 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
+/*   Updated: 2025/08/19 11:31:24 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <libft.h>
+#include <stdio.h>
 
-void	*ft_memset(void *b, int c, size_t len)
+void	*ft_memset(void *s, int c, size_t n)
 {
-	unsigned char	*mem;
+	unsigned char	*dup;
 
-	mem = (unsigned char *)b;
-	while (len > 0)
-	{
-		*(mem++) = (unsigned char)c;
-		len--;
-	}
-	return (b);
+	dup = (unsigned char *)s;
+	while (n--)
+		*dup++ = (unsigned char)c;
+	return (s);
 }

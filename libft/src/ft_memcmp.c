@@ -3,32 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 17:34:14 by lazmoud           #+#    #+#             */
-/*   Updated: 2024/10/22 18:48:01 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
+/*   Updated: 2025/08/19 11:31:24 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include <libft.h>
 
 int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {
-	unsigned char	*s1u;
-	unsigned char	*s2u;
-	size_t			idx;
+	const unsigned char	*s1p;
+	const unsigned char	*s2p;
 
-	if (n == 0)
+	if (!s1 && !s2)
 		return (0);
-	idx = 0;
-	s1u = (unsigned char *)s1;
-	s2u = (unsigned char *)s2;
-	while (idx < n)
+	s1p = (const unsigned char *)s1;
+	s2p = (const unsigned char *)s2;
+	while (n--)
 	{
-		if (s1u[idx] != s2u[idx])
-			break ;
-		idx++;
+		if (*s1p != *s2p)
+			return (*s1p - *s2p);
+		s1p++;
+		s2p++;
 	}
-	if (idx == n)
-		return (0);
-	return (s1u[idx] - s2u[idx]);
+	return (0);
 }

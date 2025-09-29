@@ -3,35 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/05 15:13:27 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/09/20 03:15:04 by zbengued         ###   ########.fr       */
+/*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
+/*   Updated: 2025/08/19 11:31:24 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# include <libft.h>
+# define MAX_FD 1024
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 100
+# endif // !BUFFER_SIZE
+
+# define NL '\n'
+# include <limits.h>
 # include <stdlib.h>
 # include <unistd.h>
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 512
-# endif // !BUFFER_SIZE
-# define FD_MAX 10240
 
-typedef struct s_line
-{
-	size_t	cap;
-	size_t	size;
-	char	*content;
-}			t_line;
-
-ssize_t		line_read(int fd, t_line *line, char **nl_loc, ssize_t *nread);
-char		*get_next_line(int fd);
-void		*ft_realloc_gnl(void *ptr, size_t new_sz, size_t old_sz);
-char		*ft_strchr_gnl(char *s, int c);
-char		*ft_strdup_heap(const char *s1, char *heap);
-char		*ft_strcpy_until(char *dst, const char *src, char c);
+char	*get_next_line(int fd);
+char	*find_chr(const char *s, int c);
+char	*join_reads(char const *s1, char const *s2);
+char	*dup_until(const char *s, char c);
+void	*clean_up(void **p);
 
 #endif // !GET_NEXT_LINE_H

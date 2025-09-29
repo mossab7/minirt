@@ -21,6 +21,7 @@ t_texture	*load_texture(char *filename)
 	program = *get_program();
 	texture = ft_calloc(1, sizeof(t_texture));
 	handle_allocation_failure(texture);
+	ft_dprintf(STDERR, "filename : \"%s\"\n", filename);
 	texture->img_ptr = mlx_xpm_file_to_image(program->mlx->mlx_ptr, filename,
 			&texture->width, &texture->height);
 	if (!texture->img_ptr)

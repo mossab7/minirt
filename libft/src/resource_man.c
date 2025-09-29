@@ -6,12 +6,11 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 20:17:41 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/03/25 20:17:42 by mbouhia          ###   ########.fr       */
+/*   Updated: 2025/09/27 01:57:34 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
-#include <stdio.h>
 
 t_alloc_record	**get_memory_tracker(void)
 {

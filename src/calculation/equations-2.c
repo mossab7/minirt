@@ -25,9 +25,11 @@ t_vec3	cross_product(t_vec3 a, t_vec3 b)
 t_vec3	screen_to_world(int x, int y)
 {
 	t_vec3	result;
+	static const double width_inv = 2.0 / WIN_WIDTH;
+	static const double height_inv = 2.0 / WIN_HEIGHT;
 
-	result.x = ((2.0 * x) / WIN_WIDTH) - 1.0;
-	result.y = ((2.0 * y) / WIN_HEIGHT) - 1.0;
+	result.x = (x * width_inv) - 1.0;
+	result.y = (y * height_inv) - 1.0;
 	result.z = 0.0;
 	return (result);
 }

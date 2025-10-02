@@ -6,7 +6,7 @@
 /*   By: deepseeko <deepseeko@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 19:03:54 by deepseeko         #+#    #+#             */
-/*   Updated: 2025/09/28 23:19:32 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:14:56 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,7 +264,7 @@ typedef struct t_material
 }						t_material;
 
 typedef void			(*t_parse_function)(char **, t_scene *);
-typedef void (*t_parse_fn)(t_scene *s_scene, t_str *line);
+typedef void			(*t_parse_fn)(t_scene *s_scene, t_str *line);
 typedef struct s_parse_entry
 {
 	char		*key;
@@ -272,12 +272,13 @@ typedef struct s_parse_entry
 	size_t		len;
 }	t_parse_entry;
 
-typedef void	(*t_parse_pattern)(t_pattern *pattern, t_str *fields, size_t *peek, size_t total);
+typedef void			(*t_parse_pattern)(t_pattern *pattern,
+		t_str *fields, size_t *peek, size_t total);
 
 typedef struct t_pattern_entry
 {
-	char	*pattern_name;
-	size_t	len;
+	char			*pattern_name;
+	size_t			len;
 	t_parse_pattern	fn;
 }	t_pattern_entry;
 
@@ -298,7 +299,7 @@ void					init_obj_parse_func(t_parse_function *parse_func,
 t_color					get_color(char *data);
 t_vec3					get_vec3(char *data);
 void					check_vec_range(t_vec3 vec);
-t_scene					*parse_scene(char *filename);
+void					parse_scene(char *filename, t_scene *scene);
 t_object				*get_object(t_container *container, size_t index);
 t_light					*get_light(t_container *container, size_t index);
 t_vec3					add_vec3(t_vec3 a, t_vec3 b);
@@ -384,7 +385,6 @@ double					dgree_to_rad(double degree);
 // void					parse_paraboloid(char **data, t_scene *scene);
 void					read_to_scene(int fd, t_scene *scene);
 t_scene					*init_scene(void);
-t_scene					*parse_scene(char *filename);
 int						parse_pattern(char **data, t_pattern *pattern);
 
 // matrix_op
@@ -496,14 +496,34 @@ int						key_release(int keycode, void *param);
 int						*get_keys(void);
 
 // parsing
-void	extract_pattern(t_str *pattern_field, t_pattern *pattern,
-			size_t count, size_t start);
-t_str	extract_identifier(t_str *line);
-double	extract_fov(t_str *fov_field);
-double	extract_diameter(t_str *diameter_field);
-double	extract_ratio(t_str *ratio_field);
-t_color	extract_color(t_str *color_field);
-t_vec3	extract_vec3(t_str *vec3_field);
-t_vec3	extract_normalvec(t_str *vec3_field);
-
+void					extract_pattern(t_str *pattern_field,
+							t_pattern *pattern, size_t count, size_t start);
+t_str					extract_identifier(t_str *line);
+double					extract_fov(t_str *fov_field);
+double					extract_diameter(t_str *diameter_field);
+double					extract_ratio(t_str *ratio_field);
+t_color					extract_color(t_str *color_field);
+t_vec3					extract_vec3(t_str *vec3_field);
+t_vec3					extract_normalvec(t_str *vec3_field);
+void					end_of_line_parse(t_str *fields,
+							size_t fields_count, size_t start);
+void					parse_sphere(t_scene *scene, t_str *line);
+void					parse_plane(t_scene *scene, t_str *line);
+void					parse_light(t_scene *scene, t_str *line);
+void					parse_cylinder(t_scene *scene, t_str *line);
+void					parse_cone(t_scene *scene, t_str *line);
+void					parse_camera(t_scene *scene, t_str *line);
+void					parse_ambient(t_scene *scene, t_str *line);
+bool					valid_diameter(double diameter);
+bool					valid_color(t_color *color);
+bool					valid_normalvec(t_vec3 vec3);
+bool					valid_fov(double fov);
+bool					valid_ratio(double ratio);
+t_container				*read_file_lines(int fd);
+t_parse_entry			*parse_entry(void);
+void					check_occ(t_str id);
+void					parse_line(t_scene *scene, t_str *line);
+void					read_scene(int fd, t_scene *scene);
+t_scene					*init_scene(void);
+int						parse_filename(char *filename);
 #endif // MINIRT_H

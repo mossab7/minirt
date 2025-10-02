@@ -6,7 +6,7 @@
 /*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 23:28:53 by zbengued          #+#    #+#             */
-/*   Updated: 2025/09/17 17:27:54 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/10/01 17:51:07 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@ void	translate_object(t_object *obj, t_vec3 translation)
 	if (!obj)
 		return ;
 	if (obj->type == SPHERE)
-		obj->u_obj.sphere.center = add_vec3(obj->u_obj.sphere.center, translation);
+		obj->u_obj.sphere.center = add_vec3(obj->u_obj.sphere.center,
+				translation);
 	else if (obj->type == PLANE)
-		obj->u_obj.plane.center = add_vec3(obj->u_obj.plane.center, translation);
+		obj->u_obj.plane.center = add_vec3(obj->u_obj.plane.center,
+				translation);
 	else if (obj->type == CYLINDER)
 		obj->u_obj.cylinder.center = add_vec3(obj->u_obj.cylinder.center,
 				translation);

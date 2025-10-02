@@ -6,7 +6,7 @@
 /*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 17:19:18 by zbengued          #+#    #+#             */
-/*   Updated: 2025/09/19 15:22:02 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:03:23 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ t_vec3	cross_product(t_vec3 a, t_vec3 b)
 
 t_vec3	screen_to_world(int x, int y)
 {
-	t_vec3	result;
-	static const double width_inv = 2.0 / WIN_WIDTH;
-	static const double height_inv = 2.0 / WIN_HEIGHT;
+	t_vec3				result;
+	static const double	width_inv = 2.0 / WIN_WIDTH;
+	static const double	height_inv = 2.0 / WIN_HEIGHT;
 
 	result.x = (x * width_inv) - 1.0;
 	result.y = (y * height_inv) - 1.0;

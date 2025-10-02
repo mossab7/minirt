@@ -6,12 +6,12 @@
 /*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 15:19:28 by zbengued          #+#    #+#             */
-/*   Updated: 2025/08/20 15:40:41 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:04:41 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef COLORS_H
-#define COLORS_H
+# define COLORS_H
 
 // Reset
 # define COLOR_RESET       "\001\033[0m\002"

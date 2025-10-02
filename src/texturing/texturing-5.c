@@ -19,18 +19,15 @@ t_texture	*load_texture(char *filename)
 	t_texture	*texture;
 
 	program = *get_program();
-	texture = ft_calloc(1, sizeof(t_texture));
+	texture = alloc(sizeof(t_texture));
 	handle_allocation_failure(texture);
-	ft_dprintf(STDERR, "filename : \"%s\"\n", filename);
 	texture->img_ptr = mlx_xpm_file_to_image(program->mlx->mlx_ptr, filename,
 			&texture->width, &texture->height);
 	if (!texture->img_ptr)
 	{
-		free(texture);
-		ft_putstr_fd("Error: Failed to load texture file: ", 2);
-		ft_putstr_fd(filename, 2);
-		ft_putstr_fd("\n", 2);
-		safe_exit(1);
+		ft_free(texture);
+		set_error(9, "Failed to load texture file: %s", filename);
+		return (NULL);
 	}
 	texture->addr = mlx_get_data_addr(texture->img_ptr, &texture->bpp,
 			&texture->line_length, &texture->endian);

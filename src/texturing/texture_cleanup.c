@@ -27,5 +27,5 @@ void	free_texture(void *texture_void)
 		mlx_destroy_image(program->mlx->mlx_ptr, texture->img_ptr);
 		texture->img_ptr = NULL;
 	}
-	free(texture);
+	ft_free(texture);
 }

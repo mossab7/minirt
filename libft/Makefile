@@ -6,7 +6,7 @@ RESET		= \033[0m
 CLEAR		= \033[K\r
 NAME		= libft.a
 INCLUDES	= -I./headers/
-CC			= cc -c -Wall -Wextra -Werror
+CC			= cc -c -Wall -Wextra -Werror -g3 #-fsanitize=address -fsanitize=leak
 AR			= ar rcs
 SRC			= src/ft_isalnum.c \
 			  src/ft_isalpha.c \
@@ -74,6 +74,7 @@ SRC			= src/ft_isalnum.c \
 			  src/ft_getenv.c \
 			  src/ft_getpath.c \
 			  src/ft_free_vector.c \
+			  src/ft_free.c \
 			  src/ft_printf/ft_printf.c \
 			  src/ft_printf/parsing.c \
 			  src/ft_printf/print_char.c \
@@ -124,7 +125,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	@$(AR) $(NAME) $(OBJ)
-	@printf "$(GREEN)$(BOLD)Libft.a done!$(RESET)\n"
+	@printf "$(GREEN)$(BOLD)Libft.a done!                           $(RESET)\n"
 
 obj/%.o: src/%.c
 	@mkdir -p $(dir $@)

@@ -34,14 +34,20 @@ t_str	read_file_fd(int fd)
 {
 	t_str	file;
 	t_str	tmp;
+	char	*line;
 
 	str_init(&file);
-	tmp = str_from_cstr(get_next_line(fd));
+	line = get_next_line(fd);
+	tmp = str_from_cstr(line);
 	while (tmp.data)
 	{
 		str_append(&file, tmp.data);
+		free(line);
 		str_destroy(&tmp);
-		tmp = str_from_cstr(get_next_line(fd));
+		line = get_next_line(fd);
+		tmp = str_from_cstr(line);
 	}
+	free(line);
+	str_destroy(&tmp);
 	return (file);
 }

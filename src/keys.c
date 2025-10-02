@@ -15,7 +15,7 @@
 #include <transform_object.h>
 
 #define ROT_SPEED 0.1
-#define TRANS_SPEED 20
+#define TRANS_SPEED 2
 #define UP 65362
 #define K_DOWN 'k'
 #define K_LEFT 'j'

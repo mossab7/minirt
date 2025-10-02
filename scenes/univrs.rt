@@ -12,5 +12,6 @@ sp 492.00,0.00,-3412.00      249            200,200,200 texture textures/others/
 sp -14.00,0.00,-4430.00      108.9          200,200,200 texture textures/others/solar_system/uranus.xpm
 sp -480.00,0.00,-4440.00     105.6          200,200,200 texture textures/others/solar_system/neptune.xpm
 sp 204.00,0.00,-464.00       8              200,200,200 texture textures/others/solar_system/moon.xpm
+sp -38.00,0.00,-100.00       10.5           200,200,200 texture textures/others/solar_system/mercury.xpm
 
-sp  0,0,0        20000      0,0,0 texture textures/others/solar_system/milky_way.xpm
+sp  0,0,0        20000      0,0,0 texture textures/others/solar_system/milky_way.xpm adf

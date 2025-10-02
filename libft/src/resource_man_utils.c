@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 20:20:31 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/09/27 01:59:04 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:10:25 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	detach_resource(t_alloc_record **memory_records, void *target_resource)
 	free(temp);
 }
 
-int		ft_open(const char *filename, int flags)
+int	ft_open(const char *filename, int flags)
 {
 	int	fd;
 

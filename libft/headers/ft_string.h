@@ -6,7 +6,7 @@
 /*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
-/*   Updated: 2025/09/28 21:36:00 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:10:44 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,8 +137,8 @@ int			str_arr_resize_if_needed(t_str_arr *arr);
 void		str_free_array(t_str *arr, size_t count);
 
 // read_file.c
-t_str	read_file(const char *file_name);
-t_str	read_file_fd(int fd);
+t_str		read_file(const char *file_name);
+t_str		read_file_fd(int fd);
 
 // str_arr_core.c
 // str_arr_utils.c

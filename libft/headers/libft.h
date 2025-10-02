@@ -6,7 +6,7 @@
 /*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 11:31:24 by zbengued          #+#    #+#             */
-/*   Updated: 2025/09/28 21:24:16 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:11:04 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@
 # include <sys/stat.h>
 # include <errno.h>
 # include <math.h>
-
 
 # define CHILD_PROC 0
 # define STDIN 0
@@ -149,7 +148,6 @@ void				*ternary(int condition, void *a, void *b);
 
 char				*ft_getoutput(char **argv, char **envp);
 
-
 typedef struct s_alloc_record
 {
 	void					*resource;
@@ -158,6 +156,7 @@ typedef struct s_alloc_record
 }							t_alloc_record;
 
 void				*alloc(size_t cap);
+void				ft_free(void *addr);
 void				free_resource(void (*free_func)(void *), void *resource);
 void				cleanup_memory_tracker(t_alloc_record **memory_records);
 void				detach_resource(t_alloc_record **memory_records,

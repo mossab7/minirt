@@ -6,7 +6,7 @@
 /*   By: deepseeko <deepseeko@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 19:03:54 by deepseeko         #+#    #+#             */
-/*   Updated: 2025/09/15 00:30:13 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:14:56 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,13 @@
 # include <macros.h>
 # include <math.h>
 # include <pthread.h>
+# include <X11/keysym.h>
+# include <mlx.h>
+# include <stdbool.h>
+# include <stdio.h>
+# include "ft_string.h"
+# include <stdint.h>
+# include <error_handler.h>
 
 typedef struct t_vec3
 {
@@ -72,7 +79,6 @@ typedef struct s_sphere
 	t_vec3				center;
 	double				diameter;
 	t_color				color;
-	t_pattern			pattern;
 }						t_sphere;
 
 typedef struct s_plane
@@ -80,7 +86,6 @@ typedef struct s_plane
 	t_vec3				center;
 	t_vec3				normal;
 	t_color				color;
-	t_pattern			pattern;
 }						t_plane;
 
 typedef struct s_hyperboloid
@@ -108,7 +113,6 @@ typedef struct s_cylinder
 	double				diameter;
 	double				height;
 	t_color				color;
-	t_pattern			pattern;
 }						t_cylinder;
 
 typedef struct s_cone
@@ -118,7 +122,6 @@ typedef struct s_cone
 	double				diameter;
 	double				height;
 	t_color				color;
-	t_pattern			pattern;
 }						t_cone;
 
 typedef enum e_object_type
@@ -142,7 +145,8 @@ typedef struct s_object
 		t_cone			cone;
 		t_hyperboloid	hyperboloid;
 		t_paraboloid	paraboloid;
-	} obj;
+	} u_obj;
+	t_pattern			pattern;
 }						t_object;
 
 typedef struct s_amb_light
@@ -221,9 +225,10 @@ typedef struct s_worker
 	int					end_x;
 }						t_worker;
 
-typedef struct
+typedef struct s_pixel_batch
 {
-	int x, y;
+	int					x;
+	int					y;
 	t_color				color;
 }						t_pixel_batch;
 
@@ -242,6 +247,7 @@ typedef struct s_program
 	bool				program_running;
 	int					worker_finish_count;
 	bool				dirty;
+	bool				keys[70000];
 }						t_program;
 
 typedef struct s_matrix4d
@@ -258,16 +264,34 @@ typedef struct t_material
 }						t_material;
 
 typedef void			(*t_parse_function)(char **, t_scene *);
+typedef void			(*t_parse_fn)(t_scene *s_scene, t_str *line);
+typedef struct s_parse_entry
+{
+	char		*key;
+	t_parse_fn	fn;
+	size_t		len;
+}	t_parse_entry;
 
-void					parse_amb_light(char **data, t_scene *scene);
-void					parse_camera(char **data, t_scene *scene);
-void					parse_light(char **data, t_scene *scene);
-void					parse_sphare(char **data, t_scene *scene);
-void					parse_plane(char **data, t_scene *scene);
-void					parse_cylinder(char **data, t_scene *scene);
-void					parse_cone(char **data, t_scene *scene);
-void					parse_hyperboloid(char **data, t_scene *scene);
-void					parse_paraboloid(char **data, t_scene *scene);
+typedef void			(*t_parse_pattern)(t_pattern *pattern,
+		t_str *fields, size_t *peek, size_t total);
+
+typedef struct t_pattern_entry
+{
+	char			*pattern_name;
+	size_t			len;
+	t_parse_pattern	fn;
+}	t_pattern_entry;
+
+// void					parse_amb_light(char **data, t_scene *scene);
+// void					parse_camera(char **data, t_scene *scene);
+// void					parse_light(char **data, t_scene *scene);
+// void					parse_sphare(char **data, t_scene *scene);
+// void					parse_plane(char **data, t_scene *scene);
+// void					parse_cylinder(char **data, t_scene *scene);
+// void					parse_cone(char **data, t_scene *scene);
+// void					parse_hyperboloid(char **data, t_scene *scene);
+// void					parse_paraboloid(char **data, t_scene *scene);
+void					free_object(void *obj_void);
 void					parse_obj_data(char **data, t_scene *scene);
 int						parse_filename(char *filename);
 void					init_obj_parse_func(t_parse_function *parse_func,
@@ -275,7 +299,7 @@ void					init_obj_parse_func(t_parse_function *parse_func,
 t_color					get_color(char *data);
 t_vec3					get_vec3(char *data);
 void					check_vec_range(t_vec3 vec);
-t_scene					*parse_scene(char *filename);
+void					parse_scene(char *filename, t_scene *scene);
 t_object				*get_object(t_container *container, size_t index);
 t_light					*get_light(t_container *container, size_t index);
 t_vec3					add_vec3(t_vec3 a, t_vec3 b);
@@ -312,7 +336,17 @@ t_vec3					matrix4d_mult_vec3(t_matrix4d matrix, t_vec3 vec);
 t_matrix4d				view_matrix(t_vec3 camera_pos, t_vec3 camera_dir);
 int						render_scene(t_program *program);
 t_program				**get_program(void);
-
+// bonus
+t_color					apply_checkerboard_pattern(t_hit_info *hit_info,
+							t_pattern *pattern);
+t_color					get_pattern_color(t_hit_info *hit_info);
+int						parse_pattern(char **data, t_pattern *pattern);
+t_vec3					apply_bump_mapping(t_hit_info *hit_info,
+							t_pattern *pattern);
+double					noise_function(double x, double y);
+t_vec3					calculate_bump_normal(t_hit_info *hit_info,
+							t_pattern *pattern);
+// adf
 t_vec3					screen_to_world(int x, int y);
 t_ray					shoot_ray(t_scene *scene, t_vec3 screen_pos);
 t_hit_info				find_closest_intersection(t_container *objects,
@@ -329,50 +363,167 @@ t_hit_info				intersect_cone_base(t_ray *ray, t_cone *cone);
 t_hit_info				intersect_cone(t_ray *ray, t_cone *cone);
 t_vec3					get_cone_normal(t_cone *cone, t_vec3 point);
 
-// Workers
+void					recalculate_camera_vectors(t_camera *camera);
+
+// parsing
+int						parse_filename(char *filename);
+void					init_obj_parse_func(t_parse_function *parse_func,
+							char **obj_name);
+void					parse_obj_data(char **data, t_scene *scene);
+t_color					get_color(char *data);
+t_vec3					get_vec3(char *vec);
+void					parse_amb_light(char **data, t_scene *scene);
+void					check_vec_range(t_vec3 vec);
+double					dgree_to_rad(double degree);
+// void					parse_camera(char **data, t_scene *scene);
+// void					parse_light(char **data, t_scene *scene);
+// void					parse_sphare(char **data, t_scene *scene);
+// void					parse_plane(char **data, t_scene *scene);
+// void					parse_cylinder(char **data, t_scene *scene);
+// void					parse_cone(char **data, t_scene *scene);
+// void					parse_hyperboloid(char **data, t_scene *scene);
+// void					parse_paraboloid(char **data, t_scene *scene);
+void					read_to_scene(int fd, t_scene *scene);
+t_scene					*init_scene(void);
+int						parse_pattern(char **data, t_pattern *pattern);
+
+// matrix_op
+t_matrix4d				matrix4d_translation(t_vec3 translation);
+t_matrix4d				matrix4d_rotation_x(double angle);
+t_matrix4d				matrix4d_rotation_y(double angle);
+t_matrix4d				matrix4d_rotation_z(double angle);
+t_matrix4d				matrix4d_mult(t_matrix4d a, t_matrix4d b);
+t_matrix4d				matrix4d_translation(t_vec3 translation);
+t_matrix4d				matrix4d_rotation_x(double angle);
+t_matrix4d				matrix4d_rotation_y(double angle);
+t_matrix4d				matrix4d_rotation_z(double angle);
+t_matrix4d				matrix4d_mult(t_matrix4d a, t_matrix4d b);
+double					calculate_determinant3x3(t_matrix4d matrix);
+t_matrix4d				inverse_rotation_scale(t_matrix4d matrix, double det);
+void					inverse_translation(t_matrix4d *result,
+							t_matrix4d original_matrix);
+t_matrix4d				matrix4d_inverse(t_matrix4d matrix);
+t_matrix4d				matrix4d_rotation(t_vec3 rotation);
+t_matrix4d				matrix4d_scale(t_vec3 scale);
+t_matrix4d				matrix4d_identity(void);
+t_matrix4d				matrix4d_transpose(t_matrix4d matrix);
+
+// texturing
+
+t_color					apply_checkerboard_pattern(t_hit_info *hit_info,
+							t_pattern *pattern);
+int						*get_perm(void);
+const int				*get_p(void);
+void					init_permutation_table(void);
+double					fade(double t);
+double					lerp(double t, double a, double b);
+double					noise_function(double x, double y);
+t_vec3					calculate_bump_normal(t_hit_info *hit_info,
+							t_pattern *pattern);
+t_color					apply_texture(t_hit_info *hit_info, t_pattern *pattern);
+t_vec3					apply_bump_mapping(t_hit_info *hit_info,
+							t_pattern *pattern);
+t_color					get_pattern_color(t_hit_info *hit_info);
+
+t_texture				*load_texture(char *filename);
+t_color					get_pixel_color(t_texture *texture, int x, int y);
+void					free_texture(void *texture_void);
+
+t_program				**get_program(void);
+void					free_all_textures(t_scene *scene);
+t_object				*get_object(t_container *container, size_t index);
+t_light					*get_light(t_container *container, size_t index);
+void					register_allocation(void *ptr,
+							void (*free_func)(void *));
+void					trans_keys(int key, t_vec3 *trans, t_program *program,
+							bool *changed);
+void					rot_keys(int key, t_vec3 *rot, bool *has_changed);
+void					transforme_camera(t_program *program, t_vec3 rotation,
+							t_vec3 trans);
+void					apply_transformation(t_program *program, t_vec3 trans,
+							t_vec3 rot);
+int						key_hook(int keycode, void *param);
+int						mouse_hook(int button, int x, int y, void *param);
+
+t_hit_info				intersect_cylinder_side(t_ray *ray,
+							t_cylinder *cylinder);
+t_vec3					cross_product(t_vec3 a, t_vec3 b);
+t_vec3					screen_to_world(int x, int y);
+t_ray					shoot_ray(t_scene *scene, t_vec3 screen_pos);
+t_hit_info				intersect_sphere(t_ray *ray, t_sphere *sphere);
+t_program				**get_program(void);
+void					free_all_textures(t_scene *scene);
+t_object				*get_object(t_container *container, size_t index);
+t_light					*get_light(t_container *container, size_t index);
+t_hit_info				compute_cylinder_hit(t_ray *ray, t_cylinder *cylinder,
+							t_vec3 axis, double *val);
+void					register_allocation(void *ptr,
+							void (*free_func)(void *));
+t_hit_info				intersect_cylinder_side(t_ray *ray,
+							t_cylinder *cylinder);
+t_hit_info				intersect_cylinder_cap(t_ray *ray, t_cylinder *cylinder,
+							int cap_side);
+t_hit_info				intersect_cone_side(t_ray *ray, t_cone *cone);
+t_hit_info				intersect_cone_base(t_ray *ray, t_cone *cone);
+t_hit_info				intersect_cone(t_ray *ray, t_cone *cone);
+t_hit_info				intersect_cylinder(t_ray *ray, t_cylinder *cylinder);
+t_hit_info				intersect_plane(t_ray *ray, t_plane *plane);
+t_vec3					get_cone_normal(t_cone *cone, t_vec3 point);
+t_pattern				*get_object_pattern(t_hit_info *hit_info);
+t_vec3					compute_light_dir(t_hit_info *hit_info, t_light *light);
+bool					is_in_shadow(t_scene *scene, t_hit_info *hit_info,
+							t_light *light);
+t_vec3					compute_light_dir(t_hit_info *hit_info, t_light *light);
+t_hit_info				find_closest_intersection(t_container *objects,
+							t_ray *ray);
+bool					is_in_shadow(t_scene *scene, t_hit_info *hit_info,
+							t_light *light);
+void					set_up_workers(t_program *program);
 void					worker_render_scene(t_worker *worker);
+void					*worker_loop(void *arg);
+int						loop_hook(void *param);
 long					get_num_cores_unix(void);
 void					set_single_worker_bounds(t_worker *worker);
 void					set_grid_division_bounds(t_worker *workers,
 							int num_threads);
 void					calculate_worker_bounds(t_program *program);
-void					*worker_loop(void *arg);
-void					set_up_workers(t_program *program);
-int						parse_pattern(char **data, t_pattern *pattern);
-// texture
-t_color					apply_checkerboard_pattern(t_hit_info *hit_info,
-							t_pattern *pattern);
-t_color					get_pattern_color(t_hit_info *hit_info, void *object);
-int						parse_pattern(char **data, t_pattern *pattern);
-t_vec3					apply_bump_mapping(t_hit_info *hit_info,
-							t_pattern *pattern);
-double					noise_function(double x, double y);
-t_vec3					calculate_bump_normal(t_hit_info *hit_info,
-							t_pattern *pattern);
-
-void					register_allocation(void *ptr,
-							void (*free_func)(void *));
-void					safe_exit(int status);
+int						safe_exit(int status);
 t_canvas				*init_canvas(void *mlx_ptr, int width, int height);
 t_mlx					*_init_mlx(void);
 
-t_program				**get_program(void);
-t_object				*get_object(t_container *container, size_t index);
-t_light					*get_light(t_container *container, size_t index);
+int						key_press(int keycode, void *param);
+int						key_release(int keycode, void *param);
+int						*get_keys(void);
 
-int						loop_hook(void *param);
-void					trans_keys(int key, t_vec3 *trans, t_program *program,
-							bool *changed);
-void					rot_keys(int key, t_vec3 *rot, bool *has_changed);
-int						key_hook(int keycode, void *param);
-int						mouse_hook(int button, int x, int y, void *param);
-
-void					transforme_camera(t_program *program, t_vec3 rotation,
-							t_vec3 trans);
-void					apply_transformation(t_program *program, t_vec3 trans,
-							t_vec3 rot);
-
-void					recalculate_camera_vectors(t_camera *camera);
-
-t_color					apply_texture(t_hit_info *hit_info, t_pattern *pattern);
+// parsing
+void					extract_pattern(t_str *pattern_field,
+							t_pattern *pattern, size_t count, size_t start);
+t_str					extract_identifier(t_str *line);
+double					extract_fov(t_str *fov_field);
+double					extract_diameter(t_str *diameter_field);
+double					extract_ratio(t_str *ratio_field);
+t_color					extract_color(t_str *color_field);
+t_vec3					extract_vec3(t_str *vec3_field);
+t_vec3					extract_normalvec(t_str *vec3_field);
+void					end_of_line_parse(t_str *fields,
+							size_t fields_count, size_t start);
+void					parse_sphere(t_scene *scene, t_str *line);
+void					parse_plane(t_scene *scene, t_str *line);
+void					parse_light(t_scene *scene, t_str *line);
+void					parse_cylinder(t_scene *scene, t_str *line);
+void					parse_cone(t_scene *scene, t_str *line);
+void					parse_camera(t_scene *scene, t_str *line);
+void					parse_ambient(t_scene *scene, t_str *line);
+bool					valid_diameter(double diameter);
+bool					valid_color(t_color *color);
+bool					valid_normalvec(t_vec3 vec3);
+bool					valid_fov(double fov);
+bool					valid_ratio(double ratio);
+t_container				*read_file_lines(int fd);
+t_parse_entry			*parse_entry(void);
+void					check_occ(t_str id);
+void					parse_line(t_scene *scene, t_str *line);
+void					read_scene(int fd, t_scene *scene);
+t_scene					*init_scene(void);
+int						parse_filename(char *filename);
 #endif // MINIRT_H

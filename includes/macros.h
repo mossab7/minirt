@@ -6,7 +6,7 @@
 /*   By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 16:28:37 by zbengued          #+#    #+#             */
-/*   Updated: 2025/09/15 00:14:06 by zbengued         ###   ########.fr       */
+/*   Updated: 2025/09/20 15:51:45 by zbengued         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,6 @@
 # include <X11/keysymdef.h>
 
 # define EPSILON 0.0001
-# define VEC_EPSILON               \
-	(t_vec3)                      \
-	{                             \
-		EPSILON, EPSILON, EPSILON \
-	}
 # define RED_INDEX 0
 # define GREEN_INDEX 1
 # define BLUE_INDEX 2
@@ -50,15 +45,7 @@
 # define COLOR_MAX 255.0f
 # define WIN_WIDTH 1920  // 1920
 # define WIN_HEIGHT 1080 // 1080
-# define RATIO (16.0f / 9.0f)
-# define UPVEC            \
-	(t_vec3)             \
-	{                    \
-		0.0f, 1.0f, 0.0f \
-	}
 # define BATCH_SIZE 64
-
-# ifndef M_PI
-#  define M_PI 3.14159265358979323846
-# endif
+# define M_PI 3.14159265358979323846
+# define ALPHA 0.5
 #endif // !MACROS_H

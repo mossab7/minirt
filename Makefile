@@ -18,10 +18,10 @@ RED    		= \033[0;31m
 RESET  		= \033[0m
 BOLD		= \033[1m
 CLEAR		= \033[K\r
-NAME		= minirt
+NAME		= miniRT
 CC			= cc
-CFLAGS		= -Wall -Wextra -Werror -g3 #-fsanitize=address -fsanitize=leak
-LFLAGS		= -lm -lmlx_Linux -lXext -lX11 -lm -lbsd -g3 #-fsanitize=address -fsanitize=leak
+CFLAGS		= -Wall -Wextra -Werror #-g3 -fsanitize=address -fsanitize=leak
+LFLAGS		= -lm -lmlx_Linux -lXext -lX11 -lm -lbsd #-g3 -fsanitize=address -fsanitize=leak
 AR			= ar rcs
 INCLUDES	= -I./includes/ -I./libft/headers/ -I./minilibx-linux/
 LIBFT_DIR	= libft
@@ -105,15 +105,15 @@ $(MLX42):
 
 clean:
 	@make -C $(LIBFT_DIR)/ clean
-	@printf "$(RED)Cleaning MLX\n$(RESET)"
-	@make -C $(MLX_DIR)/ clean 2> /dev/null > /dev/null
-	@rm -rf obj
+	@rm -f $(OBJ)
 
 fclean: clean
 	@make -C $(LIBFT_DIR)/ fclean
 	@make -C $(MLX_DIR)/ clean 2> /dev/null > /dev/null
+	@rm -rf obj
 	@rm -f $(NAME)
 
 re: fclean all
 
 .PHONY: clean
+.SECONDARY: $(OBJ)

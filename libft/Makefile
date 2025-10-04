@@ -135,12 +135,14 @@ obj/%.o: src/%.c
 
 clean :
 	@printf "$(RED)Cleaning $(OBJ_DIR)...$(RESET)\n"
-	@${RM} obj
+	@${RM} $(OBJ)
 
 fclean : clean
 	@printf "$(RED)Cleaning $(NAME)...$(RESET)\n"
+	@${RM} obj
 	@${RM} $(NAME)
 
 re: fclean all
 
 .PHONY: all, clean, fclean, re
+.SECONDARY: $(OBJ)

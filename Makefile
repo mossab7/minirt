@@ -6,7 +6,7 @@
 #    By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/24 00:06:20 by zbengued          #+#    #+#              #
-#    Updated: 2025/10/01 18:18:30 by zbengued         ###   ########.fr        #
+#    Updated: 2025/10/13 13:58:26 by mbouhia          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,8 +24,8 @@ CFLAGS		= -Wall -Wextra -Werror #-g3 -fsanitize=address -fsanitize=leak
 LFLAGS		= -lm -lmlx_Linux -lXext -lX11 -lm -lbsd #-g3 -fsanitize=address -fsanitize=leak
 AR			= ar rcs
 INCLUDES	= -I./includes/ -I./libft/headers/ -I./minilibx-linux/
-LIBFT_DIR	= libft
-MLX_DIR		= minilibx-linux
+LIBFT_DIR	= utils/libft
+MLX_DIR		= utils/minilibx-linux
 LIBFT		= $(addprefix $(LIBFT_DIR)/, libft.a)
 MLX42		= $(addprefix $(MLX_DIR)/, libmlx_Linux.a)
 SRC			= src/minirt.c \

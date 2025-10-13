@@ -17,7 +17,6 @@ void	parse_ambient(t_scene *scene, t_str *line)
 	size_t	count;
 	t_str	*fields;
 
-	(void)scene;
 	str_reduce_spaces(line);
 	fields = str_split(line, ' ', &count);
 	if (count < 3)

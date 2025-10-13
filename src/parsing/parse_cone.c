@@ -29,6 +29,7 @@ void	parse_cone(t_scene *scene, t_str *line)
 	t_str		*fields;
 	size_t		count;
 
+	str_reduce_spaces(line);
 	fields = str_split(line, ' ', &count);
 	if (count < 6)
 	{

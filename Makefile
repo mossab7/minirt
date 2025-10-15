@@ -23,7 +23,7 @@ CC			= cc
 CFLAGS		= -Wall -Wextra -Werror #-g3 -fsanitize=address -fsanitize=leak
 LFLAGS		= -lm -lmlx_Linux -lXext -lX11 -lm -lbsd #-g3 -fsanitize=address -fsanitize=leak
 AR			= ar rcs
-INCLUDES	= -I./includes/ -I./libft/headers/ -I./minilibx-linux/
+INCLUDES	= -I./includes/ -I./utils/libft/headers/ -I./utils/minilibx-linux/
 LIBFT_DIR	= utils/libft
 MLX_DIR		= utils/minilibx-linux
 LIBFT		= $(addprefix $(LIBFT_DIR)/, libft.a)

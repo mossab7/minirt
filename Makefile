@@ -6,7 +6,7 @@
 #    By: zbengued <zbengued@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/24 00:06:20 by zbengued          #+#    #+#              #
-#    Updated: 2025/10/13 13:58:26 by mbouhia          ###   ########.fr        #
+#    Updated: 2025/10/24 13:31:06 by mbouhia          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ CLEAR		= \033[K\r
 NAME		= miniRT
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror #-g3 -fsanitize=address -fsanitize=leak
-LFLAGS		= -lm -lmlx_Linux -lXext -lX11 -lm -lbsd #-g3 -fsanitize=address -fsanitize=leak
+LFLAGS		= -lm -lmlx_Linux -lXext -lX11 -lm -lbsd  -O3 -march=native -ffast-math#-g3 -fsanitize=address -fsanitize=leak
 AR			= ar rcs
 INCLUDES	= -I./includes/ -I./utils/libft/headers/ -I./utils/minilibx-linux/
 LIBFT_DIR	= utils/libft
